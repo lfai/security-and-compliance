@@ -38,6 +38,8 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 <div><img src="images/logos/google-drive-40x36.png" style="width: 20px; margin-right: 10px;" alt="Google drive logo">
 Request access to the project's <span style="color: gray;"><strong>Google drive folder</strong></span> which will be used to agendas, meeting notes, presentations, etc.
 
+- [Link to Google drive folder](https://drive.google.com/drive/folders/0ABt8Tcg9DXLoUk9PVA)
+
 #### Communication channels
 
 <div><img src="images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
