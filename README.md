@@ -36,11 +36,14 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 #### Communication channels
 
 <div><img src="images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
-Please join our Slack for informal communication with work group contributors.</p>
+Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack</strong></span> Slack for informal communication with work group contributors:</p>
 </div>
 
-- Join the LF AI & Data Foundation Slack: https://slack.lfaidata.foundation/
-- Join the project channel: [#security-and-compliance-work-group](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
+- https://slack.lfaidata.foundation/
+
+then join the project channel:
+
+- [#security-and-compliance-work-group](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
 
 <!-- <table style="border-collapse: collapse; border: none;">
 <tr style="border: none;">
