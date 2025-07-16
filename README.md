@@ -37,11 +37,14 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 
 Please join our Slack for informal communication with work group contributors.
 
-- ![](images/logos/slack-logo-trans-100x100.png) Join the LF AI & Data Foundation Slack: https://slack.lfaidata.foundation/
+<img src="images/logos/slack-logo-40x40.png" style="float: left; margin-right: 1em;" alt="Slack logo">
+<p>Please join our Slack for informal communication with work group contributors.</p>
+<li style="margin-left: 40px;">Join the LF AI & Data Foundation Slack: <a href="https://slack.lfaidata.foundation/">https://slack.lfaidata.foundation/</a></li>
+<li style="margin-left: 40px;">Join the project channel: <a href="https://lfaifoundation.slack.com/archives/C041ZAXCSJ0">#security-and-compliance-work-group</a></li>
 
 <!-- <table style="border-collapse: collapse; border: none;">
 <tr style="border: none;">
-  <td style="border: none; vertical-align: top;"><img src="images/logos/slack-logo-trans-100x100.png" width="100"></td>
+  <td style="border: none; vertical-align: top;"><img src="images/logos/slack-logo-40x40.png" width="100"></td>
   <td style="border: none;"><li>Join the LF AI & Data Foundation Slack: <a href="https://slack.lfaidata.foundation/">https://slack.lfaidata.foundation/</a></li>
   <li>Join the project channel: <a href="https://lfaifoundation.slack.com/archives/C041ZAXCSJ0">#security-and-compliance-work-group</a></li>
   </td>
