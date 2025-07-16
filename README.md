@@ -100,6 +100,7 @@ The work group intends to collaborate with and reference work from other foundat
 
 This section contains additional references to projects and resources that the work group might find useful:
 
+- [OWASP Threat Model Library](https://github.com/OWASP/www-project-threat-model-library) - first, open-sourced, structured, peer-reviewed threat modeling dataset.
 - [OWASP Threat Dragon](https://owasp.org/www-project-threat-dragon/) - a modeling tool used to create threat model diagrams as part of a secure development lifecycle.
 
 ## Code of Conduct
