@@ -21,7 +21,7 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 
 - https://lists.lfaidata.foundation/g/security-and-compliance-work-group
 
-#### Creating accounts
+##### Creating LF accounts
 
 1. Create a Linux Foundation account
 
@@ -32,6 +32,24 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 1. Register for an LF AI & Data Account
     - https://lists.lfaidata.foundation/register
         - *Please use the same email address as your LF account.*
+
+#### Contributor channels
+
+<table style="border-collapse: collapse; border: none;">
+<tr style="border: none;">
+  <td style="border: none; vertical-align: top;"><img src="images/logos/slack-logo-trans.png" width="100"></td>
+  <td style="border: none;"><li>Join the LF AI & Data Foundation Slack: <a href="https://slack.lfaidata.foundation/">https://slack.lfaidata.foundation/</a></li>
+  <li>Join the project channel: <a href="https://lfaifoundation.slack.com/archives/C041ZAXCSJ0">#security-and-compliance-work-group</a></li>
+  </td>
+</tr>
+<tr>
+  <td style="border: none; vertical-align: top;"><img src="images/logos/github-logo.svg" width="100"></td>
+  <td style="border: none;">Join the project’s GitHub: <a href="https://github.com/lfai/security-and-compliance">https://github.com/lfai/security-and-compliance
+  </a></td>
+</tr>
+</table>
+
+---
 
 ## Project structure
 
@@ -50,7 +68,7 @@ A high-level view of the activity areas the work group and its subgroups will fa
 
 ![Planned activities diagram](images/diagrams/work-group-planned-activities-small.png)
 
-### Standards and project collaboration
+#### Standards and project collaboration
 
 The work group intends to collaborate with and reference work from other foundations and organizations including:
 
@@ -72,6 +90,8 @@ The work group intends to collaborate with and reference work from other foundat
 - [NIST](https://www.nist.gov/) and its standards:
     - [Open Security Controls Assessment Language (OSCAL)](https://pages.nist.gov/OSCAL/) - security controls and profiles.s
     - [Secure Software Development Framework (SSDF)](https://csrc.nist.gov/Projects/ssdf) - secure software development practices.
+
+---
 
 ## References
 
