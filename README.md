@@ -33,19 +33,16 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
     - https://lists.lfaidata.foundation/register
         - *Please use the same email address as your LF account.*
 
-#### Contributor channels
+#### Communication channels
+
+Please join our Slack for informal communication with work group contributors.
 
 <table style="border-collapse: collapse; border: none;">
 <tr style="border: none;">
-  <td style="border: none; vertical-align: top;"><img src="images/logos/slack-logo-trans.png" width="100"></td>
+  <td style="border: none; vertical-align: top;"><img src="images/logos/slack-logo-trans-100x100.png" width="100"></td>
   <td style="border: none;"><li>Join the LF AI & Data Foundation Slack: <a href="https://slack.lfaidata.foundation/">https://slack.lfaidata.foundation/</a></li>
   <li>Join the project channel: <a href="https://lfaifoundation.slack.com/archives/C041ZAXCSJ0">#security-and-compliance-work-group</a></li>
   </td>
-</tr>
-<tr>
-  <td style="border: none; vertical-align: top;"><img src="images/logos/github-logo.svg" width="100"></td>
-  <td style="border: none;">Join the project’s GitHub: <a href="https://github.com/lfai/security-and-compliance">https://github.com/lfai/security-and-compliance
-  </a></td>
 </tr>
 </table>
 
