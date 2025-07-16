@@ -33,6 +33,11 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
     - https://lists.lfaidata.foundation/register
         - *Please use the same email address as your LF account.*
 
+#### Agendas, Meeting minutes
+
+<div><img src="images/logos/google-drive-40x36.png" style="width: 20px; margin-right: 10px;" alt="Google drive logo">
+Request access to the project's <span style="color: gray;"><strong>Google drive folder</strong></span> which will be used to agendas, meeting notes, presentations, etc.
+
 #### Communication channels
 
 <div><img src="images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
@@ -44,15 +49,6 @@ Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack
 then join the project channel:
 
 - [#security-and-compliance-work-group](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
-
-<!-- <table style="border-collapse: collapse; border: none;">
-<tr style="border: none;">
-  <td style="border: none; vertical-align: top;"><img src="images/logos/slack-logo-40x40.png" width="100"></td>
-  <td style="border: none;"><li>Join the LF AI & Data Foundation Slack: <a href="https://slack.lfaidata.foundation/">https://slack.lfaidata.foundation/</a></li>
-  <li>Join the project channel: <a href="https://lfaifoundation.slack.com/archives/C041ZAXCSJ0">#security-and-compliance-work-group</a></li>
-  </td>
-</tr>
-</table> -->
 
 ---
 
