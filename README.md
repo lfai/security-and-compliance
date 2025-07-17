@@ -5,7 +5,8 @@ This repository is used to develop and manage the Security and Compliance Work G
 
 ## Mission statement
 
- <div style="background-color: #C8F0FF;"><p style="margin: 8px;">
+ <div style="background-color: #C8F0FF;">
+ <p style="margin: 8px;">
   The LF AI & Data Security and Compliance Work Group is dedicated to formulating interconnected security use cases, threat models, and policies that can be leveraged to create a comprehensive security and compliance strategy for AI-enabled applications throughout their lifecycle. The committee will establish a framework, which references and incorporates existing AI and ML standards and technologies, that enables an automated, self-sustaining cycle where effective governance fosters secure AI development, deployment and operations and AI-driven governance systems that can reduce risk and improve compliance in critical regulated environments.</p>
 </div>
 
@@ -30,6 +31,14 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 1. Register for an LF AI & Data Account
     - https://lists.lfaidata.foundation/register
         - *Please use the same email address as your LF account.*
+
+##### Meeting sign-up
+
+The LF AI & Data Foundation allows for self-registration to meetings via the foundation's Zoom.
+
+- Using the LF AI & Data Community Calendar: [https://zoom-lfx.platform.linuxfoundation.org/meetings/lf-ai-foundation](https://zoom-lfx.platform.linuxfoundation.org/meetings/lf-ai-foundation?view=week)
+
+- Find and click on the meeting that interests you, and click "Register" to sign up.
 
 #### Agendas, Meeting minutes
 
