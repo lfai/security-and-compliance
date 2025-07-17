@@ -50,7 +50,7 @@ Request access to the project's <span style="color: gray;"><strong>Google drive 
 #### Communication channels
 
 <div><img src="images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
-Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack</strong></span> for informal communication with other work group members and others:</p>
+Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack</strong></span> for informal communication with work group members and other registered users:</p>
 </div>
 
 - https://slack.lfaidata.foundation/
