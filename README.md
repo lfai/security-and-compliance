@@ -6,10 +6,13 @@ This repository is used to develop and manage the Security and Compliance Work G
 ## Mission statement
 
 <table style="border-collapse: collapse; border: none;">
-<tr>
-  <td style="border: none; background-color: #C8F0FF;">The LF AI & Data Security and Compliance Work Group is dedicated to formulating interconnected security use cases, threat models, and policies that can be leveraged to create a comprehensive security and compliance strategy for AI-enabled applications throughout their lifecycle. The committee will establish a framework, which references and incorporates existing AI and ML standards and technologies, that enables an automated, self-sustaining cycle where effective governance fosters secure AI development, deployment and operations and AI-driven governance systems that can reduce risk and improve compliance in critical regulated environments.</td>
-</tr>
-</table>
+<!-- <tr>
+  <td style="border: none; background-color: #C8F0FF;"> -->
+ <div style="background-color: #C8F0FF;"><p style="margin: 8px;">
+  The LF AI & Data Security and Compliance Work Group is dedicated to formulating interconnected security use cases, threat models, and policies that can be leveraged to create a comprehensive security and compliance strategy for AI-enabled applications throughout their lifecycle. The committee will establish a framework, which references and incorporates existing AI and ML standards and technologies, that enables an automated, self-sustaining cycle where effective governance fosters secure AI development, deployment and operations and AI-driven governance systems that can reduce risk and improve compliance in critical regulated environments.</p>
+</div>
+<!-- </td></tr>
+</table> -->
 
 ## How to get involved
 
