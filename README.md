@@ -108,13 +108,16 @@ This section contains additional references to projects and resources that the w
 
 - [OWASP Threat Model Library](https://github.com/OWASP/www-project-threat-model-library) - first, open-sourced, structured, peer-reviewed threat modeling dataset.
 - [OWASP Threat Dragon](https://owasp.org/www-project-threat-dragon/) - a modeling tool used to create threat model diagrams as part of a secure development lifecycle.
-- [Common Weakness Enumeration (CWE)]() - a category system for hardware and software weaknesses and vulnerabilities.
-    - *As threat modeling aims to identify and address potential weaknesses, CWE provides a standard for categorization of actual weaknesses. Our WGs should look to assure semantic similarity*
 
 
 ##### Security compliance standards
 
-- [EU Cyber Resilience Act (CRA)](https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act)
+- European Commission - [EU Cybersecurity Policies](https://digital-strategy.ec.europa.eu/en/policies/cybersecurity-policies)
+    - [EU Cyber Resilience Act (CRA)](https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act)
+- Cybersecurity and Infrastructure Security Agency ([CISA](https://www.cisa.gov/))
+    - [MITRE](https://cwe.mitre.org/)
+        - [Common Weakness Enumeration (CWE)](https://en.wikipedia.org/wiki/Common_Weakness_Enumeration) - a category system for hardware and software weaknesses and vulnerabilities.
+        - *As threat modeling aims to identify and address potential weaknesses, CWE provides a standard for categorization of actual weaknesses. Our WGs should look to assure semantic similarity*
 
 
 ## Code of Conduct
