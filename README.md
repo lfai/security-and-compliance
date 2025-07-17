@@ -118,9 +118,3 @@ The work group and its subgroups adhere to the LF AI & Data's Code of Conduct (C
 All repository content is licensed under the [Apache 2.0 license](LICENSE) unless otherwise noted. Including:
 
 - *Displayed [logos](images/logos) are copyrighted and/or  trademarked by their respective owners.*
-
-## Acknowledgments
-
-| Name | GitHub | Company |
-|------|--------|---------|
-| <div style="background-color: skyblue; color: white">Matt Rutkowski<div> | foo |bar |
