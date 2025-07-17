@@ -1,0 +1,8 @@
+# Filesystem
+.DS_Store
+
+# IDEs (e.g., VSCode)
+*.code-workspace
+.vscode/*.log
+
+# Misc
