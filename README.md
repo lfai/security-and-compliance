@@ -14,7 +14,7 @@ This repository is used to develop and manage the Security and Compliance Work G
 
 #### Meetings and mailing lists
 
-The work group will use the shared LF meeting management platform for all calls and formal communications and requires an LF account to participate.
+The work group will use the shared Linux Foundation's (LF) meeting management platform for all calls and formal communications and requires an LF account to participate.
 
 In addition, the LF AI & Data Foundation has a separate account to which will be used by work group members for work group-specific communications and calendaring:
 
