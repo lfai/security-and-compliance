@@ -98,6 +98,12 @@ The work group intends to collaborate with and reference work from other foundat
 
 This section contains additional references to projects and resources that the work group might find useful:
 
+##### Model transparency
+
+- [OpenSSF Model Signing (OMS)]()
+    - Specification: [ossf/model-signing-spec](https://github.com/ossf/model-signing-spec)
+    - Tooling: [sigstore/model-transparency](https://github.com/sigstore/model-transparency)
+
 ##### Threat modeling
 
 - [OWASP Threat Model Library](https://github.com/OWASP/www-project-threat-model-library) - first, open-sourced, structured, peer-reviewed threat modeling dataset.
