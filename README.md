@@ -23,7 +23,7 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 
 ##### Creating LF accounts
 
-1. Create a Linux Foundation account
+1. Create an Linux Foundation account
 
     - https://docs.linuxfoundation.org/lfx/sso/create-an-account
     - Fill out your LF profile in the Individual Dashboard: [openprofile.dev](openprofile.dev)
@@ -36,14 +36,14 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 #### Agendas, Meeting minutes
 
 <div><img src="images/logos/google-drive-40x36.png" style="width: 20px; margin-right: 10px;" alt="Google drive logo">
-Request access to the project's <span style="color: gray;"><strong>Google drive folder</strong></span> which will be used to agendas, meeting notes, presentations, etc.
+Request access to the project's <span style="color: gray;"><strong>Google drive folder</strong></span> which will be used to hold agendas, meeting notes, presentations, etc.
 
 - [Link to Google drive folder](https://drive.google.com/drive/folders/0ABt8Tcg9DXLoUk9PVA)
 
 #### Communication channels
 
 <div><img src="images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
-Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack</strong></span> Slack for informal communication with work group contributors:</p>
+Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack</strong></span> for informal communication with other work group members and others:</p>
 </div>
 
 - https://slack.lfaidata.foundation/
@@ -61,13 +61,13 @@ Initially, the work group will establish two subgroups to better divide and focu
 - Use cases and threat models
 - Compliance and risk management
 
-Work group members are encouraged to join and contribute to these subgroups each of which manages its own bi-weekly meetings.
+Work group members are encouraged to join and contribute to these subgroups each of which hosts its own bi-weekly meetings.
 
 The subgroups will provide updates of its activities as part of the work group's meeting agenda.
 
 #### Planned activities
 
-A high-level view of the activity areas the work group and its subgroups will facilitate:
+A high-level view of the activity areas the work group and its subgroups will explore and develop concrete assets for:
 
 ![Planned activities diagram](images/diagrams/work-group-planned-activities-small.png)
 
