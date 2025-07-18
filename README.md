@@ -35,6 +35,13 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
     - https://lists.lfaidata.foundation/register
         - *Please use the same email address as your LF account.*
 
+#### Meetings and mailing list
+
+Work group meetings will be held bi-weekly
+
+- 10am US Central, 7am US Pacific, 15:00 UTC/GMT
+    - *Series starts on Tuesday, July 29th*
+
 ##### Meeting sign-up
 
 The LF AI & Data Foundation allows for self-registration to meetings via the foundation's Zoom.
@@ -43,12 +50,17 @@ The LF AI & Data Foundation allows for self-registration to meetings via the fou
 
 - Find and click on the meeting that interests you, and click "Register" to sign up.
 
+##### Subscribe to the mailing list
+
+- Email: [security-and-compliance-work-group@lists.lfaidata.foundation](security-and-compliance-work-group@lists.lfaidata.foundation)
+
 #### Agendas, Meeting minutes
 
 <div><img src="images/logos/google-drive-40x36.png" style="width: 20px; margin-right: 10px;" alt="Google drive logo">
 Request access to the project's <span style="color: gray;"><strong>Google drive folder</strong></span> which will be used to hold agendas, meeting notes, presentations, etc.
 
 - [Link to Google drive folder](https://drive.google.com/drive/folders/0ABt8Tcg9DXLoUk9PVA)
+
 
 #### Communication channels
 
