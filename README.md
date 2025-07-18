@@ -118,6 +118,9 @@ This section contains additional references to projects and resources that the w
 
 ##### Threat modeling
 
+- [OWASP AI Exchange](https://owaspai.org/docs/ai_security_overview/) - website with general AI threat matrix, controls and risks.
+    - [AI Security Matrix](https://owaspai.org/docs/ai_security_overview/#ai-security-matrix)
+    - [Controls Overview](https://owaspai.org/docs/ai_security_overview/#controls-overview)
 - [OWASP Threat Model Library](https://github.com/OWASP/www-project-threat-model-library) - first, open-sourced, structured, peer-reviewed threat modeling dataset.
 - [OWASP Threat Dragon](https://owasp.org/www-project-threat-dragon/) - a modeling tool used to create threat model diagrams as part of a secure development lifecycle.
 
