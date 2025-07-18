@@ -52,7 +52,7 @@ The LF AI & Data Foundation allows for self-registration to meetings via the fou
 
 ##### Subscribe to the mailing list
 
-- Email: [security-and-compliance-work-group@lists.lfaidata.foundation](security-and-compliance-work-group@lists.lfaidata.foundation)
+- Email: [security-and-compliance-work-group+subscribe@lists.lfaidata.foundation ](security-and-compliance-work-group+subscribe@lists.lfaidata.foundation )
 
 #### Agendas, Meeting minutes
 
