@@ -1,7 +1,7 @@
 
 # Security and Compliance Work Group
 
-> [! IMPORTANT]
+> [!IMPORTANT]
 > The newly rechristened workgroup will have its first kickoff call Tuesday July 29th @10am US Central, 7am US Pacific, 15:00 UTC/GMT.  Please [register](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd&invite=true) and join us!
 
 
