@@ -28,7 +28,7 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 1. Create an Linux Foundation account
 
     - https://docs.linuxfoundation.org/lfx/sso/create-an-account
-    - Fill out your LF profile in the Individual Dashboard: [openprofile.dev](openprofile.dev)
+    - Fill out your LF profile in the Individual Dashboard: [openprofile.dev](https://openprofile.dev/)
         - *Please “Connect your Github” using an email address associated with your Github account.*
 
 1. Register for an LF AI & Data Account
