@@ -2,7 +2,7 @@
 # Security and Compliance Work Group
 
 > [!IMPORTANT]
-> The newly rechristened workgroup will have its first kickoff call Tuesday July 29th @9am US Central, 7am US Pacific, 14:00 UTC/GMT.  Please [register](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd&invite=true) and join us!
+> The newly rechristened workgroup will have its first kickoff call Tuesday July 29th @9am US Central, 7am US Pacific, 14:00 UTC/GMT.  Please [register](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd) and join us!
 
 
 This repository is used to develop and manage the Security and Compliance Work Group's assets as well as those from its subgroups.  This may include use cases, threat models, profiles, and other artifacts.
