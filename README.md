@@ -129,7 +129,7 @@ This section contains additional references to projects and resources that the w
 
 ##### Model transparency
 
-- [OpenSSF Model Signing (OMS)]()
+- [OpenSSF Model Signing (OMS)](https://openssf.org/projects/model-signing/)
     - Specification: [ossf/model-signing-spec](https://github.com/ossf/model-signing-spec)
     - Tooling: [sigstore/model-transparency](https://github.com/sigstore/model-transparency)
 
