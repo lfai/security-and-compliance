@@ -120,7 +120,6 @@ The work group intends to collaborate with and reference work from other foundat
 - [NIST](https://www.nist.gov/) and its standards:
     - [Open Security Controls Assessment Language (OSCAL)](https://pages.nist.gov/OSCAL/) - security controls and profiles.s
     - [Secure Software Development Framework (SSDF)](https://csrc.nist.gov/Projects/ssdf) - secure software development practices.
-- [Cloud Security Alliance (CSA)](https://cloudsecurityalliance.org/) - ["ISO 42001 Lessons learned"](https://cloudsecurityalliance.org/blog/2025/05/08/iso-42001-lessons-learned-from-auditing-and-implementing-the-framework)
 
 ---
 
@@ -154,6 +153,9 @@ This section contains additional references to projects and resources that the w
         - [Common Weakness Enumeration (CWE)](https://en.wikipedia.org/wiki/Common_Weakness_Enumeration) - a category system for hardware and software weaknesses and vulnerabilities.
         - *As threat modeling aims to identify and address potential weaknesses, CWE provides a standard for categorization of actual weaknesses. Our WGs should look to assure semantic similarity*
 
+##### Risk (Auditing)
+
+- [Cloud Security Alliance (CSA)](https://cloudsecurityalliance.org/) - ["ISO 42001 Lessons learned"](https://cloudsecurityalliance.org/blog/2025/05/08/iso-42001-lessons-learned-from-auditing-and-implementing-the-framework)
 
 ## Code of Conduct
 
