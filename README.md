@@ -113,7 +113,7 @@ The work group intends to collaborate with and reference work from other foundat
 - [Linux Foundation](https://www.linuxfoundation.org/) and its projects including:
   - [Software Package Data Exchange (SPDX)](https://spdx.dev/) - Bill-of-Materials (BOM) standard and its area of interest including:
     - *[SPDX AI](https://spdx.dev/learn/areas-of-interest/ai/)*
-    - SPDX Data
+    - [SPDX Data](https://spdx.dev/learn/areas-of-interest/dataset/)
 - [OpenSSF](https://openssf.org/) and its work groups and guidelines:
     - [AI/ML Security work group](https://openssf.org/technical-initiatives/ai-ml-security/)
     - [Supply-chain Levels for Software Artifacts (SLSA)](https://openssf.org/projects/slsa/) - specification and its ability to measure [Secure Software Development Framework (SSDF)](https://csrc.nist.gov/Projects/ssdf) compliance.
