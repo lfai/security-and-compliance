@@ -43,7 +43,7 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 
 Work group meetings will be held bi-weekly
 
-- 10am US Central, 7am US Pacific, 15:00 UTC/GMT
+- 9am US Central, 7am US Pacific, 14:00 UTC/GMT
     - *Series starts on Tuesday, July 29th*
 
 ##### Meeting sign-up
