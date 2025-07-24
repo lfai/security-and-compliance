@@ -120,6 +120,7 @@ The work group intends to collaborate with and reference work from other foundat
 - [NIST](https://www.nist.gov/) and its standards:
     - [Open Security Controls Assessment Language (OSCAL)](https://pages.nist.gov/OSCAL/) - security controls and profiles.s
     - [Secure Software Development Framework (SSDF)](https://csrc.nist.gov/Projects/ssdf) - secure software development practices.
+- [Cloud Security Alliance (CSA)](https://cloudsecurityalliance.org/) - ["ISO 42001 Lessons learned"](https://cloudsecurityalliance.org/blog/2025/05/08/iso-42001-lessons-learned-from-auditing-and-implementing-the-framework)
 
 ---
 
