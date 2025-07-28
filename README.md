@@ -84,7 +84,7 @@ then join the project channel:
 
 Initially, the work group will establish two subgroups to better divide and focus work against specific subject areas each with their own home page:
 
-- [Use cases and threat models](subgroup/use-cases-and-threat-models/README.md)
+- [Use cases and threat models](subgroups/use-cases-and-threat-models/README.md)
 - [Compliance and risk management](subgroups/risk-and-compliance/README.md)
 
 Work group members are encouraged to join and contribute to these subgroups each of which hosts its own bi-weekly meetings.
