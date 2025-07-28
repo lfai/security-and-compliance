@@ -82,10 +82,10 @@ then join the project channel:
 
 ## Project structure
 
-Initially, the work group will establish two subgroups to better divide and focus work against specific subject areas.
+Initially, the work group will establish two subgroups to better divide and focus work against specific subject areas each with their own home page:
 
-- Use cases and threat models
-- Compliance and risk management
+- [Use cases and threat models](subgroup/use-cases-and-threat-models)
+- [Compliance and risk management](subgroup/risk-and-compliance)
 
 Work group members are encouraged to join and contribute to these subgroups each of which hosts its own bi-weekly meetings.
 
