@@ -2,8 +2,8 @@
 # Security and Compliance Work Group
 
 > [!IMPORTANT]
-> The newly rechristened workgroup will have its first kickoff call Tuesday July 29th @9am US Central, 7am US Pacific, 14:00 UTC/GMT.  Please [request an invite](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd) from the calendar entry and join us!
-> - [Zoom for "kickoff" call](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)
+> The Security & Compliance Work Group meets, bi-weekly on Tuesdays @9am US Central, 7am US Pacific, 14:00 UTC/GMT using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)  and join us!
+
 
 
 This repository is used to develop and manage the Security and Compliance Work Group's assets as well as those from its subgroups.  This may include use cases, threat models, profiles, and other artifacts.
@@ -157,6 +157,8 @@ This section contains additional references to projects and resources that the w
 ##### Risk (Auditing)
 
 - [Cloud Security Alliance (CSA)](https://cloudsecurityalliance.org/) - ["ISO 42001 Lessons learned"](https://cloudsecurityalliance.org/blog/2025/05/08/iso-42001-lessons-learned-from-auditing-and-implementing-the-framework)
+- IBM [Risk Atlas Nexus](https://github.com/IBM/risk-atlas-nexus/) project on GitHub.
+    - and hosted on Huggingface: [Risk Atlas Nexus ](https://huggingface.co/spaces/ibm/risk-atlas-nexus)
 
 ## Code of Conduct
 
