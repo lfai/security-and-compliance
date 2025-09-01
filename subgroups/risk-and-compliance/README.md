@@ -94,7 +94,7 @@ Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack
 
 then join the R&C subproject channel:
 
-- [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
+- [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C09DTG6A6RE)
 
 ---
 
