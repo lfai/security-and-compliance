@@ -11,6 +11,7 @@ This repository is used to develop and manage the Risk and Compliance SubGroup's
 ### Leadership
 
 - R&C Chairs: 
+
 Anca Sailer (IBM)
     - ancas@us.ibm.com
     - LFAI Slack: @Anca Sailer
