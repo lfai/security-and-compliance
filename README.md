@@ -163,6 +163,11 @@ This section contains additional references to projects and resources that the w
 - [Cloud Security Alliance (CSA)]()
     - *["Agentic AI Threat Modeling Framework: MAESTRO"](https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro#) - overview of known threat model frameworks and their pros/cons.*
 
+##### Compliance projects
+
+- CNCF [OSCAL Compass](https://github.com/oscal-compass) - a set of tools that enable the creation, validation, and governance of documentation artifacts for compliance needs.
+- OpenSSF [Gemara](https://github.com/ossf/gemara) - a logical model to describe the categories of compliance activities, how they interact, and the schemas to enable automated interoperability between them.
+
 
 ##### Security compliance standards
 
