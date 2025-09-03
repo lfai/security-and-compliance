@@ -10,7 +10,7 @@ This repository is used to develop and manage the Security and Compliance Work G
   The LF AI & Data Security and Compliance Work Group is dedicated to formulating interconnected security use cases, threat models, and policies that can be leveraged to create a comprehensive security and compliance strategy for AI-enabled applications throughout their lifecycle. The committee will establish a framework, which references and incorporates existing, relevant projects, standards and technologies, that enables an automated, self-sustaining cycle where effective governance fosters secure AI development, deployment and operations and AI-driven governance systems that can reduce risk and improve compliance in critical regulated environments.</p>
 </div>
 
-#### Join us!
+#### Meetings
 
 > [!IMPORTANT]
 > The *Security & Compliance Work Group* meets, bi-weekly on Tuesdays @9am US Central, 7am US Pacific, 14:00 UTC/GMT using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)  and join us!
@@ -56,7 +56,7 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 Work group meetings will be held bi-weekly
 
 - 9am US Central, 7am US Pacific, 14:00 UTC/GMT
-    - *Series starts on Tuesday, July 29th*
+  - *The meeting day/time will be revisited via member poll for 2026.*
 
 ##### Meeting sign-up
 
