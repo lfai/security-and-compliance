@@ -11,6 +11,7 @@ This repository is used to develop and manage the Risk and Compliance SubGroup's
 ### Leadership
 
 - R&C Chairs: 
+
 Anca Sailer (IBM)
     - ancas@us.ibm.com
     - LFAI Slack: @Anca Sailer
@@ -94,7 +95,7 @@ Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack
 
 then join the R&C subproject channel:
 
-- [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
+- [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C09DTG6A6RE)
 
 ---
 
