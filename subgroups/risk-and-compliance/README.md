@@ -4,13 +4,15 @@
 
 > [!IMPORTANT]
 > The Risk & Compliance (R&C) SubGroup meets, bi-weekly on Tuesdays @10am US ET, 7am US Pacific, 14:00 UTC/GMT using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/92920325389?password=c20c64b0-eec4-4b87-bb45-1b14ca247654)  and join us!
+>   - Slack: [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C09DTG6A6RE)
+>   - Meeting Agendas/Notes: [Google Doc](https://docs.google.com/document/d/1ZwTE084sDxHIk-BfCVSkpofbAz0BuWsWUdYnYeSgl6w/edit?tab=t.0#heading=h.5ac6du8f8k7t)
 
 
-This repository is used to develop and manage the Risk and Compliance SubGroup's assets. This may include use cases, compliance profiles and other artifacts typically in [NIST OSCAL format](https://pages.nist.gov/OSCAL-Reference/models/), risk taxonomies, and more. 
+This repository is used to develop and manage the Risk and Compliance SubGroup's assets. This may include use cases, compliance profiles and other artifacts typically in [NIST OSCAL format](https://pages.nist.gov/OSCAL-Reference/models/), risk taxonomies, and more.
 
 ### Leadership
 
-- R&C Chairs: 
+- R&C Chairs:
 Anca Sailer (IBM)
     - ancas@us.ibm.com
     - LFAI Slack: @Anca Sailer
