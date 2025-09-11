@@ -39,24 +39,9 @@ Hubbert Smith (i4ops)
 
 You will need to assure you have accounts created in both the Linux Foundation (LF) and the LF AI & Data Foundation (LFAI):
 
-The work group will use the LF meeting management platform for all calls and formal communications and requires an LF account to participate.
+Follow the instructions provided in the top-level, work group README here:
+- [Creating LF accounts](https://github.com/lfai/security-and-compliance?tab=readme-ov-file#creating-lf-accounts)
 
-In addition, the LF AI & Data Foundation has a separate account to which will be used by work group members for work group-specific communications and calendaring:
-
-- https://lists.lfaidata.foundation/g/security-and-compliance-work-group
-
-
-##### Creating LF accounts
-
-1. Create an Linux Foundation account
-
-    - https://docs.linuxfoundation.org/lfx/sso/create-an-account
-    - Fill out your LF profile in the Individual Dashboard: [openprofile.dev](https://openprofile.dev/)
-        - *Please “Connect your Github” using an email address associated with your Github account.*
-
-1. Register for an LF AI & Data Account
-    - https://lists.lfaidata.foundation/register
-        - *Please use the same email address as your LF account.*
 
 #### Meetings and mailing list
 
@@ -80,7 +65,7 @@ The LF AI & Data Foundation allows for self-registration to meetings via the fou
 
 #### Agendas, Meeting minutes
 
-<div><img src="images/logos/google-drive-40x36.png" style="width: 20px; margin-right: 10px;" alt="Google drive logo">
+<div><img src="../../images/logos/google-drive-40x36.png" style="width: 20px; margin-right: 10px;" alt="Google drive logo">
 Request access to the project's <span style="color: gray;"><strong>Google drive folder</strong></span> which will be used to hold agendas, meeting notes, presentations, etc.
 
 - [Link to R&C Google doc](https://docs.google.com/document/d/1Y5EBzZPD0PjsCOsVwu4O1SiL0YUySzxwTfJmaVu44BA/edit?tab=t.0)
@@ -88,7 +73,7 @@ Request access to the project's <span style="color: gray;"><strong>Google drive 
 
 #### Communication channels
 
-<div><img src="images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
+<div><img src="../../images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
 Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack</strong></span> for informal communication with work group members and other registered users:</p>
 </div>
 
@@ -100,15 +85,8 @@ then join the R&C subproject channel:
 
 ---
 
-
 ## Code of Conduct
 
 The subgroup adheres to the LF AI & Data's Code of Conduct (CoC) as published here:
 
 - https://github.com/lfai/foundation/blob/main/codeofconduct.md
-
-## License
-
-All repository content is licensed under the [Apache 2.0 license](LICENSE) unless otherwise noted. Including:
-
-- *Displayed [logos](images/logos) are copyrighted and/or  trademarked by their respective owners.*
