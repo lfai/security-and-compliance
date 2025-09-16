@@ -12,7 +12,8 @@ This repository is used to develop and manage the Risk and Compliance SubGroup's
 
 ### Leadership
 
-- R&C Chairs:
+- R&C Chairs: 
+
 Anca Sailer (IBM)
     - ancas@us.ibm.com
     - LFAI Slack: @Anca Sailer
@@ -24,7 +25,6 @@ Deep Patel (Cisco)
 Hubbert Smith (i4ops)
     - hubbert@i4ops.com
     - LFAI Slack: @Hubbert Smith
-
 
 ### Mission statement
 
@@ -70,7 +70,6 @@ Request access to the project's <span style="color: gray;"><strong>Google drive 
 
 - [Link to R&C Google doc](https://docs.google.com/document/d/1Y5EBzZPD0PjsCOsVwu4O1SiL0YUySzxwTfJmaVu44BA/edit?tab=t.0)
 
-
 #### Communication channels
 
 <div><img src="../../images/logos/slack-logo-40x40.png" style="width: 20px; margin-right: 10px;" alt="Slack logo">
@@ -81,7 +80,7 @@ Please join the <span style="color: gray;"><strong>LF AI & Data Foundation Slack
 
 then join the R&C subproject channel:
 
-- [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
+- [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C09DTG6A6RE)
 
 ---
 
