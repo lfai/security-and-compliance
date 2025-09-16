@@ -1,11 +1,6 @@
 
 # Security and Compliance Work Group
 
-> [!IMPORTANT]
-> The Security & Compliance Work Group meets, bi-weekly on Tuesdays @9am US Central, 7am US Pacific, 14:00 UTC/GMT using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)  and join us!
-
-
-
 This repository is used to develop and manage the Security and Compliance Work Group's assets as well as those from its subgroups.  This may include use cases, threat models, profiles, and other artifacts.
 
 ## Mission statement
@@ -14,6 +9,22 @@ This repository is used to develop and manage the Security and Compliance Work G
  <p style="margin: 8px;">
   The LF AI & Data Security and Compliance Work Group is dedicated to formulating interconnected security use cases, threat models, and policies that can be leveraged to create a comprehensive security and compliance strategy for AI-enabled applications throughout their lifecycle. The committee will establish a framework, which references and incorporates existing, relevant projects, standards and technologies, that enables an automated, self-sustaining cycle where effective governance fosters secure AI development, deployment and operations and AI-driven governance systems that can reduce risk and improve compliance in critical regulated environments.</p>
 </div>
+
+#### Meetings
+
+> [!IMPORTANT]
+> The *Security & Compliance Work Group* meets, bi-weekly on Tuesdays @9am US Central, 7am US Pacific, 14:00 UTC/GMT using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)  and join us!
+
+The work group has 2 subgroups which have separate meetings you can sign up for:
+
+> - **Use Cases and Threat Modeling** subgroup:
+>   - Weekly meetings, Tuesdays @12pm US Eastern, 16:00 GMT
+>     - [LF AI & Data calendar entry]( https://zoom-lfx.platform.linuxfoundation.org/meeting/93191199454?password=83a7bf08-2b26-44bc-aefd-8ad68b29c733)
+>   - Slack: [#security-use-cases-and-threat-modeling](https://lfaifoundation.slack.com/archives/C09DHAQ399P)
+> - **Risk and Compliance** subgroup:
+>   - Bi-weekly meetings, Tuesdays @10am US Eastern, 14:00 GMT
+>     -  [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/92920325389?password=c20c64b0-eec4-4b87-bb45-1b14ca247654)
+>   - Slack: [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
 
 ## How to get involved
 
@@ -45,7 +56,7 @@ In addition, the LF AI & Data Foundation has a separate account to which will be
 Work group meetings will be held bi-weekly
 
 - 9am US Central, 7am US Pacific, 14:00 UTC/GMT
-    - *Series starts on Tuesday, July 29th*
+  - *The meeting day/time will be revisited via member poll for 2026.*
 
 ##### Meeting sign-up
 
@@ -128,6 +139,14 @@ The work group intends to collaborate with and reference work from other foundat
 
 This section contains additional references to projects and resources that the work group might find useful:
 
+#### LF AI & Data
+
+- [LF AI & Data public calendar](https://zoom-lfx.platform.linuxfoundation.org/meetings/lf-ai-foundation) - Zoom calendar for all meetings
+- Projects:
+    - [Data Prep. Kit (DPK)](https://github.com/data-prep-kit/data-prep-kit) - accelerates unstructured data preparation for LLM app developers
+    - [Docling](https://github.com/docling-project/docling) - simplifies document processing, parsing diverse formats including advanced PDF understanding
+    - [BeeAI](https://github.com/i-am-bee) - empowers developers to discover, run, and compose AI agents from any framework
+
 ##### Model transparency
 
 - [OpenSSF Model Signing (OMS)](https://openssf.org/projects/model-signing/)
@@ -143,6 +162,11 @@ This section contains additional references to projects and resources that the w
 - [OWASP Threat Dragon](https://owasp.org/www-project-threat-dragon/) - a modeling tool used to create threat model diagrams as part of a secure development lifecycle.
 - [Cloud Security Alliance (CSA)]()
     - *["Agentic AI Threat Modeling Framework: MAESTRO"](https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro#) - overview of known threat model frameworks and their pros/cons.*
+
+##### Compliance projects
+
+- CNCF [OSCAL Compass](https://github.com/oscal-compass) - a set of tools that enable the creation, validation, and governance of documentation artifacts for compliance needs.
+- OpenSSF [Gemara](https://github.com/ossf/gemara) - a logical model to describe the categories of compliance activities, how they interact, and the schemas to enable automated interoperability between them.
 
 
 ##### Security compliance standards
