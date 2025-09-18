@@ -14,7 +14,7 @@
   - Matt Colman (IBM)
     - mtcolman@uk.ibm.com
     - Slack: @Matt Colman
-  - Petra Vukmirovoc ([Numan](https://www.numan.com/))
+  - Petra Vukmirovoc ([Numan])(https://www.numan.com/))
     - Slack: @petra vukmirovic
 
 ### Mission
