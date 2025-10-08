@@ -1,46 +1,63 @@
----
-config:
-  theme: base
-  layout: fixed
----
 flowchart TD
- subgraph s3["<b>Engineer Activities</b>"]
+
+    %% Style section
+    style s5 fill:#e8f1ff,stroke:#0077cc,stroke-width:2px,rx:10,ry:10
+    style n21 stroke:#424242
+    style n31 stroke:#424242
+
+    subgraph s3["<b>Engineer Activities</b>"]
         n21(["<b>AI Engineer</b>"])
         n22(["Data Processing"])
-        n23(["Client Data"])
+        n23(["Database"])
         n24(["Embeddings"])
         n25(["Vector Database"])
-  end
- subgraph s4["<b>User Activities</b>"]
+    end
+
+    subgraph s4["<b>User Activities</b>"]
         n26(["Authentication and Authorisation"])
         n31(["<b>User<b></b></b>"])
-        n27(["GenAI App"])
         n34["Output Guard"]
         n33["Input Guard"]
-  end
- subgraph s1["<b>Client Location</b>"]
+        n37["Input Guard"]
+
+        subgraph s5["GenAI App"]
+            n27(["GenAI App"])
+            n35["Retriever"]
+        end
+    end
+
+    subgraph s1["<b>Client Location</b>"]
         s3
         s4
-  end
- subgraph s2["<b>Cloud (SaaS)/On-Prem</b>"]
-        n32["LLM"]
-  end
+    end
+
+    subgraph s2["<b>Cloud (SaaS)/On-Prem</b>"]
+        n32["Generative LLM"]
+    end
+
+    subgraph s6["<b>Cloud (SaaS)/On-Prem</b>"]
+        n36["Embedding Model"]
+    end
+
     n21 -- Ingest/Prepare --> n22
     n22 -- Generated Embeddings --> n24
     n23 -- Ingest/Prepare --> n22
     n24 -- Save Embeddings --> n25
     n25 -. Check authz .-> n26
-    n27 -- "2 - Search for relevant information for query" --> n25
-    n27 -. Check authz .-> n26
-    n27 -- "3 - Raw query + prompt + enhanced content" --> n33
+    n27 -- "6 - Search for relevant information for query" --> n25
+    n25 -- "7 - Return retrieved docs" --> n27
+    n27 -. "5 - Check authz" .-> n26
+    n27 -- "8 - Raw query + prompt + enhanced content" --> n33
+    n32 -- "10 - Raw Response" --> n34
+    n34 -- "11 - Moderated Response" --> n27
     n31 -- "1 - Initial Query" --> n27
     n31 -. Authenticates .-> n26
-    n32 -- "5 - Raw Response" --> n34
-    n34 -- "6 - Moderated Response" --> n27
-    n27 -- "7 - Final Response" --> n31
-    n33 -- "4 - Moderated query + prompt + enhanced content" --> s2
-    n21@{ icon: "fa:circle-user", pos: "b", h: 48}
-    n31@{ icon: "fa:circle-user", pos: "b", h: 48}
-    n32@{ shape: rounded}
-    style n21 stroke:#424242
-    style n31 fill:transparent,stroke:#424242
+    n27 -- "12 - Final Response" --> n31
+    n33 -- "9 - Moderated query + prompt + enhanced content" --> n32
+    n27 -- "2 - invoke retriever" --> n35
+    n35 -- "3 - embed query (raw)" --> n37
+    n37 -- "3 - embed query (moderated)" --> n36
+    n36 -- "4 - embedded query" --> n35
+    
+    n21@{ shape: "circle", label: "AI\nEngineer", pos: "b", h: 48}
+    n31@{ shape: "circle", label: "User", pos: "b", h: 48}
