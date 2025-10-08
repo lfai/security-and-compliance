@@ -19,8 +19,9 @@
 
 ### Mission
 
-TBA
+To produce interoperable AI security and compliance standards through its lifecycle-wide use cases that with corresponding controls and risk mitigation measures informed by a library of real world threat models, make them directly consumable by automated security, compliance, and governance workflows.
 
 ### Goals
 
-TBA
+1. Identify and publish at least 3 pilot use cases + threat models in OWASP Threat Model Library
+2. Align on the use case - threat model (threats, controls, risks) - standard workflow
