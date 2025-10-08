@@ -1,35 +1,42 @@
 flowchart TD
     %% Users
-    n2([Developer])
     n15([Reviewer])
 
-    %% Auth
-    subgraph 05["Authn/Authz"]
-        n11["Authn"]
-        n12["Authz"]
-    end
+    %% Scope
+    subgraph 08["Scope"]
 
-    %% Workstation
-    subgraph 02["Workstation"]
-        n3["Local codebase clone"]
-        n4["IDE"]
-        n5["Assistant Plugin"]
-    end
+        %% User
+        n2([Developer])
 
-    %% Agent Tools (e.g.: https://www.qodo.ai/mcp-plugins/)
-    subgraph 06["Agent Tools"]
-        n17["Extension(s) / MCP Tool(s)"]
-    end
+        %% Auth
+        subgraph 05["Authn/Authz"]
+            n11["Authn"]
+            n12["Authz"]
+        end
 
-    %% Services
-    subgraph 07["Service"]
-        n18["Service(s) e.g., Jira, GitHub"]
-    end
+        %% Workstation
+        subgraph 02["Workstation"]
+            n3["Local codebase clone"]
+            n4["IDE"]
+            n5["Assistant Plugin"]
+        end
 
-    %% Cloud Assistant
-    subgraph 04["Cloud Service (Assistant)"]
-        n6["Assistant Backend"]
-        n7["Assistant LLM"]
+        %% Agent Tools (e.g.: https://www.qodo.ai/mcp-plugins/)
+        subgraph 06["Agent Tools"]
+            n17["Extension(s) / MCP Tool(s)"]
+        end
+
+        %% Services
+        subgraph 07["Service"]
+            n18["Service(s) e.g., Jira, GitHub"]
+        end
+
+        %% Cloud Assistant
+        subgraph 04["Cloud Service (Assistant)"]
+            n6["Assistant Backend"]
+            n7["Assistant LLM"]
+        end
+
     end
 
     %% Remote / SCM
@@ -88,3 +95,4 @@ flowchart TD
     %% SCM -> Authn/Authz
     n14 -.->|"authn check"| n11
     n14 -.->|"authorization enforcement"| n12
+	style 08 color:#000000,fill:#C1FF72
