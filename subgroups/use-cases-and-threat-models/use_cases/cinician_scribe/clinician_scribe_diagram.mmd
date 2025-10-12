@@ -1,0 +1,102 @@
+---
+config:
+  layout: dagre
+---
+flowchart TD
+  subgraph Data["📂 Data Collection"]
+      D1["Clinical Audio Dataset<br>Dataset Card"]
+      D2["Clinical Text Corpora<br>Dataset Card"]
+  end
+  subgraph Models["🧠 Model Development"]
+      M1["Speech-to-Text Model<br>Model Card"]
+      M2["Structured Note Model<br>Model Card"]
+      M3["Safety Classifier Model<br>Model Card"]
+  end
+  subgraph Agents["🤖 Agent Layer"]
+      A1["Safety Agent<br>Agent Card"]
+      A2["Compliance Agent<br>Agent Card"]
+      A3["Workflow Agent<br>Agent Card"]
+      A4["Human Oversight Agent<br>Agent Card"]
+  end
+  subgraph TrainingFeedback["🧪 Training Feedback"]
+      TF1["Clinician Feedback Review"]
+  end
+  subgraph Engineer["🛠️ Engineer Flow"]
+      direction TB
+      Data
+      Models
+      Agents
+      TrainingFeedback
+  end
+  subgraph User["🩺 Clinician (User) Flow"]
+      U1["Start Notetaking Session"]
+      U2["Upload/Dictate/Type Note"]
+      U3["Automatic Speech-to-Text"]
+      U4["Auto Structured Note"]
+      U5["Safety/Compliance Check"]
+      U6["User Review & Edit"]
+      U7["Save to EHR"]
+      U8{"Consent to Feedback?"}
+      U9["De-identified Feedback"]
+  end
+  subgraph Deployment["🚀 Deployment & Integration"]
+      UI["Review Interface"]
+      EHR["EHR Integration"]
+  end
+
+    %% Engineer flow internal
+    D1 --> M1
+    D2 --> M2
+    M1 --> M2
+    M2 --> A1
+    M3 --> A1
+    A1 --> A2
+    A2 --> UI
+    A3 --> M1 & M2 & UI
+    UI --> A4
+    A4 --> EHR
+    TF1 -- Curated Cases/Feedback --> D2
+    TF1 -- Feedback on Model Output --> M2
+
+    %% User flow path
+    U1 --> U2
+    U2 --> U3
+    U3 --> U4
+    U4 --> U5
+    U5 --> U6
+    U6 --> U7 & UI
+    U7 --> EHR & U8
+
+    %% Mapping User flow to system
+    U3 -- Uses --> M1
+    U4 -- Uses --> M2
+    U5 -- Uses --> A1 & A2
+    U6 -- Uses --> UI
+    U7 -- Uses --> EHR
+
+    %% Feedback Flow to Training
+    U8 -- Yes --> U9
+    U9 -- "Sends Feedback" --> TF1
+
+    %% === COLORS (palette applied) ===
+    style D1 fill:#80cbc4,stroke:#00695c,stroke-width:2px,color:#000
+    style D2 fill:#80cbc4,stroke:#00695c,stroke-width:2px,color:#000
+    style M1 fill:#ef9a9a,stroke:#b71c1c,stroke-width:2px,color:#000
+    style M2 fill:#ef9a9a,stroke:#b71c1c,stroke-width:2px,color:#000
+    style M3 fill:#ef9a9a,stroke:#b71c1c,stroke-width:2px,color:#000
+    style A1 fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000
+    style A2 fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000
+    style A3 fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000
+    style A4 fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000
+    style UI fill:#b39ddb,stroke:#4527a0,stroke-width:2px,color:#000
+    style EHR fill:#b39ddb,stroke:#4527a0,stroke-width:2px,color:#000
+    style U1 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style U2 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style U3 fill:#ffe082,stroke:#fbc02d,stroke-width:2px,color:#000
+    style U4 fill:#ffe082,stroke:#fbc02d,stroke-width:2px,color:#000
+    style U5 fill:#ffe082,stroke:#0d47a1,stroke-width:2px,color:#000
+    style U6 fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:#000
+    style U7 fill:#fff176,stroke:#fbc02d,stroke-width:2px,color:#000
+    style U8 fill:#f5f5f5,stroke:#424242,stroke-width:2px,color:#000
+    style U9 fill:#f5f5f5,stroke:#424242,stroke-width:2px,color:#000
+    style TF1 fill:#b3e5fc,stroke:#01579b,stroke-width:2px,color:#000
