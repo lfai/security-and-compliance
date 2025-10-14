@@ -24,6 +24,18 @@ The tables below detail the controls and assets shown on the code generator data
 | C17   | Role-Based Access Control (RBAC  | Limits access per user role                                 | Cloud Service: Assistant LLM                     |
 | C18   | Data-at-Rest Encryption          | All stored data is encrypted using strong cryptography      | Workstation: Developer environment, Local codebase clone, IDE, Assistant Plugin; Agent Tools; Service; Cloud Service: Assistant Backend & LLM |
 
+### Universal Controls
+
+| ID    | Control Name                       | Description                                                                 | Located In                                 |
+|-------|------------------------------------|-----------------------------------------------------------------------------|--------------------------------------------|
+| C19   | Logging & Auditing                 | Maintain detailed logs for all actions and access events, enabling traceability and detection | Scope (all components)   |
+| C20   | Monitoring & Alerts                | Continuous monitoring for abnormal activity, with alerts for potential security incidents | Scope (all components)       |
+| C21   | Backup & Recovery                  | Ensure regular backups and tested recovery procedures for all critical assets | Scope (all components)                   |
+| C22   | Access Control / RBAC              | Enforce principle of least privilege for all users, services, and components | Scope (all components)                    |
+| C23   | Secure Configuration               | Standardize and harden configurations for all components to reduce attack surface | Scope (all components)               |
+| C24   | Anti-Malware / Endpoint Protection | Deploy malware/endpoint protections for all local devices and service hosts | Scope (all components)                     |
+| C25   | Secret Management                  | Centralized and secure storage for credentials, API keys, and other sensitive secrets | Scope (all components)           |
+| C26   | Continuous Security Testing        | Automated security scanning (SAST/DAST/IAST) for code, services, and infrastructure | Scope (all components)             |
 
 ## Assets
 
