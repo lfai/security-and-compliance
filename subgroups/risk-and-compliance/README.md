@@ -84,6 +84,12 @@ then join the R&C subproject channel:
 
 ---
 
+### Initiatives
+
+1. [Best Practices and Benchmarks for AI](./Initiative-BestPracticesBenchmarksForAI.md)
+
+---
+
 ## Code of Conduct
 
 The subgroup adheres to the LF AI & Data's Code of Conduct (CoC) as published here:
