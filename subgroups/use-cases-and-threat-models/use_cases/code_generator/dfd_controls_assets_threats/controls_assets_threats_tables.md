@@ -1,5 +1,25 @@
-# Controls, Assets, and Threats for Code Generator Assistant
-The tables below detail the controls, assets, and threats shown on the code generator data flow diagram (dfd).
+# Assets, Controls, and Threats for Code Generator Assistant
+The tables below detail the assets, controls, and threats shown on the code generator data flow diagram (dfd).
+
+## Assets
+
+| ID    | Asset Name                  | Description                                   | Located In                         |
+|-------|-----------------------------|-----------------------------------------------|------------------------------------|
+| A01   | Developer Identity          | Credentials (e.g., SSH keys, tokens)          | Workstation: Developer environment |
+| A02   | Personal Workspace Data     | Local temp files and environment              | Workstation: Developer environment |
+| A03   | Authn Service Config        | Authentication settings and secrets           | Authn                              |
+| A04   | User Session Tokens         | Tokens allowing access                        | Authz                              |
+| A05   | Local Codebase Clone        | Developer working copy                        | Workstation: Local codebase clone  |
+| A06   | IDE Context Data            | In-memory project metadata                    | Workstation: IDE                   |
+| A07   | Assistant Plugin Data       | User commands, snippets, suggestions          | Workstation: Assistant Plugin      |
+| A08   | Agent Tool Configs          | Tool/extension configuration and credentials  | Agent Tools                        |
+| A09   | Tool Execution Results      | Local execution results and metadata          | Agent Tools                        |
+| A10   | Service Data / Projects     | Stored project or ticket information          | Service                            |
+| A11   | Service Logs / Metadata     | Activity or audit information                 | Service                            |
+| A12   | Assistant Backend Data      | Backend request context or session info       | Cloud Service: Assistant Backend   |
+| A13   | LLM Model Data              | Prompt context, temporary memory              | Cloud Service: Assistant LLM       |
+| A14   | LLM Output / Suggestions    | Generated suggestions or responses            | Cloud Service: Assistant LLM       |
+
 
 ## Controls
 
@@ -36,25 +56,6 @@ The tables below detail the controls, assets, and threats shown on the code gene
 | C24   | Anti-Malware / Endpoint Protection | Deploy malware/endpoint protections for all local devices and service hosts | Scope (all components)                     |
 | C25   | Secret Management                  | Centralized and secure storage for credentials, API keys, and other sensitive secrets | Scope (all components)           |
 | C26   | Continuous Security Testing        | Automated security scanning (SAST/DAST/IAST) for code, services, and infrastructure | Scope (all components)             |
-
-## Assets
-
-| ID    | Asset Name                  | Description                                   | Located In                         |
-|-------|-----------------------------|-----------------------------------------------|------------------------------------|
-| A01   | Developer Identity          | Credentials (e.g., SSH keys, tokens)          | Workstation: Developer environment |
-| A02   | Personal Workspace Data     | Local temp files and environment              | Workstation: Developer environment |
-| A03   | Authn Service Config        | Authentication settings and secrets           | Authn                              |
-| A04   | User Session Tokens         | Tokens allowing access                        | Authz                              |
-| A05   | Local Codebase Clone        | Developer working copy                        | Workstation: Local codebase clone  |
-| A06   | IDE Context Data            | In-memory project metadata                    | Workstation: IDE                   |
-| A07   | Assistant Plugin Data       | User commands, snippets, suggestions          | Workstation: Assistant Plugin      |
-| A08   | Agent Tool Configs          | Tool/extension configuration and credentials  | Agent Tools                        |
-| A09   | Tool Execution Results      | Local execution results and metadata          | Agent Tools                        |
-| A10   | Service Data / Projects     | Stored project or ticket information          | Service                            |
-| A11   | Service Logs / Metadata     | Activity or audit information                 | Service                            |
-| A12   | Assistant Backend Data      | Backend request context or session info       | Cloud Service: Assistant Backend   |
-| A13   | LLM Model Data              | Prompt context, temporary memory              | Cloud Service: Assistant LLM       |
-| A14   | LLM Output / Suggestions    | Generated suggestions or responses            | Cloud Service: Assistant LLM       |
 
 ## Threats
 
