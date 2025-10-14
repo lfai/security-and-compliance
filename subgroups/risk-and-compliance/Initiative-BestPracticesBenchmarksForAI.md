@@ -25,7 +25,7 @@ Initiative Leads:
 - Thalia Hooker - LFAI Slack: @Thalia Hooker
 
 Contributors:
-- TO ADD
+- TO BE ADDED
 
 ## Working Documents
 
