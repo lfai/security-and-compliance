@@ -71,6 +71,10 @@ Elevation of privilege |	Threat action intending to gain privileged access to re
 
 **Source:** [STRIDE Threat List (OWASP)](https://owasp.org/www-community/Threat_Modeling_Process#stride)
 
+Likely threat manifestation:
+<img width="1630" height="579" alt="image" src="https://github.com/user-attachments/assets/fe6c8799-e88a-477e-a68f-fd2da64165fc" />
+
+
 ### Threat Table
 
 | ID  | Threat (brief)                                                           | Threat Statement                                                                                                   | STRIDE | Category      | Standards / mappings (OWASP / GenAI / ATLAS) | Likely CWE(s) | Component(s) | IBM AI Risk Atlas Mapping |
