@@ -1,0 +1,202 @@
+%%{init: {'themeVariables': {'fontSize': '13px','edgeLabelBackground':'#ffffff'}}}%%
+flowchart TD
+    %% === Classes ===
+    classDef control fill:#b3ffb3,stroke:#006600,color:#000,stroke-width:1px;
+    classDef asset fill:#ffb3b3,stroke:#660000,color:#000,stroke-width:1px;
+    classDef threat fill:#cce5ff,stroke:#3366cc,color:#000,stroke-width:1px;
+    classDef legendBox fill:#ffffff,stroke:#000,stroke-width:1px,color:#000;
+
+    %% === Users ===
+    n15([Reviewer])
+    n2([Developer])
+
+    %% === Scope ===
+    subgraph 08["Scope"]
+
+        %% --- Authn/Authz ---
+        subgraph 05["Authn/Authz"]
+            subgraph 10[" "]
+                n11["Authn"]
+                A03["A03"]:::asset
+                C03["C03"]:::control
+                C04["C04"]:::control
+                T21["T21"]:::threat
+            end
+            style 10 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+            subgraph 11[" "]
+                n12["Authz"]
+                A04["A04"]:::asset
+                C05["C05"]:::control
+                T22["T22"]:::threat
+            end
+            style 11 fill:none,stroke-dasharray:5 5,stroke:#666;
+        end
+
+        %% --- Workstation ---
+        subgraph 02["Workstation"]
+
+            %% Developer device environment
+            subgraph 19[" "]
+                C01["C01"]:::control
+                C02["C02"]:::control
+                C18["C18"]:::control
+                A01["A01"]:::asset
+                A02["A02"]:::asset
+                T01["T01"]:::threat
+                T02["T02"]:::threat
+                T03["T03"]:::threat
+            end
+            style 19 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+            %% Local codebase clone
+            subgraph 12[" "]
+                n3["Local codebase clone"]
+                C06["C06"]:::control
+                C18_12["C18"]:::control
+                A05["A05"]:::asset
+                T04["T04"]:::threat
+                T05["T05"]:::threat
+            end
+            style 12 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+            %% IDE
+            subgraph 13[" "]
+                n4["IDE"]
+                C07["C07"]:::control
+                C18_13["C18"]:::control
+                A06["A06"]:::asset
+                T06["T06"]:::threat
+                T07["T07"]:::threat
+            end
+            style 13 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+            %% Assistant Plugin
+            subgraph 14[" "]
+                n5["Assistant Plugin"]
+                C08["C08"]:::control
+                C18_14["C18"]:::control
+                A07["A07"]:::asset
+                T08["T08"]:::threat
+                T09["T09"]:::threat
+            end
+            style 14 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+        end
+
+        %% --- Agent Tools ---
+        subgraph 06["Agent Tools"]
+            subgraph 15[" "]
+                n17["Extension(s) / MCP Tool(s)"]
+                C09["C09"]:::control
+                C10["C10"]:::control
+                C18_15["C18"]:::control
+                A08["A08"]:::asset
+                A09["A09"]:::asset
+                T10["T10"]:::threat
+                T11["T11"]:::threat
+            end
+            style 15 fill:none,stroke-dasharray:5 5,stroke:#666;
+        end
+
+        %% --- Services ---
+        subgraph 07["Service"]
+            subgraph 16[" "]
+                n18["Service(s) e.g., Jira, GitHub APIs"]
+                C11["C11"]:::control
+                C12["C12"]:::control
+                C18_16["C18"]:::control
+                A10["A10"]:::asset
+                A11["A11"]:::asset
+                T12["T12"]:::threat
+                T13["T13"]:::threat
+            end
+            style 16 fill:none,stroke-dasharray:5 5,stroke:#666;
+        end
+
+        %% --- Cloud Service (Assistant) ---
+        subgraph 04["Cloud Service (Assistant)"]
+            subgraph 17[" "]
+                n6["Assistant Backend"]
+                C13["C13"]:::control
+                C14["C14"]:::control
+                C18_17["C18"]:::control
+                A12["A12"]:::asset
+                T14["T14"]:::threat
+                T15["T15"]:::threat
+            end
+            style 17 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+            subgraph 18[" "]
+                n7["Assistant LLM"]
+                C15["C15"]:::control
+                C16["C16"]:::control
+                C17["C17"]:::control
+                C18_18["C18"]:::control
+                A13["A13"]:::asset
+                A14["A14"]:::asset
+                T16["T16"]:::threat
+                T17["T17"]:::threat
+                T18["T18"]:::threat
+                T19["T19"]:::threat
+                T20["T20"]:::threat
+            end
+            style 18 fill:none,stroke-dasharray:5 5,stroke:#666;
+
+        end
+
+    end
+    style 08 fill:#C1FF72,stroke:#000,stroke-width:1px;
+
+    %% === External Systems ===
+    subgraph 01["SCM (Server / Cloud)"]
+        n1["Remote codebase"]
+        n13["Pull Request (SCM)"]
+        n14["SCM Policy Engine"]
+    end
+
+    subgraph 03["Change Control / CI-CD"]
+        n16["clone repo"]
+        n8["Build & Test Pipeline"]
+        n9["Security Gate(s)"]
+        n10["Code Quality Gate"]
+    end
+
+    %% === Data Flows (TLS annotated) ===
+    n2 ---|"Authenticates over TLS"| n11
+    n11 ---|"Authorization checks over TLS"| n12
+    n2 ---|"uses"| n4
+    n4 ---|"R/W access"| n3
+    n4 ---|"Context, Snippets, Commands"| n5
+    n5 ---|"Suggestions, Edits, Insertions"| n4
+    n5 ---|"Code prompt, edits, context over TLS"| n6
+    n6 ---|"Suggestions over TLS"| n5
+    n6 ---|"Processed request, context over TLS"| n7
+    n7 ---|"Suggestions over TLS"| n6
+    n5 ---|"calls (needs authn/z) over TLS"| n17
+    n17 ---|"calls (needs authn/z) over TLS"| n18
+    n18 -.->|"authn/z over TLS"| n11
+    n1 ---|"cloned to (with authn/authz) over TLS"| n3
+    n3 ---|"push branch (with authn/authz) over TLS"| n13
+    n13 ---|"triggers over TLS"| n8
+    n16 ---|"code copy now in pipeline over TLS"| n8
+    n1 ---|"repo clone for build (with authn/authz) over TLS"| n16
+    n8 <-->|"security enforcement over TLS"| n9
+    n8 <-->|"quality enforcement over TLS"| n10
+    n8 ---|"status: pass/fail over TLS"| n13
+    n15 -.->|"optional: review / approve over TLS"| n13
+    n13 ---|"evaluates PR (pipeline + reviewer + rules) over TLS"| n14
+    n14 ---|"update code over TLS"| n1
+    n14 -.->|"authn check over TLS"| n11
+    n14 -.->|"authorization enforcement over TLS"| n12
+
+    %% === Legend ===
+    subgraph 99["Legend"]
+        assetLegend["🟥 Asset"]:::asset
+        controlLegend["🟩 Control"]:::control
+        threatLegend["🟦 Threat (Txx)"]:::threat
+        dottedBoxLegend["Component / mini-subgraph (dotted)"]:::legendBox
+        scopeLegend["Scope (green fill)"]:::legendBox
+        tlsLegend["All external / inter-component comms = TLS"]:::legendBox
+    end
+    style 99 fill:#ffffff,stroke:#000,stroke-width:1px;
