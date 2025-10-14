@@ -58,6 +58,21 @@ The tables below detail the controls and assets shown on the code generator data
 
 ## Threats
 
+### STRIDE Reference
+
+|Type     |  Description | Security Control |
+|---------|--------------|------------------|
+Spoofing  |	Threat action aimed at accessing and use of another user’s credentials, such as username and password. | Authentication |
+Tampering |	Threat action intending to maliciously change or modify persistent data, such as records in a database, and the alteration of data in transit between two computers over an open network, such as the Internet. | Integrity |
+Repudiation | 	Threat action aimed at performing prohibited operations in a system that lacks the ability to trace the operations. | Non-Repudiation |
+Information disclosure |	Threat action intending to read a file that one was not granted access to, or to read data in transit. | Confidentiality |
+Denial of service |	Threat action attempting to deny access to valid users, such as by making a web server temporarily unavailable or unusable. | Availability |
+Elevation of privilege |	Threat action intending to gain privileged access to resources in order to gain unauthorized access to information or to compromise a system. | Authorization |
+
+**Source:** [STRIDE Threat List (OWASP)](https://owasp.org/www-community/Threat_Modeling_Process#stride)
+
+### Threat Table
+
 | ID  | Threat (brief)                                                           | Threat Statement                                                                                                   | STRIDE | Category      | Standards / mappings (OWASP / GenAI / ATLAS) | Likely CWE(s) | Component(s) |
 |-----|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|--------|---------------|----------------------------------------------|---------------|--------------|
 | T01 | Credential theft / spoofing of developer identity                        | Nation state steals credentials on developer device to access source code without authorization                   | Spoofing | platform      | OWASP A07; MITRE ATLAS: Credential Access   | CWE-522, CWE-287 | Workstation: Developer device environment |
