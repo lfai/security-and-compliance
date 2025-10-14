@@ -18,19 +18,26 @@ for managing/mitigating those risks for AI systems. This whitepaper will specifi
 for handling those risks/controls in generic AI systems. As part of this effort we will also generate compliance artifacts such as 
 AI catalog containing requirements/controls and component definitions giving best practices technology specific rules for any AI system.
 
-## Leadership and Contributors
+## List of Projects to be explored for creating benchmarks
 
-Initiative Leads:
-- Vikas Agarwal - LFAI Slack: @Vikas Agarwal
-- Thalia Hooker - LFAI Slack: @Thalia Hooker
+| Project          | Project Contact(s) | Initiative Contact(s) | Link to presentation  |
+| :--------------  | :------            | :------                | :------               |
+| vLLM / KServe   |                    |                        |                       |
+| TensorRT   |                    |                        |                       |
+| ONNX Runtime   |                    |                        |                       |
+| PyTorch   |                    |                        |                       |
+| TorchServe   |                    |                        |                       |
+| Ray Train   |                    |                        |                       |
+| Ray Serve   |                    |                        |                       |
+| ML FLow   |                    |                        |                       |
+| LangChain   |                    |                        |                       |
 
-Contributors:
-- TO BE ADDED
 
 ## Working Documents
 
 Whitepaper [working document](https://docs.google.com/document/d/16YN4Zw_GQqirzgGn370xZ4rOdXW1D9KLap0EeykkHPM/edit?usp=sharing)
 
 - Data processing use case [working document](https://docs.google.com/document/d/1vjUkEi5LwmnEIr_n_VuOfD7jhiFE5zv04Tk8xjE10Jc/edit?usp=sharing)
-- Inference use case working  document
+- Inference use case [working  document](https://docs.google.com/document/d/1pCDWFVLSI5jl8leSvFoWi2Jk-6NXRBYqZdYOR67hBsM/edit?usp=sharing)
+- Agentic use case [working document](https://docs.google.com/document/d/1aiLUuWO5TDVjvEVPKmNxErD1l9vh9RSsZCiVLq4jYJY/edit?usp=sharing)
 
