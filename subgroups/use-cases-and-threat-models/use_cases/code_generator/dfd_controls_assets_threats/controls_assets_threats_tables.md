@@ -114,4 +114,5 @@ Elevation of privilege |	Threat action intending to gain privileged access to re
  - [OWASP Top 10 for LLMs](https://genai.owasp.org/llm-top-10/)
  - [MITRE ATLAS](https://atlas.mitre.org/matrices/ATLAS)
  - [CWE List](https://cwe.mitre.org/data/)
+ - [IBM AI Risk Atlas](https://www.ibm.com/docs/en/watsonx/saas?topic=ai-risk-atlas)
  - [Adversa AI MCP Security Top 25 Vulnerabilities](https://adversa.ai/mcp-security-top-25-mcp-vulnerabilities)
