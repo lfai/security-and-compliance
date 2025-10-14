@@ -1,5 +1,5 @@
 # Controls, Assets, and Threats for Code Generator Assistant
-The tables below detail the controls and assets shown on the code generator data flow diagram (dfd).
+The tables below detail the controls, assets, and threats shown on the code generator data flow diagram (dfd).
 
 ## Controls
 
