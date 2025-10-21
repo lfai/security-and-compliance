@@ -20,7 +20,7 @@ The tables below detail the assets, controls, and threats shown on the chatbot d
 | A13 | Generative LLM | AI model that generates text responses | Cloud (SaaS)/On-Prem: Generative LLM |
 | A14 | Embedding Model | AI model that converts text to vectors | Cloud (SaaS)/On-Prem: Embedding Model |
   
-  
+
   
 ****Controls****  
   
