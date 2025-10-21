@@ -40,7 +40,6 @@ flowchart TD
   end
  subgraph 04[" "]
         n3(["Database Processing"])
-        A03["A03"]
         T07["T07"]
         T08["T08"]
         T09["T09"]
@@ -50,7 +49,6 @@ flowchart TD
   end
  subgraph 05[" "]
         n4(["Embeddings"])
-        A04["A04"]
         T11["T11"]
         T12["T12"]
         T13["T13"]
@@ -59,7 +57,8 @@ flowchart TD
   end
  subgraph 06[" "]
         n5["Vector Database"]
-        A05["A05"]
+        A03["A03"]
+        A04["A04"]
         T14["T14"]
         T15["T15"]
         T16["T16"]
@@ -81,7 +80,6 @@ flowchart TD
   end
  subgraph 08[" "]
         n6["User"]
-        A06["A06"]
         T21["T21"]
         T22["T22"]
         C13["C13"]
@@ -89,7 +87,6 @@ flowchart TD
   end
  subgraph 09[" "]
         n7["Input Guard (Query)"]
-        A07["A07"]
         T27["T27"]
         T28["T28"]
         T29["T29"]
@@ -98,7 +95,6 @@ flowchart TD
   end
  subgraph 10[" "]
         n8["Input Guard (Embedding)"]
-        A08["A08"]
         T30["T30"]
         T31["T31"]
         C17["C17"]
@@ -106,7 +102,8 @@ flowchart TD
   end
  subgraph 11[" "]
         n9(["Authn & Authz"])
-        A09["A09"]
+        A05["A05"]
+        A06["A06"]
         T23["T23"]
         T24["T24"]
         T25["T25"]
@@ -117,7 +114,6 @@ flowchart TD
   end
  subgraph 12[" "]
         n10["Output Guard"]
-        A10["A10"]
         T32["T32"]
         T33["T33"]
         T34["T34"]
@@ -131,7 +127,7 @@ flowchart TD
   end
  subgraph 14[" "]
         n11(["Gen AI App"])
-        A11["A11"]
+        A07["A07"]
         T36["T36"]
         T37["T37"]
         T38["T38"]
@@ -145,7 +141,7 @@ flowchart TD
   end
  subgraph 15[" "]
         n12["Retriever"]
-        A12["A12"]
+        A08["A08"]
         T43["T43"]
         T44["T44"]
         T45["T45"]
@@ -160,7 +156,9 @@ flowchart TD
   end
  subgraph 17[" "]
         n13["Generative LLM"]
-        A13["A13"]
+        A09["A09"]
+        A10["A10"]
+        A11["A11"]
         T48["T48"]
         T49["T49"]
         T50["T50"]
@@ -176,7 +174,8 @@ flowchart TD
   end
  subgraph 19[" "]
         n14["Embedding Model"]
-        A14["A14"]
+        A12["A12"]
+        A13["A13"]
         T54["T54"]
         T55["T55"]
         T56["T56"]
@@ -227,20 +226,19 @@ flowchart TD
     style C03 fill:#C8E6C9
     style C04 fill:#C8E6C9
     style C05 fill:#C8E6C9
-    style A03 fill:#FFCDD2
     style T07 fill:#BBDEFB
     style T08 fill:#BBDEFB
     style T09 fill:#BBDEFB
     style T10 fill:#BBDEFB
     style C06 fill:#C8E6C9
     style C07 fill:#C8E6C9
-    style A04 fill:#FFCDD2
     style T11 fill:#BBDEFB
     style T12 fill:#BBDEFB
     style T13 fill:#BBDEFB
     style C08 fill:#C8E6C9
     style C09 fill:#C8E6C9
-    style A05 fill:#FFCDD2
+    style A03 fill:#FFCDD2
+    style A04 fill:#FFCDD2
     style T14 fill:#BBDEFB
     style T15 fill:#BBDEFB
     style T16 fill:#BBDEFB
@@ -253,23 +251,21 @@ flowchart TD
     style C12 fill:#C8E6C9
     style 13 fill:#FFF9C
     style n6 fill:#FFFFFF
-    style A06 fill:#FFCDD2
     style T21 fill:#BBDEFB
     style T22 fill:#BBDEFB
     style C13 fill:#C8E6C9
     style C14 fill:#C8E6C9
-    style A07 fill:#FFCDD2
     style T27 fill:#BBDEFB
     style T28 fill:#BBDEFB
     style T29 fill:#BBDEFB
     style C15 fill:#C8E6C9
     style C16 fill:#C8E6C9
-    style A08 fill:#FFCDD2
     style T30 fill:#BBDEFB
     style T31 fill:#BBDEFB
     style C17 fill:#C8E6C9
     style C18 fill:#C8E6C9
-    style A09 fill:#FFCDD2
+    style A05 fill:#FFCDD2
+    style A06 fill:#FFCDD2
     style T23 fill:#BBDEFB
     style T24 fill:#BBDEFB
     style T25 fill:#BBDEFB
@@ -277,14 +273,13 @@ flowchart TD
     style C19 fill:#C8E6C9
     style C20 fill:#C8E6C9
     style C21 fill:#C8E6C9
-    style A10 fill:#FFCDD2
     style T32 fill:#BBDEFB
     style T33 fill:#BBDEFB
     style T34 fill:#BBDEFB
     style T35 fill:#BBDEFB
     style C22 fill:#C8E6C9
     style C23 fill:#C8E6C9
-    style A11 fill:#FFCDD2
+    style A07 fill:#FFCDD2
     style T36 fill:#BBDEFB
     style T37 fill:#BBDEFB
     style T38 fill:#BBDEFB
@@ -295,7 +290,7 @@ flowchart TD
     style C24 fill:#C8E6C9
     style C25 fill:#C8E6C9
     style C26 fill:#C8E6C9
-    style A12 fill:#FFCDD2
+    style A08 fill:#FFCDD2
     style T43 fill:#BBDEFB
     style T44 fill:#BBDEFB
     style T45 fill:#BBDEFB
@@ -304,7 +299,9 @@ flowchart TD
     style C27 fill:#C8E6C9
     style C28 fill:#C8E6C9
     style C29 fill:#C8E6C9
-    style A13 fill:#FFCDD2
+    style A09 fill:#FFCDD2
+    style A10 fill:#FFCDD2
+    style A11 fill:#FFCDD2
     style T48 fill:#BBDEFB
     style T49 fill:#BBDEFB
     style T50 fill:#BBDEFB
@@ -314,7 +311,8 @@ flowchart TD
     style C30 fill:#C8E6C9
     style C31 fill:#C8E6C9
     style C32 fill:#C8E6C9
-    style A14 fill:#FFCDD2
+    style A12 fill:#FFCDD2
+    style A13 fill:#FFCDD2
     style T54 fill:#BBDEFB
     style T55 fill:#BBDEFB
     style T56 fill:#BBDEFB
