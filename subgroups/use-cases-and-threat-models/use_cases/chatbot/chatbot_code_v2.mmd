@@ -1,327 +1,57 @@
 ---
 config:
-  theme: base
-  layout: dagre
+  theme: neutral
 ---
 flowchart TD
- subgraph 00["Legend"]
-        assetLegend["🟥 Asset"]
-        controlLegend["🟩 Control"]
-        threatLegend["🟦 Threat (Txx)"]
-        dottedBoxLegend["Component / mini-subgraph (dotted)"]
-        scopeLegend["Scope (green fill)"]
-        tlsLegend["All external / inter-component comms = TLS"]
-  end
- subgraph 01["<b>Engineer Activities</b>"]
-        02["02"]
-        03["03"]
-        04["04"]
-        05["05"]
-        06["06"]
-  end
- subgraph 02[" "]
-        n1["AI Engineer"]
-        A01["A01"]
-        T01["T01"]
-        T02["T02"]
-        C01["C01"]
-        C02["C02"]
-  end
- subgraph 03[" "]
-        n2["Database"]
-        A02["A02"]
-        T03["T03"]
-        T04["T04"]
-        T05["T05"]
-        T06["T06"]
-        C03["C03"]
-        C04["C04"]
-        C05["C05"]
-  end
- subgraph 04[" "]
-        n3(["Database Processing"])
-        A03["A03"]
-        T07["T07"]
-        T08["T08"]
-        T09["T09"]
-        T10["T10"]
-        C06["C06"]
-        C07["C07"]
-  end
- subgraph 05[" "]
-        n4(["Embeddings"])
-        A04["A04"]
-        T11["T11"]
-        T12["T12"]
-        T13["T13"]
-        C08["C08"]
-        C09["C09"]
-  end
- subgraph 06[" "]
-        n5["Vector Database"]
-        A05["A05"]
-        T14["T14"]
-        T15["T15"]
-        T16["T16"]
-        T17["T17"]
-        T18["T18"]
-        T19["T19"]
-        T20["T20"]
-        C10["C10"]
-        C11["C11"]
-        C12["C12"]
-  end
- subgraph 07["<b>User Activities</b>"]
-        08["08"]
-        09["09"]
-        10["10"]
-        11["11"]
-        12["12"]
-        13["13"]
-  end
- subgraph 08[" "]
-        n6["User"]
-        A06["A06"]
-        T21["T21"]
-        T22["T22"]
-        C13["C13"]
-        C14["C14"]
-  end
- subgraph 09[" "]
-        n7["Input Guard (Query)"]
-        A07["A07"]
-        T27["T27"]
-        T28["T28"]
-        T29["T29"]
-        C15["C15"]
-        C16["C16"]
-  end
- subgraph 10[" "]
-        n8["Input Guard (Embedding)"]
-        A08["A08"]
-        T30["T30"]
-        T31["T31"]
-        C17["C17"]
-        C18["C18"]
-  end
- subgraph 11[" "]
-        n9(["Authn & Authz"])
-        A09["A09"]
-        T23["T23"]
-        T24["T24"]
-        T25["T25"]
-        T26["T26"]
-        C19["C19"]
-        C20["C20"]
-        C21["C21"]
-  end
- subgraph 12[" "]
-        n10["Output Guard"]
-        A10["A10"]
-        T32["T32"]
-        T33["T33"]
-        T34["T34"]
-        T35["T35"]
-        C22["C22"]
-        C23["C23"]
-  end
- subgraph 13["<b>Gen AI App</b>"]
-        14["14"]
-        15["15"]
-  end
- subgraph 14[" "]
-        n11(["Gen AI App"])
-        A11["A11"]
-        T36["T36"]
-        T37["T37"]
-        T38["T38"]
-        T39["T39"]
-        T40["T40"]
-        T41["T41"]
-        T42["T42"]
-        C24["C24"]
-        C25["C25"]
-        C26["C26"]
-  end
- subgraph 15[" "]
-        n12["Retriever"]
-        A12["A12"]
-        T43["T43"]
-        T44["T44"]
-        T45["T45"]
-        T46["T46"]
-        T47["T47"]
-        C27["C27"]
-        C28["C28"]
-        C29["C29"]
-  end
- subgraph 16["<b>Cloud (SaaS)/On-Prem</b>"]
-        17["17"]
-  end
- subgraph 17[" "]
-        n13["Generative LLM"]
-        A13["A13"]
-        T48["T48"]
-        T49["T49"]
-        T50["T50"]
-        T51["T51"]
-        T52["T52"]
-        T53["T53"]
-        C30["C30"]
-        C31["C31"]
-        C32["C32"]
-  end
- subgraph 18["<b>Cloud (SaaS)/On-Prem</b>"]
-        19["19"]
-  end
- subgraph 19[" "]
-        n14["Embedding Model"]
-        A14["A14"]
-        T54["T54"]
-        T55["T55"]
-        T56["T56"]
-        T57["T57"]
-        C33["C33"]
-        C34["C34"]
-        C35["C35"]
-  end
- subgraph 20["Client Location"]
-        01
-        07
-  end
-    n1 -- Ingest/Prepare --> n3
-    n2 -- Ingest/Prepare --> n3
-    n3 -- Generated Embeddings --> n4
-    n4 -- Save Embeddings --> n5
-    n5 -. Check authz .-> n9
-    n11 -- "6 - Search for relevant information for query" --> n5
-    n5 -- "7 - Return retrieved docs" --> n11
-    n11 -. "5 - Check authz" .-> n9
-    n11 -- "8 - Raw query + prompt + enhanced content" --> n7
-    n13 -- "10 - Raw Response" --> n10
-    n10 -- "11 - Moderated Response" --> n11
-    n6 -- "1 - Initial Query" --> n11
-    n6 -. Authenticates .-> n9
-    n11 -- "12 - Final Response" --> n6
-    n7 -- "9 - Moderated query + prompt + enhanced content" --> n13
-    n11 -- "2 - Invoke retriever" --> n12
-    n12 -- "3 - Embed query (raw)" --> n8
-    n8 -- "3 - Embed query (moderated)" --> n14
-    n14 -- "4 - Embedded query" --> n12
-    n1@{ shape: rounded}
-    n2@{ shape: db}
-    n5@{ shape: db}
-    n6@{ shape: rounded}
-    style scopeLegend fill:#C1FF72
-    style n1 color:#000000,fill:#FFFFFF
-    style A01 fill:#FFCDD2
-    style T01 fill:#BBDEFB
-    style T02 fill:#BBDEFB
-    style C01 fill:#C8E6C9
-    style C02 fill:#C8E6C9
-    style A02 fill:#FFCDD2
-    style T03 fill:#BBDEFB
-    style T04 fill:#BBDEFB
-    style T05 fill:#BBDEFB
-    style T06 fill:#BBDEFB
-    style C03 fill:#C8E6C9
-    style C04 fill:#C8E6C9
-    style C05 fill:#C8E6C9
-    style A03 fill:#FFCDD2
-    style T07 fill:#BBDEFB
-    style T08 fill:#BBDEFB
-    style T09 fill:#BBDEFB
-    style T10 fill:#BBDEFB
-    style C06 fill:#C8E6C9
-    style C07 fill:#C8E6C9
-    style A04 fill:#FFCDD2
-    style T11 fill:#BBDEFB
-    style T12 fill:#BBDEFB
-    style T13 fill:#BBDEFB
-    style C08 fill:#C8E6C9
-    style C09 fill:#C8E6C9
-    style A05 fill:#FFCDD2
-    style T14 fill:#BBDEFB
-    style T15 fill:#BBDEFB
-    style T16 fill:#BBDEFB
-    style T17 fill:#BBDEFB
-    style T18 fill:#BBDEFB
-    style T19 fill:#BBDEFB
-    style T20 fill:#BBDEFB
-    style C10 fill:#C8E6C9
-    style C11 fill:#C8E6C9
-    style C12 fill:#C8E6C9
-    style 13 fill:#FFF9C
-    style n6 fill:#FFFFFF
-    style A06 fill:#FFCDD2
-    style T21 fill:#BBDEFB
-    style T22 fill:#BBDEFB
-    style C13 fill:#C8E6C9
-    style C14 fill:#C8E6C9
-    style A07 fill:#FFCDD2
-    style T27 fill:#BBDEFB
-    style T28 fill:#BBDEFB
-    style T29 fill:#BBDEFB
-    style C15 fill:#C8E6C9
-    style C16 fill:#C8E6C9
-    style A08 fill:#FFCDD2
-    style T30 fill:#BBDEFB
-    style T31 fill:#BBDEFB
-    style C17 fill:#C8E6C9
-    style C18 fill:#C8E6C9
-    style A09 fill:#FFCDD2
-    style T23 fill:#BBDEFB
-    style T24 fill:#BBDEFB
-    style T25 fill:#BBDEFB
-    style T26 fill:#BBDEFB
-    style C19 fill:#C8E6C9
-    style C20 fill:#C8E6C9
-    style C21 fill:#C8E6C9
-    style A10 fill:#FFCDD2
-    style T32 fill:#BBDEFB
-    style T33 fill:#BBDEFB
-    style T34 fill:#BBDEFB
-    style T35 fill:#BBDEFB
-    style C22 fill:#C8E6C9
-    style C23 fill:#C8E6C9
-    style A11 fill:#FFCDD2
-    style T36 fill:#BBDEFB
-    style T37 fill:#BBDEFB
-    style T38 fill:#BBDEFB
-    style T39 fill:#BBDEFB
-    style T40 fill:#BBDEFB
-    style T41 fill:#BBDEFB
-    style T42 fill:#BBDEFB
-    style C24 fill:#C8E6C9
-    style C25 fill:#C8E6C9
-    style C26 fill:#C8E6C9
-    style A12 fill:#FFCDD2
-    style T43 fill:#BBDEFB
-    style T44 fill:#BBDEFB
-    style T45 fill:#BBDEFB
-    style T46 fill:#BBDEFB
-    style T47 fill:#BBDEFB
-    style C27 fill:#C8E6C9
-    style C28 fill:#C8E6C9
-    style C29 fill:#C8E6C9
-    style A13 fill:#FFCDD2
-    style T48 fill:#BBDEFB
-    style T49 fill:#BBDEFB
-    style T50 fill:#BBDEFB
-    style T51 fill:#BBDEFB
-    style T52 fill:#BBDEFB
-    style T53 fill:#BBDEFB
-    style C30 fill:#C8E6C9
-    style C31 fill:#C8E6C9
-    style C32 fill:#C8E6C9
-    style A14 fill:#FFCDD2
-    style T54 fill:#BBDEFB
-    style T55 fill:#BBDEFB
-    style T56 fill:#BBDEFB
-    style T57 fill:#BBDEFB
-    style C33 fill:#C8E6C9
-    style C34 fill:#C8E6C9
-    style C35 fill:#C8E6C9
-    style 01 fill:#FFF9C
-    style 07 fill:#C1FF72
-    style 20 fill:#FFF9C
+    style s5 fill:#e8f1ff,stroke:#0077cc,stroke-width:2px,rx:10,ry:10
+    style n21 stroke:#424242
+    style n31 stroke:#424242
+    subgraph s3["<b>Engineer Activities</b>"]
+        n21(["<b>AI Engineer</b>"])
+        n22(["Data Processing"])
+        n23(["Database"])
+        n24(["Embeddings"])
+        n25(["Vector Database"])
+    end
+    subgraph s4["<b>User Activities</b>"]
+        n26(["Authentication and Authorisation"])
+        n31(["<b>User<b></b></b>"])
+        n34["Output Guard"]
+        n33["Input Guard"]
+        n37["Input Guard"]
+        subgraph s5["GenAI App"]
+            n27(["GenAI App"])
+            n35["Retriever"]
+        end
+    end
+    subgraph s1["<b>Client Location</b>"]
+        s3
+        s4
+    end
+    subgraph s2["<b>Cloud (SaaS)/On-Prem</b>"]
+        n32["Generative LLM"]
+    end
+    subgraph s6["<b>Cloud (SaaS)/On-Prem</b>"]
+        n36["Embedding Model"]
+    end
+    n21 -- Ingest/Prepare --> n22
+    n22 -- Generated Embeddings --> n24
+    n23 -- Ingest/Prepare --> n22
+    n24 -- Save Embeddings --> n25
+    n25 -. Check authz .-> n26
+    n27 -- "6 - Search for relevant information for query" --> n25
+    n25 -- "7 - Return retrieved docs" --> n27
+    n27 -. "5 - Check authz" .-> n26
+    n27 -- "8 - Raw query + prompt + enhanced content" --> n33
+    n32 -- "10 - Raw Response" --> n34
+    n34 -- "11 - Moderated Response" --> n27
+    n31 -- "1 - Initial Query" --> n27
+    n31 -. Authenticates .-> n26
+    n27 -- "12 - Final Response" --> n31
+    n33 -- "9 - Moderated query + prompt + enhanced content" --> n32
+    n27 -- "2 - invoke retriever" --> n35
+    n35 -- "3 - embed query (raw)" --> n37
+    n37 -- "3 - embed query (moderated)" --> n36
+    n36 -- "4 - embedded query" --> n35
+    n21@{ shape: "circle", label: "AI\nEngineer", pos: "b", h: 48}
+    n31@{ shape: "circle", label: "User", pos: "b", h: 48}
