@@ -1,4 +1,4 @@
-# **Assets, Controls, and Threats for Chatbot**  
+# **Assets, Controls, and Threats for Chatbot**   
 The tables below detail the assets, controls, and threats shown on the chatbot diagram  
   
 ****Assets****  
