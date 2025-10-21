@@ -21,7 +21,7 @@ The tables below detail the assets, controls, and threats shown on the chatbot d
 | A14 | Embedding Model | AI model that converts text to vectors | Cloud (SaaS)/On-Prem: Embedding Model |
   
   
-  n
+  
 ****Controls****  
   
 
