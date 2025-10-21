@@ -1,0 +1,483 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2865
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Bold;\f2\fnil\fcharset0 AppleColorEmoji;
+}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue254;\red0\green0\blue0;\red130\green53\blue188;
+\red83\green133\blue132;\red153\green115\blue4;\red143\green16\blue118;\red16\green121\blue2;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c99608;\cssrgb\c0\c0\c0;\cssrgb\c58824\c31373\c78431;
+\cssrgb\c39216\c58824\c58824;\cssrgb\c66667\c52157\c0;\cssrgb\c63529\c15686\c53725;\cssrgb\c0\c53333\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14400\viewh11040\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \cb2 \expnd0\expndtw0\kerning0
+---\cb1 \
+\cb2 config:\cb1 \
+\cb2   theme: base\cb1 \
+\cb2   layout: dagre\cb1 \
+\cb2 ---\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf4 \cb2 flowchart
+\f0\b0 \cf0  \cf5 TD\cf0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  00\cf6 ["Legend"]\cf0 \cb1 \
+\cb2         \cf7 assetLegend\cf6 ["
+\f2 \uc0\u55357 \u57317 
+\f0  Asset"]\cf0 \cb1 \
+\cb2         \cf7 controlLegend\cf6 ["
+\f2 \uc0\u55357 \u57321 
+\f0  Control"]\cf0 \cb1 \
+\cb2         \cf7 threatLegend\cf6 ["
+\f2 \uc0\u55357 \u57318 
+\f0  Threat (Txx)"]\cf0 \cb1 \
+\cb2         \cf7 dottedBoxLegend\cf6 ["Component / mini-subgraph (dotted)"]\cf0 \cb1 \
+\cb2         \cf7 scopeLegend\cf6 ["Scope (green fill)"]\cf0 \cb1 \
+\cb2         \cf7 tlsLegend\cf6 ["All external / inter-component comms = TLS"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  01\cf6 ["<b>Engineer Activities</b>"]\cf0 \cb1 \
+\cb2         02\cf6 ["02"]\cf0 \cb1 \
+\cb2         03\cf6 ["03"]\cf0 \cb1 \
+\cb2         04\cf6 ["04"]\cf0 \cb1 \
+\cb2         05\cf6 ["05"]\cf0 \cb1 \
+\cb2         06\cf6 ["06"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  02\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n1\cf6 ["AI Engineer"]\cf0 \cb1 \
+\cb2         \cf7 A01\cf6 ["A01"]\cf0 \cb1 \
+\cb2         \cf7 T01\cf6 ["T01"]\cf0 \cb1 \
+\cb2         \cf7 T02\cf6 ["T02"]\cf0 \cb1 \
+\cb2         \cf7 C01\cf6 ["C01"]\cf0 \cb1 \
+\cb2         \cf7 C02\cf6 ["C02"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  03\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n2\cf6 ["Database"]\cf0 \cb1 \
+\cb2         \cf7 A02\cf6 ["A02"]\cf0 \cb1 \
+\cb2         \cf7 T03\cf6 ["T03"]\cf0 \cb1 \
+\cb2         \cf7 T04\cf6 ["T04"]\cf0 \cb1 \
+\cb2         \cf7 T05\cf6 ["T05"]\cf0 \cb1 \
+\cb2         \cf7 T06\cf6 ["T06"]\cf0 \cb1 \
+\cb2         \cf7 C03\cf6 ["C03"]\cf0 \cb1 \
+\cb2         \cf7 C04\cf6 ["C04"]\cf0 \cb1 \
+\cb2         \cf7 C05\cf6 ["C05"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  04\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n3\cf6 (["Database Processing"])\cf0 \cb1 \
+\cb2         \cf7 A03\cf6 ["A03"]\cf0 \cb1 \
+\cb2         \cf7 T07\cf6 ["T07"]\cf0 \cb1 \
+\cb2         \cf7 T08\cf6 ["T08"]\cf0 \cb1 \
+\cb2         \cf7 T09\cf6 ["T09"]\cf0 \cb1 \
+\cb2         \cf7 T10\cf6 ["T10"]\cf0 \cb1 \
+\cb2         \cf7 C06\cf6 ["C06"]\cf0 \cb1 \
+\cb2         \cf7 C07\cf6 ["C07"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  05\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n4\cf6 (["Embeddings"])\cf0 \cb1 \
+\cb2         \cf7 A04\cf6 ["A04"]\cf0 \cb1 \
+\cb2         \cf7 T11\cf6 ["T11"]\cf0 \cb1 \
+\cb2         \cf7 T12\cf6 ["T12"]\cf0 \cb1 \
+\cb2         \cf7 T13\cf6 ["T13"]\cf0 \cb1 \
+\cb2         \cf7 C08\cf6 ["C08"]\cf0 \cb1 \
+\cb2         \cf7 C09\cf6 ["C09"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  06\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n5\cf6 ["Vector Database"]\cf0 \cb1 \
+\cb2         \cf7 A05\cf6 ["A05"]\cf0 \cb1 \
+\cb2         \cf7 T14\cf6 ["T14"]\cf0 \cb1 \
+\cb2         \cf7 T15\cf6 ["T15"]\cf0 \cb1 \
+\cb2         \cf7 T16\cf6 ["T16"]\cf0 \cb1 \
+\cb2         \cf7 T17\cf6 ["T17"]\cf0 \cb1 \
+\cb2         \cf7 T18\cf6 ["T18"]\cf0 \cb1 \
+\cb2         \cf7 T19\cf6 ["T19"]\cf0 \cb1 \
+\cb2         \cf7 T20\cf6 ["T20"]\cf0 \cb1 \
+\cb2         \cf7 C10\cf6 ["C10"]\cf0 \cb1 \
+\cb2         \cf7 C11\cf6 ["C11"]\cf0 \cb1 \
+\cb2         \cf7 C12\cf6 ["C12"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  07\cf6 ["<b>User Activities</b>"]\cf0 \cb1 \
+\cb2         08\cf6 ["08"]\cf0 \cb1 \
+\cb2         09\cf6 ["09"]\cf0 \cb1 \
+\cb2         10\cf6 ["10"]\cf0 \cb1 \
+\cb2         11\cf6 ["11"]\cf0 \cb1 \
+\cb2         12\cf6 ["12"]\cf0 \cb1 \
+\cb2         13\cf6 ["13"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  08\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n6\cf6 ["User"]\cf0 \cb1 \
+\cb2         \cf7 A06\cf6 ["A06"]\cf0 \cb1 \
+\cb2         \cf7 T21\cf6 ["T21"]\cf0 \cb1 \
+\cb2         \cf7 T22\cf6 ["T22"]\cf0 \cb1 \
+\cb2         \cf7 C13\cf6 ["C13"]\cf0 \cb1 \
+\cb2         \cf7 C14\cf6 ["C14"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  09\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n7\cf6 ["Input Guard (Query)"]\cf0 \cb1 \
+\cb2         \cf7 A07\cf6 ["A07"]\cf0 \cb1 \
+\cb2         \cf7 T27\cf6 ["T27"]\cf0 \cb1 \
+\cb2         \cf7 T28\cf6 ["T28"]\cf0 \cb1 \
+\cb2         \cf7 T29\cf6 ["T29"]\cf0 \cb1 \
+\cb2         \cf7 C15\cf6 ["C15"]\cf0 \cb1 \
+\cb2         \cf7 C16\cf6 ["C16"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  10\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n8\cf6 ["Input Guard (Embedding)"]\cf0 \cb1 \
+\cb2         \cf7 A08\cf6 ["A08"]\cf0 \cb1 \
+\cb2         \cf7 T30\cf6 ["T30"]\cf0 \cb1 \
+\cb2         \cf7 T31\cf6 ["T31"]\cf0 \cb1 \
+\cb2         \cf7 C17\cf6 ["C17"]\cf0 \cb1 \
+\cb2         \cf7 C18\cf6 ["C18"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  11\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n9\cf6 (["Authn & Authz"])\cf0 \cb1 \
+\cb2         \cf7 A09\cf6 ["A09"]\cf0 \cb1 \
+\cb2         \cf7 T23\cf6 ["T23"]\cf0 \cb1 \
+\cb2         \cf7 T24\cf6 ["T24"]\cf0 \cb1 \
+\cb2         \cf7 T25\cf6 ["T25"]\cf0 \cb1 \
+\cb2         \cf7 T26\cf6 ["T26"]\cf0 \cb1 \
+\cb2         \cf7 C19\cf6 ["C19"]\cf0 \cb1 \
+\cb2         \cf7 C20\cf6 ["C20"]\cf0 \cb1 \
+\cb2         \cf7 C21\cf6 ["C21"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  12\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n10\cf6 ["Output Guard"]\cf0 \cb1 \
+\cb2         \cf7 A10\cf6 ["A10"]\cf0 \cb1 \
+\cb2         \cf7 T32\cf6 ["T32"]\cf0 \cb1 \
+\cb2         \cf7 T33\cf6 ["T33"]\cf0 \cb1 \
+\cb2         \cf7 T34\cf6 ["T34"]\cf0 \cb1 \
+\cb2         \cf7 T35\cf6 ["T35"]\cf0 \cb1 \
+\cb2         \cf7 C22\cf6 ["C22"]\cf0 \cb1 \
+\cb2         \cf7 C23\cf6 ["C23"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  13\cf6 ["<b>Gen AI App</b>"]\cf0 \cb1 \
+\cb2         14\cf6 ["14"]\cf0 \cb1 \
+\cb2         15\cf6 ["15"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  14\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n11\cf6 (["Gen AI App"])\cf0 \cb1 \
+\cb2         \cf7 A11\cf6 ["A11"]\cf0 \cb1 \
+\cb2         \cf7 T36\cf6 ["T36"]\cf0 \cb1 \
+\cb2         \cf7 T37\cf6 ["T37"]\cf0 \cb1 \
+\cb2         \cf7 T38\cf6 ["T38"]\cf0 \cb1 \
+\cb2         \cf7 T39\cf6 ["T39"]\cf0 \cb1 \
+\cb2         \cf7 T40\cf6 ["T40"]\cf0 \cb1 \
+\cb2         \cf7 T41\cf6 ["T41"]\cf0 \cb1 \
+\cb2         \cf7 T42\cf6 ["T42"]\cf0 \cb1 \
+\cb2         \cf7 C24\cf6 ["C24"]\cf0 \cb1 \
+\cb2         \cf7 C25\cf6 ["C25"]\cf0 \cb1 \
+\cb2         \cf7 C26\cf6 ["C26"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  15\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n12\cf6 ["Retriever"]\cf0 \cb1 \
+\cb2         \cf7 A12\cf6 ["A12"]\cf0 \cb1 \
+\cb2         \cf7 T43\cf6 ["T43"]\cf0 \cb1 \
+\cb2         \cf7 T44\cf6 ["T44"]\cf0 \cb1 \
+\cb2         \cf7 T45\cf6 ["T45"]\cf0 \cb1 \
+\cb2         \cf7 T46\cf6 ["T46"]\cf0 \cb1 \
+\cb2         \cf7 T47\cf6 ["T47"]\cf0 \cb1 \
+\cb2         \cf7 C27\cf6 ["C27"]\cf0 \cb1 \
+\cb2         \cf7 C28\cf6 ["C28"]\cf0 \cb1 \
+\cb2         \cf7 C29\cf6 ["C29"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  16\cf6 ["<b>Cloud (SaaS)/On-Prem</b>"]\cf0 \cb1 \
+\cb2         17\cf6 ["17"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  17\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n13\cf6 ["Generative LLM"]\cf0 \cb1 \
+\cb2         \cf7 A13\cf6 ["A13"]\cf0 \cb1 \
+\cb2         \cf7 T48\cf6 ["T48"]\cf0 \cb1 \
+\cb2         \cf7 T49\cf6 ["T49"]\cf0 \cb1 \
+\cb2         \cf7 T50\cf6 ["T50"]\cf0 \cb1 \
+\cb2         \cf7 T51\cf6 ["T51"]\cf0 \cb1 \
+\cb2         \cf7 T52\cf6 ["T52"]\cf0 \cb1 \
+\cb2         \cf7 T53\cf6 ["T53"]\cf0 \cb1 \
+\cb2         \cf7 C30\cf6 ["C30"]\cf0 \cb1 \
+\cb2         \cf7 C31\cf6 ["C31"]\cf0 \cb1 \
+\cb2         \cf7 C32\cf6 ["C32"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  18\cf6 ["<b>Cloud (SaaS)/On-Prem</b>"]\cf0 \cb1 \
+\cb2         19\cf6 ["19"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  19\cf6 [" "]\cf0 \cb1 \
+\cb2         \cf7 n14\cf6 ["Embedding Model"]\cf0 \cb1 \
+\cb2         \cf7 A14\cf6 ["A14"]\cf0 \cb1 \
+\cb2         \cf7 T54\cf6 ["T54"]\cf0 \cb1 \
+\cb2         \cf7 T55\cf6 ["T55"]\cf0 \cb1 \
+\cb2         \cf7 T56\cf6 ["T56"]\cf0 \cb1 \
+\cb2         \cf7 T57\cf6 ["T57"]\cf0 \cb1 \
+\cb2         \cf7 C33\cf6 ["C33"]\cf0 \cb1 \
+\cb2         \cf7 C34\cf6 ["C34"]\cf0 \cb1 \
+\cb2         \cf7 C35\cf6 ["C35"]\cf0 \cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2  
+\f1\b \cf4 subgraph
+\f0\b0 \cf0  20\cf6 ["Client Location"]\cf0 \cb1 \
+\cb2         01\cb1 \
+\cb2         07\cb1 \
+\cb2   
+\f1\b \cf4 end
+\f0\b0 \cf0 \cb1 \
+\cb2     \cf7 n1\cf0  
+\f1\b \cf8 --
+\f0\b0 \cf6  Ingest/Prepare 
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n3\cf0 \cb1 \
+\cb2     \cf7 n2\cf0  
+\f1\b \cf8 --
+\f0\b0 \cf6  Ingest/Prepare 
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n3\cf0 \cb1 \
+\cb2     \cf7 n3\cf0  
+\f1\b \cf8 --
+\f0\b0 \cf6  Generated Embeddings 
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n4\cf0 \cb1 \
+\cb2     \cf7 n4\cf0  
+\f1\b \cf8 --
+\f0\b0 \cf6  Save Embeddings 
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n5\cf0 \cb1 \
+\cb2     \cf7 n5\cf0  
+\f1\b \cf8 -.
+\f0\b0 \cf6  Check authz 
+\f1\b \cf8 .->
+\f0\b0 \cf0  \cf7 n9\cf0 \cb1 \
+\cb2     \cf7 n11\cf0  -- \cf6 "6 - Search for relevant information for query"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n5\cf0 \cb1 \
+\cb2     \cf7 n5\cf0  -- \cf6 "7 - Return retrieved docs"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n11\cf0 \cb1 \
+\cb2     \cf7 n11\cf0  -. \cf6 "5 - Check authz"\cf0  .-> \cf7 n9\cf0 \cb1 \
+\cb2     \cf7 n11\cf0  -- \cf6 "8 - Raw query + prompt + enhanced content"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n7\cf0 \cb1 \
+\cb2     \cf7 n13\cf0  -- \cf6 "10 - Raw Response"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n10\cf0 \cb1 \
+\cb2     \cf7 n10\cf0  -- \cf6 "11 - Moderated Response"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n11\cf0 \cb1 \
+\cb2     \cf7 n6\cf0  -- \cf6 "1 - Initial Query"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n11\cf0 \cb1 \
+\cb2     \cf7 n6\cf0  
+\f1\b \cf8 -.
+\f0\b0 \cf6  Authenticates 
+\f1\b \cf8 .->
+\f0\b0 \cf0  \cf7 n9\cf0 \cb1 \
+\cb2     \cf7 n11\cf0  -- \cf6 "12 - Final Response"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n6\cf0 \cb1 \
+\cb2     \cf7 n7\cf0  -- \cf6 "9 - Moderated query + prompt + enhanced content"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n13\cf0 \cb1 \
+\cb2     \cf7 n11\cf0  -- \cf6 "2 - Invoke retriever"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n12\cf0 \cb1 \
+\cb2     \cf7 n12\cf0  -- \cf6 "3 - Embed query (raw)"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n8\cf0 \cb1 \
+\cb2     \cf7 n8\cf0  -- \cf6 "3 - Embed query (moderated)"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n14\cf0 \cb1 \
+\cb2     \cf7 n14\cf0  -- \cf6 "4 - Embedded query"\cf0  
+\f1\b \cf8 -->
+\f0\b0 \cf0  \cf7 n12\cf0 \cb1 \
+\cb2     \cf7 n1\cf0 @\cf6 \{ shape: rounded\}\cf0 \cb1 \
+\cb2     \cf7 n2\cf0 @\cf6 \{ shape: db\}\cf0 \cb1 \
+\cb2     \cf7 n5\cf0 @\cf6 \{ shape: db\}\cf0 \cb1 \
+\cb2     \cf7 n6\cf0 @\cf6 \{ shape: rounded\}\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 scopeLegend\cf0  \cf7 fill\cf0 :#\cf7 C1FF72\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 n1\cf0  \cf7 color\cf0 :#000000,\cf7 fill\cf0 :#\cf7 FFFFFF\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A01\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T01\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T02\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C01\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C02\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A02\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T03\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T04\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T05\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T06\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C03\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C04\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C05\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A03\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T07\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T08\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T09\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T10\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C06\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C07\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A04\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T11\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T12\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T13\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C08\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C09\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A05\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T14\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T15\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T16\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T17\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T18\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T19\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T20\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C10\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C11\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C12\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  13 \cf7 fill\cf0 :#\cf7 FFF9C\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 n6\cf0  \cf7 fill\cf0 :#\cf7 FFFFFF\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A06\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T21\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T22\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C13\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C14\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A07\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T27\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T28\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T29\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C15\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C16\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A08\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T30\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T31\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C17\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C18\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A09\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T23\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T24\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T25\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T26\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C19\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C20\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C21\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A10\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T32\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T33\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T34\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T35\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C22\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C23\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A11\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T36\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T37\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T38\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T39\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T40\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T41\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T42\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C24\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C25\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C26\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A12\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T43\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T44\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T45\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T46\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T47\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C27\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C28\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C29\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A13\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T48\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T49\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T50\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T51\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T52\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T53\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C30\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C31\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C32\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 A14\cf0  \cf7 fill\cf0 :#\cf7 FFCDD2\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T54\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T55\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T56\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 T57\cf0  \cf7 fill\cf0 :#\cf7 BBDEFB\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C33\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C34\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  \cf7 C35\cf0  \cf7 fill\cf0 :#\cf7 C8E6C9\cf0 \cb1 \
+\cb2     \cf5 style\cf0  01 \cf7 fill\cf0 :#\cf7 FFF9C\cf0 \cb1 \
+\cb2     \cf5 style\cf0  07 \cf7 fill\cf0 :#\cf7 C1FF72\cf0 \cb1 \
+\cb2     \cf5 style\cf0  20 \cf7 fill\cf0 :#\cf7 FFF9C\cf0 \cb1 \
+\
+}
