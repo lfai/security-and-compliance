@@ -168,6 +168,7 @@ Likely threat manifestation:
 | T45 | Elevation of Privilege | LLM05: Improper Output Handling | External Attacker intercepts or predicts session tokens, gaining unauthorized access to agent sessions | External Attacker | Agent session, sensitive operations | AI / AI Agent | [LLM05: Improper Output Handling](https://genai.owasp.org/llmrisk/llm05-improper-output-handling/) |  |
 | T46 | Elevation of Privilege | LLM05: Improper Output Handling | Tokens improperly handled across agents, leading to unauthorized access or privilege escalation |  | Agent access controls, sensitive operations | AI / AI Agent | [LLM05: Improper Output Handling](https://genai.owasp.org/llmrisk/llm05-improper-output-handling/) |  |
 | T47 | Tampering | LLM01: Prompt Injection | Agent LLM fails to distinguish between legitimate instructions and malicious input, enabling injection attacks |  | AI system integrity, generated outputs | AI / AI Agent | [LLM01: Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) |  |
+| T48 | Tampering, Information Disclosure, Elevation of Privilege | LLM01: Prompt Injection (and others) | Malicious employee creates an MCP server that acts maliciously (e.g., discloses information, manipulates requests or responses, calls insecure backend services etc) | Malicious Insider |  Agent session, sensitive operations  | AI / AI Agent | [LLM01: Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)<br><br>And others... |  |
 
 **References:**
  - [OWASP Top 10 for Web Applications](https://owasp.org/Top10/)
