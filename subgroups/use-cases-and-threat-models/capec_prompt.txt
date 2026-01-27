@@ -1,0 +1,73 @@
+Threat Modeling Prompt (CAPEC / CWE focused)
+
+You are performing a structured threat-model mapping using MITRE CAPEC and CWE.
+
+Scenario:
+
+[SUPPLY THREAT SCENARIO]
+
+Instructions:
+
+First, restate the assumed attack flow step by step, explicitly stating:
+
+attacker role (vendor / insider / external),
+
+delivery mechanism (model update, dependency, plugin release),
+
+what is modified (model weights, training data, runtime behavior),
+
+how the malicious behavior is triggered (latent prompt, condition, time, input).
+
+Then map the scenario using the following required structure and headers:
+
+the attacker’s strategy (distribution + deception + supply chain)
+→ list only CAPECs describing how the attacker succeeds
+
+the execution and impact
+→ list CAPECs describing what the malicious logic does at runtime
+
+the underlying trust failure
+→ list CWEs describing why the system allowed this to happen
+
+Prefer the most specific CAPECs available (e.g., malicious logic insertion, third‑party component inclusion) and avoid defaulting to broad categories unless necessary.
+
+If a more general CAPEC is included, justify why a more specific one does not apply.
+
+Explicitly consider and either include or reject the following classes where relevant:
+
+supply‑chain compromise,
+
+malicious logic insertion,
+
+backdoor / hidden functionality,
+
+data or instruction manipulation,
+
+execution without user intent.
+
+For each CAPEC or CWE included, provide a one‑line justification explaining exactly how it applies to this scenario.
+
+Do not mix CAPECs and CWEs in the same category.
+CAPEC = attacker behavior; CWE = system weakness.
+
+End with a concise “final list” containing only:
+
+the CAPECs and CWEs that are strictly necessary and non‑redundant.
+
+Output format must be:
+
+Assumed attack flow (bullet list)
+
+the attacker’s strategy (distribution + deception + supply chain):
+
+CAPEC‑X (name) — justification
+
+the execution and impact:
+
+CAPEC‑Y (name) — justification
+
+the underlying trust failure:
+
+CWE‑Z (name) — justification
+
+Final minimal list (no explanations)
