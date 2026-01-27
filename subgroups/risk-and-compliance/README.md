@@ -10,6 +10,9 @@
 
 This repository is used to develop and manage the Risk and Compliance SubGroup's assets. This may include use cases, compliance profiles and other artifacts typically in [NIST OSCAL format](https://pages.nist.gov/OSCAL-Reference/models/), risk taxonomies, and more.
 
+> [!IMPORTANT]
+> **Comments invited on the OSCAL Mapping Best Practices white paper**. Please see the [Initiative below](#initiatives)
+
 ### Leadership
 
 - R&C Chairs: 
@@ -87,6 +90,7 @@ then join the R&C subproject channel:
 ### Initiatives
 
 1. [Best Practices and Benchmarks for AI](./Initiative-BestPracticesBenchmarksForAI.md)
+2. [OSCAL Mapping Best Practices](https://docs.google.com/document/d/1OInb3KA000ELjgjk1uPjaVl5ONaYl4u1/edit?usp=sharing&ouid=108830014708799752840&rtpof=true&sd=true). An [issue](https://github.com/lfai/security-and-compliance/issues/31) has been created to provide comments on the white paper.
 
 ---
 
