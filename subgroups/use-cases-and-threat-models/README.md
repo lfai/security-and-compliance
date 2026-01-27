@@ -26,8 +26,13 @@ To produce interoperable AI security and compliance standards through its lifecy
 1. Identify and publish at least 3 pilot use cases + threat models in OWASP Threat Model Library
 2. Align on the use case - threat model (threats, controls, risks) - standard workflow
 
+### Current Work
 
-### Layer Stack for Threat Modelling
+As of 27th Jan 2026 we have threat modelled the use case "AI Assistant Code Generator" (based on using a code-generating AI assistant as a plugin in IDE).
+
+The threat Model lives here: https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing (please request access if needed)
+
+### WIP - Layer Stack for Threat Modelling
 
 | Layer     | Description    | Example Components    | Key Assets    | Example Threats    |
 | --------- | -------------- | --------------------- | ------------- | ------------------ |
