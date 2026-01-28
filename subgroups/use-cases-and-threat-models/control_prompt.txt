@@ -1,0 +1,33 @@
+I am performing threat modelling.
+
+Threat Scenario
+
+[INSERT THREAT SCENARIO TEXT HERE]
+
+Associated Threat Patterns and Weaknesses
+
+[INSERT CAPEC AND CWE LIST HERE]
+
+Control Mapping Requirements
+
+Map the above CAPECs and CWEs to mitigating security controls from a recognized control framework, specifically [CONTROL STANDARD AND VERSION, e.g., NIST SP 800-53 Rev. 5].
+
+For each control:
+
+Use the official control identifier and control name from the selected standard
+
+Provide a brief, one-sentence description of how the control mitigates the listed threats
+
+Explicitly list the CAPEC(s) and/or CWE(s) mitigated by that control
+
+Output Format (strict)
+<Control ID and Name> – <brief description> – <CAPEC-ID(s) / CWE-ID(s) mitigated>
+Constraints
+
+Output only the list of controls in the specified format
+
+Include only controls that directly and meaningfully mitigate the listed CAPECs and CWEs
+
+Do not include generic, administrative, or unrelated controls
+
+Do not include explanatory text, headings, or commentary outside the list
