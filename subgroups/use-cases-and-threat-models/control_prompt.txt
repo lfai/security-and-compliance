@@ -10,24 +10,36 @@ Associated Threat Patterns and Weaknesses
 
 Control Mapping Requirements
 
-Map the above CAPECs and CWEs to mitigating security controls from a recognized control framework, specifically [CONTROL STANDARD AND VERSION, e.g., NIST SP 800-53 Rev. 5].
+Map the above CAPECs and CWEs to mitigating security controls from a recognized control framework, specifically [NIST SP 800-53 Rev. 5].
+
+Categorize controls into two tiers:
+
+Tier 1 – Direct Mitigations
+Controls that directly prevent, detect, or invalidate the attacker’s technique in this scenario (e.g., blocking malicious distribution, preventing spoofing, or stopping exfiltration).
+
+Tier 2 – Supporting / Risk-Reducing Controls
+Controls that do not directly stop the attack pattern, but reduce likelihood, limit blast radius, or improve detection and response if the attack succeeds.
 
 For each control:
 
 Use the official control identifier and control name from the selected standard
 
-Provide a brief, one-sentence description of how the control mitigates the listed threats
+Provide a brief, one-sentence description of how the control mitigates the threat
 
 Explicitly list the CAPEC(s) and/or CWE(s) mitigated by that control
 
 Output Format (strict)
+```
+Tier 1 – Direct Mitigations
 <Control ID and Name> – <brief description> – <CAPEC-ID(s) / CWE-ID(s) mitigated>
+
+Tier 2 – Supporting / Risk-Reducing Controls
+<Control ID and Name> – <brief description> – <CAPEC-ID(s) / CWE-ID(s) mitigated>
+```
+
 Constraints
-
-Output only the list of controls in the specified format
-
-Include only controls that directly and meaningfully mitigate the listed CAPECs and CWEs
-
-Do not include generic, administrative, or unrelated controls
-
-Do not include explanatory text, headings, or commentary outside the list
+ - Output only the categorized list in the specified format
+ - Assign each control to one tier only
+ - Include only controls that meaningfully mitigate the listed CAPECs and CWEs
+ - Avoid generic governance-only controls unless they clearly support risk reduction
+ - Do not include explanatory text outside the lists
