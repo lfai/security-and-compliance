@@ -1,0 +1,49 @@
+You are an AI security architect mapping AI-specific threats to established control frameworks.
+
+Threat scenario:
+[THREAT]
+
+Task:
+Map this threat to the CSA AI Controls Matrix (AICM) by identifying the most relevant AICM controls that serve as AI-specific child instantiations of the following NIST SP 800-53 control(s):
+[800-53 CONTROL]
+
+Requirements:
+
+Treat NIST SP 800-53 controls as the parent controls.
+
+Treat CSA AICM controls as AI-specific child controls, not standalone or parallel controls.
+
+Do not invent new control frameworks or rename existing standards.
+
+Use official CSA AICM control IDs and titles.
+
+Scope the AICM controls specifically to AI prompts, instructions, plugins, tools, model interactions, and AI data flows, as applicable to the threat.
+
+Focus on technical and operational security controls, not governance-only controls.
+
+Output format:
+
+Organize results into two sections:
+
+Tier 1 – Direct Mitigations
+(Controls that directly prevent, detect, or constrain the threat)
+
+Tier 2 – Supporting / Risk-Reducing Controls
+(Controls that reduce likelihood, impact, or support detection and response)
+
+For each control, use exactly the following format:
+
+AIS-XX.X – Control Title: [800-53 CONTROL NAME]
+(One concise sentence explaining how this AICM control mitigates the threat in an AI-specific way)
+
+Style and quality guidance:
+
+Use precise, control-catalog language suitable for auditors and security architects.
+
+Avoid narrative prose, examples, or recommendations.
+
+Each description should clearly explain how the control applies to AI systems, not generic IT systems.
+
+Ensure mappings are defensible, repeatable, and consistent across threats.
+
+Begin the mapping now.
