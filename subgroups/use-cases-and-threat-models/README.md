@@ -34,7 +34,7 @@ The DFD lives [here on Mural](https://app.mural.co/t/securityusecasesandthreatmo
 
 ![Data Flow Diagram of Code Assistant](./images/code_assistant_dfd.png)
 
-The Threat Model lives here: https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing (please request access if needed)
+The Threat Model lives [here on google Docs](https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing) (please request access if needed)
 
 We are currently creating an automated, AI driven process to utilise AI to:
 
