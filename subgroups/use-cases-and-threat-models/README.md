@@ -11,7 +11,7 @@
 ### Leadership
 
 ##### Chairs:
-  - Matt Colman (IBM)
+  - Matt Colman ([IBM](https://www.ibm.com/))
     - mtcolman@uk.ibm.com
     - Slack: @Matt Colman
   - Petra Vukmirovoc ([Numan](https://www.numan.com/))
@@ -30,16 +30,21 @@ To produce interoperable AI security and compliance standards through its lifecy
 
 As of 27th Jan 2026 we have threat modelled the use case "AI Assistant Code Generator" (based on using a code-generating AI assistant as a plugin in IDE).
 
-The threat Model lives here: https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing (please request access if needed)
+The DFD lives [here on Mural](https://app.mural.co/t/securityusecasesandthreatmod1795/m/securityusecasesandthreatmod1795/1761143364260/4f8be761b012f15453ff697a978bf113e9ac215c).
 
-### WIP - Layer Stack for Threat Modelling
+![Data Flow Diagram of Code Assistant](./images/code_assistant_dfd.png)
 
-| Layer     | Description    | Example Components    | Key Assets    | Example Threats    |
-| --------- | -------------- | --------------------- | ------------- | ------------------ |
-| **AI**  | All ML/AI-specific components, pipelines, and data flows | Models, training data, prompt chains, inference APIs  | Model integrity, data confidentiality  | Data poisoning, model inversion, prompt injection |
-| **Application**  | Business logic, user interfaces, API endpoints  | Web apps, APIs, microservices, UI code  | Business data, user sessions   | Logic abuse, injection, broken access control   |
-| **Software (Runtime & Platform)**  | The software stack *under* the application layer, providing execution and dependencies | Programming languages, libraries, dependencies, runtimes, containers, SDKs | Code integrity, dependency trust, runtime stability | Supply-chain compromise, vulnerable dependency, malicious library, insecure deserialization |
-| **Operating System & Firmware**   | Host OS, hypervisor, kernel, and firmware layers  | OS (Linux/Windows), BIOS/UEFI, hypervisors   | System integrity, kernel security   | Privilege escalation, rootkits, firmware tampering   |
-| **Data**  | Data storage, flow, and lifecycle   | Databases, object stores, ETL pipelines | Data confidentiality, integrity, availability | Unauthorized access, exfiltration, corruption   |
-| **Network**  | Connectivity and communication  | Routers, firewalls, VPCs, load balancers | Traffic confidentiality and availability | DDoS, MITM, routing manipulation    |
-| **Infrastructure (Physical & Cloud)** | Compute, storage, virtualization, and hosting | Servers, VMs, cloud accounts, physical datacenters   | Service continuity, platform resilience | Misconfiguration, insider threat, resource exhaustion  |
+The Threat Model lives here: https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing (please request access if needed)
+
+We are currently creating an automated, AI driven process to utilise AI to:
+
+ - Enrich threat scenario text to ensure high quality
+ - Map threat scenario to [CAPEC](https://capec.mitre.org/)
+ - Map the CAPEC to [NIST SP800-53 controls](https://csrc.nist.gov/projects/risk-management/sp800-53-controls/downloads)
+ - Map NIST SP800-53 controls to [CSA AICM controls](https://cloudsecurityalliance.org/artifacts/ai-controls-matrix) (where the threat is AI specific/focused)
+
+![Process Chart of Threat Modelling with AI](./images/threat_modelling_with_ai.png)
+
+This gives us the following mapping:
+
+![Controls Mapping](./images/threat_model_controls_mapping_example.png)
