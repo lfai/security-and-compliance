@@ -30,7 +30,7 @@ To produce interoperable AI security and compliance standards through its lifecy
 
 Threat statements need to be written with the following structure:
 
-"User A ('the who') does B ('malicious action') to C ('technical component') which results in doing D ('the reason') to E ('the resource')"
+"Actor A ('the who') does B ('action') to C ('technical component') which results in doing D ('the reason') to E ('the resource')"
 
 E.g.: "Attacker ('the who') tampers ('malicious action') with REST service parameters ('technical component') to view ('the reason') unauthorised customer data ('the resource')"
 
