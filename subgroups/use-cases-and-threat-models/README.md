@@ -26,6 +26,15 @@ To produce interoperable AI security and compliance standards through its lifecy
 1. Identify and publish at least 3 pilot use cases + threat models in OWASP Threat Model Library
 2. Align on the use case - threat model (threats, controls, risks) - standard workflow
 
+### Guidance
+
+Threat statements need to be written with the following structure:
+
+"User A does B to C which results in D"
+
+E.g.: "Attacker ('the who') tampers ('malicious action') with REST service parameters ('technical component') to view ('the reason') unauthorised customer data ('the resource')"
+
+
 ### Current Work
 
 We have threat modelled the use case "AI Assistant Code Generator" (based on using a code-generating AI assistant as a plugin in IDE).
