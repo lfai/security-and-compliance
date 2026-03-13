@@ -1,0 +1,36 @@
+id,category,subcategory,description
+TS-ADV-01,Adversarial,Individual - Outsider,Individuals external to the organization who seek to exploit cyber resources
+TS-ADV-02,Adversarial,Individual - Insider,Individuals within the organization who seek to exploit cyber resources
+TS-ADV-03,Adversarial,Individual - Trusted Insider,Trusted individuals within the organization with authorized access
+TS-ADV-04,Adversarial,Individual - Privileged Insider,Individuals with elevated privileges who may exploit their access
+TS-ADV-05,Adversarial,Group - Ad hoc,Informal groups that form temporarily to conduct attacks
+TS-ADV-06,Adversarial,Group - Established,Organized groups with established attack capabilities
+TS-ADV-07,Adversarial,Organization - Competitor,Competing organizations seeking competitive advantage
+TS-ADV-08,Adversarial,Organization - Supplier,Supply chain entities that may compromise products or services
+TS-ADV-09,Adversarial,Organization - Partner,Partner organizations with access to systems or data
+TS-ADV-10,Adversarial,Organization - Customer,Customers who may exploit their access or relationship
+TS-ADV-11,Adversarial,Nation-State,State-sponsored actors with advanced capabilities and resources
+TS-ACC-01,Accidental,User,Regular users who make unintentional errors in normal operations
+TS-ACC-02,Accidental,Privileged User/Administrator,Administrators who make unintentional errors with elevated privileges
+TS-STR-01,Structural,IT Equipment - Storage,Failures of storage systems due to aging or resource depletion
+TS-STR-02,Structural,IT Equipment - Processing,Failures of processing systems exceeding operating parameters
+TS-STR-03,Structural,IT Equipment - Communications,Failures of communication systems or network equipment
+TS-STR-04,Structural,IT Equipment - Display,Failures of display or output systems
+TS-STR-05,Structural,IT Equipment - Sensor,Failures of sensor or monitoring equipment
+TS-STR-06,Structural,IT Equipment - Controller,Failures of control systems or controllers
+TS-STR-07,Structural,Environmental Controls - Temperature/Humidity,Failures of environmental control systems
+TS-STR-08,Structural,Environmental Controls - Power Supply,Failures of power supply or backup systems
+TS-STR-09,Structural,Software - Operating System,OS failures due to bugs or resource exhaustion
+TS-STR-10,Structural,Software - Networking,Network software failures affecting connectivity
+TS-STR-11,Structural,Software - General-Purpose Application,Failures of common application software
+TS-STR-12,Structural,Software - Mission-Specific Application,Failures of specialized mission-critical applications
+TS-ENV-01,Environmental,Natural Disaster - Fire,Fire causing damage to facilities or infrastructure
+TS-ENV-02,Environmental,Natural Disaster - Flood/Tsunami,Water-related disasters affecting operations
+TS-ENV-03,Environmental,Natural Disaster - Windstorm/Tornado,Wind-related disasters causing physical damage
+TS-ENV-04,Environmental,Natural Disaster - Hurricane,Major storms affecting facilities and infrastructure
+TS-ENV-05,Environmental,Natural Disaster - Earthquake,Seismic events causing structural damage
+TS-ENV-06,Environmental,Man-made Disaster - Bombing,Explosive attacks on facilities
+TS-ENV-07,Environmental,Man-made Disaster - Overrun,Physical intrusion or occupation of facilities
+TS-ENV-08,Environmental,Unusual Natural Event,Rare natural phenomena like solar events affecting systems
+TS-ENV-09,Environmental,Infrastructure Failure - Telecommunications,External telecom infrastructure failures
+TS-ENV-10,Environmental,Infrastructure Failure - Electrical Power,External power grid failures or outages

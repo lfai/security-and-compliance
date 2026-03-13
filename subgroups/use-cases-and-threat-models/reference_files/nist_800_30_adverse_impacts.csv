@@ -1,0 +1,31 @@
+id,category,subcategory,description
+AI-OPS-01,HARM TO OPERATIONS,Inability to perform current missions/business functions,Inability to perform current missions/business functions in a sufficiently timely manner with sufficient confidence and/or correctness within planned resource constraints
+AI-OPS-02,HARM TO OPERATIONS,Inability to perform missions/business functions in the future,Inability or limited ability to perform missions/business functions in the future
+AI-OPS-03,HARM TO OPERATIONS,Inability to restore missions/business functions,Inability to restore missions/business functions in a sufficiently timely manner with sufficient confidence and/or correctness within planned resource constraints
+AI-OPS-04,HARM TO OPERATIONS,Harms due to noncompliance with laws or regulations,Harms including financial costs sanctions due to noncompliance with applicable laws or regulations
+AI-OPS-05,HARM TO OPERATIONS,Harms due to noncompliance with contractual requirements,Harms including financial costs sanctions due to noncompliance with contractual requirements or other requirements in other binding agreements
+AI-OPS-06,HARM TO OPERATIONS,Direct financial costs,Direct financial costs resulting from threat events
+AI-OPS-07,HARM TO OPERATIONS,Damage to trust relationships,Relational harms including damage to trust relationships
+AI-OPS-08,HARM TO OPERATIONS,Damage to image or reputation,Damage to image or reputation and hence future or potential trust relationships
+AI-AST-01,HARM TO ASSETS,Damage to or loss of physical facilities,Damage to or loss of physical facilities
+AI-AST-02,HARM TO ASSETS,Damage to or loss of information systems or networks,Damage to or loss of information systems or networks
+AI-AST-03,HARM TO ASSETS,Damage to or loss of information technology or equipment,Damage to or loss of information technology or equipment
+AI-AST-04,HARM TO ASSETS,Damage to or loss of component parts or supplies,Damage to or loss of component parts or supplies
+AI-AST-05,HARM TO ASSETS,Damage to or loss of information assets,Damage to or loss of information assets
+AI-AST-06,HARM TO ASSETS,Loss of intellectual property,Loss of intellectual property
+AI-IND-01,HARM TO INDIVIDUALS,Injury or loss of life,Injury or loss of life
+AI-IND-02,HARM TO INDIVIDUALS,Physical or psychological mistreatment,Physical or psychological mistreatment
+AI-IND-03,HARM TO INDIVIDUALS,Identity theft,Identity theft
+AI-IND-04,HARM TO INDIVIDUALS,Loss of Personally Identifiable Information,Loss of Personally Identifiable Information
+AI-IND-05,HARM TO INDIVIDUALS,Damage to image or reputation,Damage to image or reputation
+AI-ORG-01,HARM TO OTHER ORGANIZATIONS,Harms due to noncompliance with laws or regulations,Harms including financial costs sanctions due to noncompliance with applicable laws or regulations
+AI-ORG-02,HARM TO OTHER ORGANIZATIONS,Harms due to noncompliance with contractual requirements,Harms including financial costs sanctions due to noncompliance with contractual requirements or other requirements in other binding agreements
+AI-ORG-03,HARM TO OTHER ORGANIZATIONS,Direct financial costs,Direct financial costs to other organizations
+AI-ORG-04,HARM TO OTHER ORGANIZATIONS,Damage to trust relationships,Relational harms including damage to trust relationships
+AI-ORG-05,HARM TO OTHER ORGANIZATIONS,Damage to reputation,Damage to reputation and hence future or potential trust relationships
+AI-NAT-01,HARM TO THE NATION,Damage to or incapacitation of critical infrastructure sector,Damage to or incapacitation of a critical infrastructure sector
+AI-NAT-02,HARM TO THE NATION,Loss of government continuity of operations,Loss of government continuity of operations
+AI-NAT-03,HARM TO THE NATION,Damage to trust relationships with other governments,Relational harms including damage to trust relationships with other governments or with nongovernmental entities
+AI-NAT-04,HARM TO THE NATION,Damage to national reputation,Damage to national reputation and hence future or potential trust relationships
+AI-NAT-05,HARM TO THE NATION,Damage to ability to achieve national objectives,Damage to current or future ability to achieve national objectives
+AI-NAT-06,HARM TO THE NATION,Harm to national security,Harm to national security
