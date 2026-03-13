@@ -36,11 +36,12 @@ E.g.: "Attacker ('the who') tampers ('malicious action') with REST service param
 
 ### Process to follow
 
-1. Generate threats (supply the guidance above for reference)
-2. Ensure threats are written following the structure above (amend any that aren't)
-3. Convert/Map threat statements to NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
-4. Map to CAPEC & CWE
-5. Map to Controls (NIST 800-53 and CSA AICM)
+1. Create dataflow diagram
+2. Generate threats (supply the guidance above for reference)
+3. Ensure threats are written following the structure above (amend any that aren't)
+4. Convert/Map threat statements to NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
+5. Map to CAPEC & CWE
+6. Map to Controls (NIST 800-53 and CSA AICM)
 
 ### Current Work
 
