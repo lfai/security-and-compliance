@@ -34,6 +34,14 @@ Threat statements need to be written with the following structure:
 
 E.g.: "Attacker ('the who') tampers ('malicious action') with REST service parameters ('technical component') to view ('the reason') unauthorised customer data ('the resource')"
 
+### Process to follow
+
+1. Generate threats (supply the guidance above for reference)
+2. Ensure threats are written following the structure above (amend any that aren't)
+3. Convert/Map threat statements to NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
+4. Map to CAPEC & CWE
+5. Map to Controls (NIST 800-53 and CSA AICM)
+
 ### Current Work
 
 We have threat modelled the use case "AI Assistant Code Generator" (based on using a code-generating AI assistant as a plugin in IDE).
