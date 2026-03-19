@@ -55,9 +55,9 @@ Human:
    - Ensure threats are written following the perspective guidance above (amend any that aren't)
 
 AI:
-3. Enrich human-generated threats with NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
-4. Map enriched statements to CAPEC & CWE
-5. Map CAPEC & CWE to Controls (NIST 800-53 and CSA AICM)
+1. Enrich human-generated threats with NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
+2. Map enriched statements to CAPEC & CWE
+3. Map CAPEC & CWE to Controls (NIST 800-53 and CSA AICM)
 
 ### Current Work
 
