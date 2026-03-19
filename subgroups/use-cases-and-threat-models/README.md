@@ -28,20 +28,33 @@ To produce interoperable AI security and compliance standards through its lifecy
 
 ### Guidance
 
+#### Threat Statements
+
 Threat statements need to be written with the following structure:
 
 "Actor A ('the who') does B ('action') to C ('technical component') which results in doing D ('the reason') to E ('the resource')"
 
 E.g.: "Attacker ('the who') tampers ('malicious action') with REST service parameters ('technical component') to view ('the reason') unauthorised customer data ('the resource')"
 
+#### Threat Perspective
+
+Threats need to be written with actors included within the diagram as the focal point, for example on a diagram that shows a developer flow, this threat:
+
+> External Attacker publishes a malicious version of the official plugin to an unofficial marketplace which results in developers installing it and sending code to an attacker-controlled backend.
+
+should be written as:
+
+> Developer uses an unofficial marketplace and unknowingly installs a malicious version of the official plugin into the IDE. This results in code being sent to an external, attacker-controlled backend.
+
 ### Process to follow
 
 1. Create dataflow diagram
 2. Generate threats (supply the guidance above for reference)
-3. Ensure threats are written following the structure above (amend any that aren't)
-4. Convert/Map threat statements to NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
-5. Map to CAPEC & CWE
-6. Map to Controls (NIST 800-53 and CSA AICM)
+  a. Ensure threats are written following the structure guidance above (amend any that aren't)
+  b. Ensure threats are written following the perspective guidance above (amend any that aren't)
+3. Convert/Map threat statements to NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
+4. Map to CAPEC & CWE
+5. Map to Controls (NIST 800-53 and CSA AICM)
 
 ### Current Work
 
