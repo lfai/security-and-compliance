@@ -50,8 +50,8 @@ should be written as:
 
 1. Create dataflow diagram
 2. Generate threats (supply the guidance above for reference)
-  a. Ensure threats are written following the structure guidance above (amend any that aren't)
-  b. Ensure threats are written following the perspective guidance above (amend any that aren't)
+   - Ensure threats are written following the structure guidance above (amend any that aren't)
+   - Ensure threats are written following the perspective guidance above (amend any that aren't)
 3. Convert/Map threat statements to NIST 800-30 taxonomy (threat source, threat event, and adverse impact)
 4. Map to CAPEC & CWE
 5. Map to Controls (NIST 800-53 and CSA AICM)
