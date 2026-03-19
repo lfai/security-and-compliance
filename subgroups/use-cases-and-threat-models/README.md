@@ -72,7 +72,7 @@ The Threat Model lives [here on google Docs](https://docs.google.com/spreadsheet
 We are currently creating an automated, AI driven process to utilise AI to:
 
  - Enrich threat scenario text to ensure high quality
- - Convert scenario to [NIST 800-30 threat taxonomy](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-30r1.pdf)
+ - Enrich scenario with [NIST 800-30 threat taxonomy](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-30r1.pdf)
  - Map threat scenario to [Common Attack Pattern Enumerations and Classifications (CAPEC)](https://capec.mitre.org/)
  - Map the CAPEC to [NIST SP800-53 Security and Privacy Controls for Information Systems and Organizations](https://csrc.nist.gov/projects/risk-management/sp800-53-controls/downloads) controls
  - Map NIST SP800-53 controls to [Cloud Security Alliance AI Controls Matrix (CSA AICM)](https://cloudsecurityalliance.org/artifacts/ai-controls-matrix) controls (where the threat is AI specific/focused)
