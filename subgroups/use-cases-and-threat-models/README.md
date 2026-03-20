@@ -50,14 +50,14 @@ should be written as:
 
 The AI tool will enrich threat statements with NIST 800-30 rather than reformat them, e.g. we would send the following to the LLM when asking it to align CAPEC to the scenario:
 
-> **Prompt**
+> **Prompt**  
 > Determine which CAPEC align(s) to this threat scenario 
 > 
 > Developer uses an unofficial marketplace and unknowingly installs a malicious version of the official plugin into the IDE. This results in code being sent to an external, attacker-controlled backend.
 
 becomes:
 
-> **Prompt**
+> **Prompt**  
 > Determine which CAPEC align(s) to this threat scenario, NIST 800-30 threat taxonomy alignment has been supplied to provide further clarity alongside the threat statement. Ensure to primarily focus on the details in the threat statement.
 > 
 > Developer uses an unofficial marketplace and unknowingly installs a malicious version of the official plugin into the IDE. This results in code being sent to an external, attacker-controlled backend.
