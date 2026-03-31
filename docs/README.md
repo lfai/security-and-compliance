@@ -8,4 +8,4 @@
 
 ### Whitepapers
 
-- TBD
+- [OSCAL Mapping Best Practices](./OSCAL_Mapping_Best_Practices.pdf)
