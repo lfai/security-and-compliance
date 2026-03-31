@@ -134,6 +134,10 @@ The work group intends to collaborate with and reference work from other foundat
     - [Secure Software Development Framework (SSDF)](https://csrc.nist.gov/Projects/ssdf) - secure software development practices.
 
 ---
+## Whitepapers
+
+- [OSCAL Mapping Best Practices](./docs/OSCAL_Mapping_Best_Practices.pdf)
+---
 
 ## References
 
