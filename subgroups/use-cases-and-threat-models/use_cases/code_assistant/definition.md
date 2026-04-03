@@ -23,11 +23,14 @@ Humans or services that take action
 - **Developer**  
   The human actor who writes, modifies, and maintains code—considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations).
 
+- **(Code Assistant LLM) Model (Thinking & Tooling capability)**   
+    An AI model within the assistant plugin that combines reasoning (“thinking”) and tool interaction capabilities (e.g., APIs, code execution) to perform actions. In threat modeling, it is treated as an active actor since these capabilities can be leveraged—intentionally or through manipulation (e.g., prompt injection)—to carry out malicious or unintended actions such as data exfiltration, unsafe operations, or abuse of integrated services.
+
 ### Data
 
 Data at rest or data in motion
-- **Assistant Plugin (Malicious)**  
-  An AI-powered or automation plugin integrated into the IDE that assists with coding—introduces risks such as data exfiltration, prompt injection, or insecure code generation.
+- **Code Assistant Plugin (Malicious)**  
+  A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.
 
 ### Components
 
@@ -38,10 +41,10 @@ Software or services
 
 - **Local codebase clone**  
   A developer’s local copy of a repository—treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised.
-- **Assistant Backend**  
+- **Assistant Backend (Agent Runner)**  
   The server-side infrastructure that processes requests from the assistant plugin, orchestrates workflows, and communicates with LLMs and external services—an important trust boundary and potential target for data interception or abuse.
 
-- **Assistant LLM (Large Language Model)**  
+- **(Code assistant LLM) Model (Large Language Model)**  
   The core AI model that generates responses or code suggestions—relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, or insecure output generation.
 
 - **RAG (Retrieval-Augmented Generation)**  
@@ -64,3 +67,6 @@ Software or services
 
 - **External Plugin Marketplace**  
   A third-party platform where developers discover and install IDE plugins or extensions—introduces supply chain risks such as malicious or vulnerable plugins, insufficient vetting, and potential for unauthorized data access or exfiltration.
+
+- **(Code Assistant LLM) Model (Thinking & Tooling capability)**  
+    A core system component of the assistant architecture responsible for processing inputs, generating responses, and orchestrating tool usage. It represents a critical trust boundary where data is interpreted and actions are initiated, introducing risks related to insecure outputs, data leakage, improper tool invocation, and reliance on untrusted inputs.
