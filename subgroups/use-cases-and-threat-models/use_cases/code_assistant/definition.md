@@ -10,8 +10,8 @@ Diagram (draw.io): ![Diagram](security-and-compliance/subgroups/use-cases-and-th
 
 Note that within the Code Assistant Use Case there are two sub use cases:
 
-A. The Backend for the Code Assistant is locally hosted within the same workstation
-B. The Backend for the Code Assistant is remotely hosted
+A. The Backend for the Code Assistant is locally hosted within the same workstation  
+B. The Backend for the Code Assistant is remotely hosted  
 
 
 ### Logical boundries
