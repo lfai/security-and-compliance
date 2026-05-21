@@ -4,7 +4,7 @@ This document provides concise definitions of the items used in threat modeling 
 
 Diagram (draw.io): ![Diagram](./diagram/ai_code_generator_threat_model_diagram_updated_2026_05_12.drawio.svg)
 
-[Edit this diagram (draw.io XML)](./diagramm/ai_code_generator_threat_model_diagram_updated_2026_05_12.drawio)
+[Edit this diagram (draw.io XML)](./diagram/ai_code_generator_threat_model_diagram_updated_2026_05_12.drawio)
 
 ## Sub Use Case 1a:
 The developer's workstation hosts the full agentic framework, including the dynamic agent, model, RAG, and context store. The assistant plugin communicates directly with locally running components, with MCP servers bridging internal third-party services and external cloud platforms.
