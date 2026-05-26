@@ -117,11 +117,17 @@ Humans or services that take action
 - **Developer**
   The human actor who writes, modifies, and maintains code—considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations).
 
+  Example: A backend engineer, a DevOps engineer, a security engineer, a contractor with repo access.
+
 - **Code Assistant Agent (Static Code)**
   An AI model embedded within the assistant plugin that combines reasoning and tool interaction capabilities (e.g., APIs, code execution) to perform actions directly within the developer environment. In threat modeling it is treated as an active actor, since these capabilities can be leveraged—intentionally or through manipulation such as prompt injection—to carry out malicious or unintended actions including data exfiltration, unsafe operations, or abuse of integrated services.
 
+  Example: GitHub Copilot, Amazon Q Developer
+
 - **Code Assistant Agent (Dynamic Code) (local/Remote)**
   An AI model within the agentic framework that combines reasoning and tool interaction capabilities to orchestrate multi-step workflows, invoke external services, and coordinate with the broader agent ecosystem. In threat modeling it is treated as an active actor with an expanded blast radius relative to its static counterpart—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems.
+
+  Example: Claude with MCP tools, AutoGen agent, LangGraph agent
 
 ### Components
 
@@ -132,27 +138,41 @@ Used to describe the control zones of an organization relative to the usecases o
 - **Internal**  
   Systems, APIs, or infrastructure owned and operated within the organization’s environment—generally more trusted but still pose risks such as misconfigurations, lateral movement, and insider threats.
 
+  Example: Self-hosted GitLab, on-prem Jenkins CI
+
 - **External SaaS**  
   Third-party managed software platforms that provide application or agentic capabilities (SaaS-style trust boundary) — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
 
+  Example: GitHub.com, Stripe API, Slack
+
 - **External Cloud**  
   Third-party infrastructure and cloud service providers used as dependencies or execution targets — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
+
+  Example: AWS, Google Cloud Platform (GCP), Microsoft Azure
 
 #### Data
 
 Data at rest or data in motion
 
 - **Code Assistant Plugin**  
-  A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.  
+  A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.
+
+  Example: Malicious fake ESLint extension, trojanized Prettier plugin
 
 - **Local Codebase clone**  
   A developer’s local copy of a repository—treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised.
 
+  Example: local monorepo checkout
+
 - **Local Context Store**  
   A locally hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs.
 
+  Example: Local Chroma DB, local FAISS index
+
 - **Remote Context Store**  
   A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs.
+
+  Example: Pinecone, Weaviate
 
 - **RAG data**  
   TBC
@@ -160,52 +180,80 @@ Data at rest or data in motion
 #### Application
 
 - **Integrated Development Environment (IDE)**  
-  The software environment (e.g., VS Code, IntelliJ) where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure.
+  The software environment where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure.
+
+  Example: VS Code, JetBrains IntelliJ IDEA, Google Antigravity IDE 
 
 - **Authentication Service**  
-  The service for verifying the identity of a user or system (e.g., passwords, tokens, MFA)—risks include credential theft, weak authentication mechanisms, and session hijacking.
+  The service for verifying the identity of a user or system—risks include credential theft, weak authentication mechanisms, and session hijacking.
+
+  Example: Okta, Microsoft Entra ID, AWS Cognito
 
 - **Authorization Service**  
   The service for determining what an authenticated user or system is allowed to access or perform—risks include excessive permissions, privilege escalation, and misconfigured access controls.
 
+  Example: Open Policy Agent (OPA), AWS IAM, HashiCorp Boundary
+
 - **Third Party MCP Server**
   An organization-operated MCP server that integrates the assistant with internal third-party services. Poses risks if misconfigured or inadequately secured, including unauthorized data access, insecure API exposure, and privilege escalation through service integrations.
+
+  Example: Internal MCP server bridging Jira, Confluence
 
 - **Local RAG**  
   A component, hosted locally, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs.
 
+  Example: Local LangChain + Chroma, LlamaIndex + FAISS
+
 - **Remote RAG**  
   A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs.
-  
+
+  Example: Hosted LangChain + Pinecone, Haystack + Weaviate
+
 - **MCP Server — Cloud Service**  
   A vendor-operated MCP server that integrates the assistant with external cloud platforms and services. Introduces supply chain risks including vulnerable or malicious dependencies, excessive permissions, and potential exfiltration of data passed through the integration.
+
+  Example: AWS S3 MCP integration, Google Drive MCP connector
 
 - **MCP Server — Agentic SaaS**
   The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components. A high-value target due to its central role—risks include unauthorized access, data interception, and abuse of its broad orchestration capabilities.
 
+  Example: Cursor cloud MCP layer, GitHub Copilot Workspace MCP backend
+
 - **MCP Gateway**
   The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. Acts as a perimeter trust boundary—misconfiguration or compromise can expose backend infrastructure to unauthorized access or traffic manipulation.
+
+  Example: AWS API Gateway, Nginx reverse proxy, Cloudflare Tunnel
 
 #### Platform
 
 - **External Plugin Marketplace**  
   An externally operated third-party platform where developers discover and install IDE plugins or extensions—introduces supply chain risks such as malicious or vulnerable plugins, insufficient vetting, and potential for unauthorized data access or exfiltration.
 
+  Example: VS Code Marketplace, JetBrains Marketplace, Chrome Web Store
+
 - **Agentic SaaS**
   An externally operated platform that delivers agentic assistant capabilities as a managed service. Introduces risks related to third-party data handling, limited visibility into model behavior and data flows, dependency on external availability, and reduced control over security posture.
+
+  Example: Cursor, GitHub Copilot Workspace
 
 #### Framework
 
 - **Agentic Framework**  
   The orchestration layer that coordinates multi-step, tool-using workflows on behalf of the assistant. Manages execution flow between the model, retrieval systems, and external services—a high-impact trust boundary where prompt injection, tool misuse, or unintended action chains can have significant consequences.
 
+  Example: LangChain, CrewAI, Anthropic Agents SDK,
+
 ### Machine-Learning-Model
 
 - **Local Code Assistant Model**  
   The core AI model that generates responses or code suggestions. Run locally (e.g., a self-hosted model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent.
 
+  Example: Ollama + CodeLlama 13B, self-hosted Mistral 7B
+
 - **Remote Code Assistant Model**  
   The core AI model that generates responses or code suggestions. Run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent.
+
+  Example: Claude Sonnet (Anthropic API), GPT-4o (Azure OpenAI), Llama 3 70B (Amazon Bedrock)
 
 ## CycloneDX v1.7 — Code Assistant Threat Model BOM
 
