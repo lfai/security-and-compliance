@@ -132,7 +132,7 @@ Used to describe the control zones of an organization relative to the usecases o
 - **Internal**  
   Systems, APIs, or infrastructure owned and operated within the organization’s environment—generally more trusted but still pose risks such as misconfigurations, lateral movement, and insider threats.
 
-- **External SaaS**
+- **External SaaS**  
   Third-party managed software platforms that provide application or agentic capabilities (SaaS-style trust boundary) — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
 
 - **External Cloud**  
