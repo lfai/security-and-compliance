@@ -60,6 +60,35 @@ External B
     └── Cloud Service (e.g. AWS, GCP)
 ```
 
+## Canonical Diagram Entity Mapping
+
+| Canonical Name                      | Taxonomy Group         | Usecases | Group          |
+| ----------------------------------- | ---------------------- | -------- | -------------- |
+| Developer                           | Actor                  | 1a,1b    | Internal       |
+| Code Assistant Plugin               | Data                   | 1a,1b    | Internal       |
+| Local Codebase Clone                | Data                   | 1a,1b    | Internal       |
+| IDE                                 | Application            | 1a,1b    | Internal       |
+| Authentication Service              | Application            | 1a,1b    | Internal       |
+| Authorization Service               | Application            | 1a,1b    | Internal       |
+| Third Party MCP Server              | Application            | 1a,1b    | Internal       |
+| MCP Server — Third Party Service    | Application            | 1a,1b    | Internal       |
+| Code Assistant Agent (Static Code)  | Application            | 1a,1b    | Internal       |
+| Code Assistant Agent (Dynamic Code) | Application            | 1a       | Internal       |
+| Code Assistant Agent (Dynamic Code) | Application            | 1b       | External SaaS  |
+| Agentic Framework                   | Framework              | 1a       | Internal       |
+| Agentic Framework                   | Framework              | 1b       | External SaaS  |
+| Local Code Assistant Model          | Machine-Learning-Model | 1a       | Internal       |
+| Remote Code Assistant Model         | Machine-Learning-Model | 1b       | External SaaS  |
+| Local RAG                           | Application            | 1a       | Internal       |
+| Remote RAG                          | Application            | 1b       | External SaaS  |
+| Local Context Store                 | Data                   | 1a       | Internal       |
+| Remote Context Store                | Data                   | 1b       | External SaaS  |
+| MCP Gateway                         | Application            | 1b       | External SaaS  |
+| MCP Server — Agentic SaaS           | Application            | 1b       | External SaaS  |
+| External Plugin Marketplace         | Platform               | 1b       | External SaaS  |
+| Agentic SaaS                        | Platform               | 1b       | External SaaS  |
+| MCP Server — Cloud Service          | Application            | 1a,1b    | External Cloud |
+| Cloud Service (AWS/GCP/etc.)        | Application            | 1a,1b    | External Cloud |
 
 ## Diagram Content
 The following taxonomy is aligned to available component types as present in [CycloneDX 1.7/2.0+](https://cyclonedx.org/docs/1.7/json/#metadata_tools_oneOf_i0_components_items_type). An example is shown below:
@@ -103,8 +132,11 @@ Used to describe the control zones of an organization relative to the usecases o
 - **Internal**  
   Systems, APIs, or infrastructure owned and operated within the organization’s environment—generally more trusted but still pose risks such as misconfigurations, lateral movement, and insider threats.
 
-- **External**  
-  Third-party systems or services outside the organization’s control (e.g., SaaS, APIs, cloud providers)—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
+- **External SaaS (external-a)**
+  Third-party managed software platforms that provide application or agentic capabilities (SaaS-style trust boundary) — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
+
+- **External Cloud (external-b)**  
+  Third-party infrastructure and cloud service providers used as dependencies or execution targets — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
 
 #### Data
 
