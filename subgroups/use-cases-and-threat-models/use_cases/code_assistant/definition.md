@@ -25,13 +25,13 @@ Internal
         ├── RAG
         └── Context Store
 
-External B
+External Cloud
 └── MCP Server
     └── Cloud Service
 ```
 
 ## Sub Use Case 1b:
-  The agentic framework is offloaded to an external SaaS platform, which hosts the dynamic agent, model, RAG, and context store behind an MCP Gateway. The workstation retains the plugin and static agent, with MCP servers connecting to both internal third-party services and external cloud platforms.
+The agentic framework is offloaded to an external SaaS platform, which hosts the dynamic agent, model, RAG, and context store behind an MCP Gateway. The workstation retains the plugin and static agent, with MCP servers connecting to both internal third-party services and external cloud platforms.
 
 ```
 Internal
@@ -45,17 +45,17 @@ Internal
     │   └── Code Assistant Agent (Static Code)
     └── Agentic Framework
 
-External A
+External SaaS
 ├── Plugin Marketplace
 └── Agentic SaaS
     ├── MCP Gateway
     └── MCP Server (e.g. Claude code)
         ├── Code Assistant Agent (Dynamic Code)
         ├── Code Assistant Model (e.g. 30b)
-        ├── Rag
+        ├── RAG
         └── Context store
 
-External B
+External Cloud
 └── MCP Server
     └── Cloud Service (e.g. AWS, GCP)
 ```
@@ -132,10 +132,10 @@ Used to describe the control zones of an organization relative to the usecases o
 - **Internal**  
   Systems, APIs, or infrastructure owned and operated within the organization’s environment—generally more trusted but still pose risks such as misconfigurations, lateral movement, and insider threats.
 
-- **External SaaS (external-a)**
+- **External SaaS**  
   Third-party managed software platforms that provide application or agentic capabilities (SaaS-style trust boundary) — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
 
-- **External Cloud (external-b)**  
+- **External Cloud**  
   Third-party infrastructure and cloud service providers used as dependencies or execution targets — introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
 
 #### Data
