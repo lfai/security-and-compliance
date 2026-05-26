@@ -486,6 +486,5 @@ Data at rest or data in motion
       ]
     }
   ]
-
 }
 ```
