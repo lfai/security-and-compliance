@@ -30,6 +30,156 @@ External Cloud
     └── Cloud Service
 ```
 
+```json
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "version": 1,
+  "components": [
+
+    {
+      "type": "platform",
+      "name": "Internal",
+      "description": "Systems, APIs, or infrastructure owned and operated within the organization's environment—generally more trusted but still pose risks such as misconfigurations, lateral movement, and insider threats.",
+      "components": [
+
+        {
+          "type": "application",
+          "bom-ref": "app-mcp-third-party",
+          "name": "Third Party MCP Server",
+          "description": "An organization-operated MCP server that integrates the assistant with internal third-party services. Poses risks if misconfigured or inadequately secured, including unauthorized data access, insecure API exposure, and privilege escalation through service integrations.",
+          "components": [
+            {
+              "type": "application",
+              "bom-ref": "app-third-party-service",
+              "name": "Third Party Service",
+              "description": "An internal third-party service (e.g. Jira, Confluence) accessed via the organization-operated MCP server."
+            }
+          ]
+        },
+
+        {
+          "type": "application",
+          "bom-ref": "app-authn",
+          "name": "Authentication Service",
+          "description": "The service for verifying the identity of a user or system—risks include credential theft, weak authentication mechanisms, and session hijacking."
+        },
+
+        {
+          "type": "application",
+          "bom-ref": "app-authz",
+          "name": "Authorization Service",
+          "description": "The service for determining what an authenticated user or system is allowed to access or perform—risks include excessive permissions, privilege escalation, and misconfigured access controls."
+        },
+
+        {
+          "type": "device",
+          "bom-ref": "device-workstation",
+          "name": "Workstation",
+          "description": "The developer's endpoint—hosts the IDE, local codebase, plugin, and (in use case 1a) the full agentic framework. A high-value target due to privileged access to source code, credentials, and integrated services.",
+          "components": [
+
+            {
+              "type": "application",
+              "bom-ref": "app-ide",
+              "name": "Integrated Development Environment (IDE)",
+              "description": "The software environment where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure."
+            },
+
+            {
+              "type": "data",
+              "bom-ref": "data-local-codebase",
+              "name": "Local Codebase Clone",
+              "description": "A developer's local copy of a repository—treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised."
+            },
+
+            {
+              "type": "data",
+              "bom-ref": "data-plugin",
+              "name": "Code Assistant Plugin",
+              "description": "A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.",
+              "components": [
+                {
+                  "type": "application",
+                  "bom-ref": "app-agent-static",
+                  "name": "Code Assistant Agent (Static Code)",
+                  "description": "An AI model embedded within the assistant plugin that combines reasoning and tool interaction capabilities (e.g., APIs, code execution) to perform actions directly within the developer environment. In threat modeling it is treated as an active actor, since these capabilities can be leveraged—intentionally or through manipulation such as prompt injection—to carry out malicious or unintended actions including data exfiltration, unsafe operations, or abuse of integrated services."
+                }
+              ]
+            },
+
+            {
+              "type": "framework",
+              "bom-ref": "framework-1a",
+              "name": "Agentic Framework",
+              "description": "The orchestration layer that coordinates multi-step, tool-using workflows on behalf of the assistant. Manages execution flow between the model, retrieval systems, and external services—a high-impact trust boundary where prompt injection, tool misuse, or unintended action chains can have significant consequences.",
+              "components": [
+
+                {
+                  "type": "application",
+                  "bom-ref": "app-agent-dynamic-1a",
+                  "name": "Code Assistant Agent (Dynamic Code)",
+                  "description": "An AI model within the agentic framework that combines reasoning and tool interaction capabilities to orchestrate multi-step workflows, invoke external services, and coordinate with the broader agent ecosystem. In threat modeling it is treated as an active actor with an expanded blast radius relative to its static counterpart—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems."
+                },
+
+                {
+                  "type": "machine-learning-model",
+                  "bom-ref": "model-local",
+                  "name": "Local Code Assistant Model",
+                  "description": "The core AI model that generates responses or code suggestions, run locally (e.g., a self-hosted model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent."
+                },
+
+                {
+                  "type": "application",
+                  "bom-ref": "rag-local",
+                  "name": "Local RAG",
+                  "description": "A component, hosted locally, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs."
+                },
+
+                {
+                  "type": "data",
+                  "bom-ref": "ctx-local",
+                  "name": "Local Context Store",
+                  "description": "A locally hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs."
+                }
+
+              ]
+            }
+
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "type": "platform",
+      "name": "External Cloud",
+      "description": "Third-party infrastructure and cloud service providers used as dependencies or execution targets—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.",
+      "components": [
+
+        {
+          "type": "application",
+          "bom-ref": "mcp-cloud",
+          "name": "MCP Server — Cloud Service",
+          "description": "A vendor-operated MCP server that integrates the assistant with external cloud platforms and services. Introduces supply chain risks including vulnerable or malicious dependencies, excessive permissions, and potential exfiltration of data passed through the integration.",
+          "components": [
+            {
+              "type": "application",
+              "bom-ref": "cloud-service",
+              "name": "Cloud Service (AWS/GCP/etc.)",
+              "description": "Third-party infrastructure and cloud service providers used as dependencies or execution targets—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices."
+            }
+          ]
+        }
+
+      ]
+    }
+
+  ]
+}
+```
+
 ## Sub Use Case 1b:
 The agentic framework is offloaded to an external SaaS platform, which hosts the dynamic agent, model, RAG, and context store behind an MCP Gateway. The workstation retains the plugin and static agent, with MCP servers connecting to both internal third-party services and external cloud platforms.
 
@@ -58,6 +208,196 @@ External SaaS
 External Cloud
 └── MCP Server
     └── Cloud Service (e.g. AWS, GCP)
+```
+
+```json
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "version": 1,
+  "components": [
+
+    {
+      "type": "platform",
+      "name": "Internal",
+      "description": "Systems, APIs, or infrastructure owned and operated within the organization's environment—generally more trusted but still pose risks such as misconfigurations, lateral movement, and insider threats.",
+      "components": [
+
+        {
+          "type": "application",
+          "bom-ref": "app-mcp-third-party",
+          "name": "Third Party MCP Server",
+          "description": "An organization-operated MCP server that integrates the assistant with internal third-party services. Poses risks if misconfigured or inadequately secured, including unauthorized data access, insecure API exposure, and privilege escalation through service integrations.",
+          "components": [
+            {
+              "type": "application",
+              "bom-ref": "app-third-party-service",
+              "name": "Third Party Service",
+              "description": "An internal third-party service (e.g. Jira, GitHub) accessed via the organization-operated MCP server."
+            }
+          ]
+        },
+
+        {
+          "type": "application",
+          "bom-ref": "app-authn",
+          "name": "Authentication Service",
+          "description": "The service for verifying the identity of a user or system—risks include credential theft, weak authentication mechanisms, and session hijacking."
+        },
+
+        {
+          "type": "application",
+          "bom-ref": "app-authz",
+          "name": "Authorization Service",
+          "description": "The service for determining what an authenticated user or system is allowed to access or perform—risks include excessive permissions, privilege escalation, and misconfigured access controls."
+        },
+
+        {
+          "type": "device",
+          "bom-ref": "device-workstation",
+          "name": "Workstation",
+          "description": "The developer's endpoint—hosts the IDE, local codebase, and plugin. In use case 1b the agentic framework is offloaded to an external SaaS platform.",
+          "components": [
+
+            {
+              "type": "application",
+              "bom-ref": "app-ide",
+              "name": "Integrated Development Environment (IDE)",
+              "description": "The software environment where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure."
+            },
+
+            {
+              "type": "data",
+              "bom-ref": "data-local-codebase",
+              "name": "Local Codebase Clone",
+              "description": "A developer's local copy of a repository—treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised."
+            },
+
+            {
+              "type": "data",
+              "bom-ref": "data-plugin",
+              "name": "Code Assistant Plugin",
+              "description": "A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.",
+              "components": [
+                {
+                  "type": "application",
+                  "bom-ref": "app-agent-static",
+                  "name": "Code Assistant Agent (Static Code)",
+                  "description": "An AI model embedded within the assistant plugin that combines reasoning and tool interaction capabilities (e.g., APIs, code execution) to perform actions directly within the developer environment. In threat modeling it is treated as an active actor, since these capabilities can be leveraged—intentionally or through manipulation such as prompt injection—to carry out malicious or unintended actions including data exfiltration, unsafe operations, or abuse of integrated services."
+                }
+              ]
+            },
+
+            {
+              "type": "framework",
+              "bom-ref": "framework-1b-stub",
+              "name": "Agentic Framework",
+              "description": "The orchestration layer is offloaded to the External SaaS platform in this use case. This stub represents the local integration point on the workstation that connects to the remote agentic framework."
+            }
+
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "type": "platform",
+      "name": "External SaaS",
+      "description": "Third-party managed software platforms that provide application or agentic capabilities—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.",
+      "components": [
+
+        {
+          "type": "platform",
+          "bom-ref": "external-plugin-marketplace",
+          "name": "External Plugin Marketplace",
+          "description": "An externally operated third-party platform where developers discover and install IDE plugins or extensions—introduces supply chain risks such as malicious or vulnerable plugins, insufficient vetting, and potential for unauthorized data access or exfiltration."
+        },
+
+        {
+          "type": "platform",
+          "bom-ref": "agentic-saas",
+          "name": "Agentic SaaS",
+          "description": "An externally operated platform that delivers agentic assistant capabilities as a managed service. Introduces risks related to third-party data handling, limited visibility into model behavior and data flows, dependency on external availability, and reduced control over security posture.",
+          "components": [
+
+            {
+              "type": "application",
+              "bom-ref": "mcp-gateway",
+              "name": "MCP Gateway",
+              "description": "The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. Acts as a perimeter trust boundary—misconfiguration or compromise can expose backend infrastructure to unauthorized access or traffic manipulation."
+            },
+
+            {
+              "type": "application",
+              "bom-ref": "mcp-agentic-saas",
+              "name": "MCP Server — Agentic SaaS",
+              "description": "The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components. A high-value target due to its central role—risks include unauthorized access, data interception, and abuse of its broad orchestration capabilities.",
+              "components": [
+
+                {
+                  "type": "application",
+                  "bom-ref": "app-agent-dynamic-1b",
+                  "name": "Code Assistant Agent (Dynamic Code)",
+                  "description": "An AI model within the agentic framework that combines reasoning and tool interaction capabilities to orchestrate multi-step workflows, invoke external services, and coordinate with the broader agent ecosystem. In threat modeling it is treated as an active actor with an expanded blast radius relative to its static counterpart—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems."
+                },
+
+                {
+                  "type": "machine-learning-model",
+                  "bom-ref": "model-remote",
+                  "name": "Remote Code Assistant Model",
+                  "description": "The core AI model that generates responses or code suggestions, run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent."
+                },
+
+                {
+                  "type": "application",
+                  "bom-ref": "rag-remote",
+                  "name": "Remote RAG",
+                  "description": "A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs."
+                },
+
+                {
+                  "type": "data",
+                  "bom-ref": "ctx-remote",
+                  "name": "Remote Context Store",
+                  "description": "A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs."
+                }
+
+              ]
+            }
+
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "type": "platform",
+      "name": "External Cloud",
+      "description": "Third-party infrastructure and cloud service providers used as dependencies or execution targets—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.",
+      "components": [
+
+        {
+          "type": "application",
+          "bom-ref": "mcp-cloud",
+          "name": "MCP Server — Cloud Service",
+          "description": "A vendor-operated MCP server that integrates the assistant with external cloud platforms and services. Introduces supply chain risks including vulnerable or malicious dependencies, excessive permissions, and potential exfiltration of data passed through the integration.",
+          "components": [
+            {
+              "type": "application",
+              "bom-ref": "cloud-service",
+              "name": "Cloud Service (AWS/GCP/etc.)",
+              "description": "Third-party infrastructure and cloud service providers used as dependencies or execution targets—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices."
+            }
+          ]
+        }
+
+      ]
+    }
+
+  ]
+}
 ```
 
 ## Canonical Diagram Entity Mapping
@@ -96,7 +436,7 @@ The following taxonomy is aligned to available component types as present in [Cy
 ```json
 {
   "bomFormat": "CycloneDX",
-  "specVersion": "1.7",
+  "specVersion": "2.0",
   "version": 1,
   "components": [
     {
@@ -255,306 +595,180 @@ Data at rest or data in motion
 
   Example: Claude Sonnet (Anthropic API), GPT-4o (Azure OpenAI), Llama 3 70B (Amazon Bedrock)
 
-## CycloneDX v1.7 — Code Assistant Threat Model BOM
+## CycloneDX v2.0 — Code Assistant Threat Model BOM
 
 ```json
 {
   "bomFormat": "CycloneDX",
-  "specVersion": "1.7",
+  "specVersion": "2.0",
   "version": 1,
   "components": [
     {
       "type": "device",
       "bom-ref": "actor-developer",
       "name": "Developer",
-      "description": "The human actor who writes, modifies, and maintains code—considered a potential target or source of risk.",
-      "properties": [
-        { "name": "cdx:category", "value": "actor" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "The human actor who writes, modifies, and maintains code—considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations)."
     },
 
     {
       "type": "application",
       "bom-ref": "app-ide",
       "name": "Integrated Development Environment (IDE)",
-      "description": "The software environment where code is written and tested.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "The software environment where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure."
     },
 
     {
       "type": "data",
       "bom-ref": "data-plugin",
       "name": "Code Assistant Plugin",
-      "description": "AI-powered IDE plugin that may be compromised or malicious.",
-      "properties": [
-        { "name": "cdx:category", "value": "data" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" },
-        { "name": "cdx:parent", "value": "app-ide" }
-      ]
+      "description": "A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs."
     },
 
     {
       "type": "data",
       "bom-ref": "data-local-codebase",
       "name": "Local Codebase Clone",
-      "description": "Local copy of repository containing sensitive code and secrets.",
-      "properties": [
-        { "name": "cdx:category", "value": "data" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "A developer's local copy of a repository—treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised."
     },
 
     {
       "type": "application",
       "bom-ref": "app-authn",
       "name": "Authentication Service",
-      "description": "Service responsible for identity verification.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "The service for verifying the identity of a user or system—risks include credential theft, weak authentication mechanisms, and session hijacking."
     },
 
     {
       "type": "application",
       "bom-ref": "app-authz",
       "name": "Authorization Service",
-      "description": "Service responsible for access control decisions.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "The service for determining what an authenticated user or system is allowed to access or perform—risks include excessive permissions, privilege escalation, and misconfigured access controls."
     },
 
     {
       "type": "application",
       "bom-ref": "app-mcp-third-party",
       "name": "Third Party MCP Server",
-      "description": "Organization-operated MCP server integrating third-party services.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "An organization-operated MCP server that integrates the assistant with internal third-party services. Poses risks if misconfigured or inadequately secured, including unauthorized data access, insecure API exposure, and privilege escalation through service integrations."
     },
 
     {
       "type": "application",
       "bom-ref": "app-agent-static",
       "name": "Code Assistant Agent (Static Code)",
-      "description": "AI model embedded in plugin performing tool use inside IDE.",
-      "properties": [
-        { "name": "cdx:category", "value": "actor" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a,1b" },
-        { "name": "cdx:parent", "value": "data-plugin" }
-      ]
+      "description": "An AI model embedded within the assistant plugin that combines reasoning and tool interaction capabilities (e.g., APIs, code execution) to perform actions directly within the developer environment. In threat modeling it is treated as an active actor, since these capabilities can be leveraged—intentionally or through manipulation such as prompt injection—to carry out malicious or unintended actions including data exfiltration, unsafe operations, or abuse of integrated services."
     },
 
     {
       "type": "application",
       "bom-ref": "app-agent-dynamic-1a",
       "name": "Code Assistant Agent (Dynamic Code)",
-      "description": "Agentic model orchestrating multi-step workflows (local deployment).",
-      "properties": [
-        { "name": "cdx:category", "value": "actor" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a" },
-        { "name": "cdx:parent", "value": "framework-1a" }
-      ]
+      "description": "An AI model within the agentic framework that combines reasoning and tool interaction capabilities to orchestrate multi-step workflows, invoke external services, and coordinate with the broader agent ecosystem. In threat modeling it is treated as an active actor with an expanded blast radius relative to its static counterpart—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems. (local deployment)"
     },
 
     {
       "type": "application",
       "bom-ref": "app-agent-dynamic-1b",
       "name": "Code Assistant Agent (Dynamic Code)",
-      "description": "Agentic model orchestrating multi-step workflows (remote SaaS deployment).",
-      "properties": [
-        { "name": "cdx:category", "value": "actor" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" },
-        { "name": "cdx:parent", "value": "framework-1b" }
-      ]
+      "description": "An AI model within the agentic framework that combines reasoning and tool interaction capabilities to orchestrate multi-step workflows, invoke external services, and coordinate with the broader agent ecosystem. In threat modeling it is treated as an active actor with an expanded blast radius relative to its static counterpart—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems. (remote SaaS deployment)"
     },
 
     {
       "type": "framework",
       "bom-ref": "framework-1a",
       "name": "Agentic Framework (Internal)",
-      "description": "Orchestration layer for multi-step tool execution.",
-      "properties": [
-        { "name": "cdx:category", "value": "framework" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a" }
-      ]
+      "description": "The orchestration layer that coordinates multi-step, tool-using workflows on behalf of the assistant. Manages execution flow between the model, retrieval systems, and external services—a high-impact trust boundary where prompt injection, tool misuse, or unintended action chains can have significant consequences."
     },
 
     {
       "type": "framework",
       "bom-ref": "framework-1b",
       "name": "Agentic Framework (External SaaS)",
-      "description": "Cloud-hosted orchestration layer coordinating agent workflows.",
-      "properties": [
-        { "name": "cdx:category", "value": "framework" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "The orchestration layer that coordinates multi-step, tool-using workflows on behalf of the assistant. Manages execution flow between the model, retrieval systems, and external services—a high-impact trust boundary where prompt injection, tool misuse, or unintended action chains can have significant consequences."
     },
 
     {
       "type": "machine-learning-model",
       "bom-ref": "model-local",
       "name": "Local Code Assistant Model",
-      "description": "Locally hosted AI model generating code suggestions.",
-      "properties": [
-        { "name": "cdx:category", "value": "machine-learning-model" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a" },
-        { "name": "cdx:parent", "value": "framework-1a" }
-      ]
+      "description": "The core AI model that generates responses or code suggestions, run locally (e.g., a self-hosted model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent."
     },
 
     {
       "type": "machine-learning-model",
       "bom-ref": "model-remote",
       "name": "Remote Code Assistant Model",
-      "description": "Cloud-hosted AI model generating code suggestions.",
-      "properties": [
-        { "name": "cdx:category", "value": "machine-learning-model" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" },
-        { "name": "cdx:parent", "value": "framework-1b" }
-      ]
+      "description": "The core AI model that generates responses or code suggestions, run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent."
     },
 
     {
       "type": "application",
       "bom-ref": "rag-local",
       "name": "Local RAG",
-      "description": "Local retrieval-augmented generation system.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a" }
-      ]
+      "description": "A component, hosted locally, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs."
     },
 
     {
       "type": "application",
       "bom-ref": "rag-remote",
       "name": "Remote RAG",
-      "description": "Cloud-hosted retrieval-augmented generation system.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs."
     },
 
     {
       "type": "data",
       "bom-ref": "ctx-local",
       "name": "Local Context Store",
-      "description": "Local data store used for retrieval augmentation.",
-      "properties": [
-        { "name": "cdx:category", "value": "data" },
-        { "name": "cdx:environment", "value": "Internal" },
-        { "name": "cdx:usecases", "value": "1a" }
-      ]
+      "description": "A locally hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs."
     },
 
     {
       "type": "data",
       "bom-ref": "ctx-remote",
       "name": "Remote Context Store",
-      "description": "Remote data store used for retrieval augmentation.",
-      "properties": [
-        { "name": "cdx:category", "value": "data" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs."
     },
 
     {
       "type": "application",
       "bom-ref": "mcp-gateway",
       "name": "MCP Gateway",
-      "description": "Ingress gateway routing assistant traffic.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. Acts as a perimeter trust boundary—misconfiguration or compromise can expose backend infrastructure to unauthorized access or traffic manipulation."
     },
 
     {
       "type": "application",
       "bom-ref": "mcp-agentic-saas",
       "name": "MCP Server — Agentic SaaS",
-      "description": "Core SaaS orchestration MCP server.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components. A high-value target due to its central role—risks include unauthorized access, data interception, and abuse of its broad orchestration capabilities."
     },
 
     {
       "type": "platform",
       "bom-ref": "external-plugin-marketplace",
       "name": "External Plugin Marketplace",
-      "description": "Third-party plugin distribution platform.",
-      "properties": [
-        { "name": "cdx:category", "value": "platform" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "An externally operated third-party platform where developers discover and install IDE plugins or extensions—introduces supply chain risks such as malicious or vulnerable plugins, insufficient vetting, and potential for unauthorized data access or exfiltration."
     },
 
     {
       "type": "platform",
       "bom-ref": "agentic-saas",
       "name": "Agentic SaaS",
-      "description": "Managed agentic assistant platform.",
-      "properties": [
-        { "name": "cdx:category", "value": "platform" },
-        { "name": "cdx:environment", "value": "External SaaS" },
-        { "name": "cdx:usecases", "value": "1b" }
-      ]
+      "description": "An externally operated platform that delivers agentic assistant capabilities as a managed service. Introduces risks related to third-party data handling, limited visibility into model behavior and data flows, dependency on external availability, and reduced control over security posture."
     },
 
     {
       "type": "application",
       "bom-ref": "mcp-cloud",
       "name": "MCP Server — Cloud Service",
-      "description": "Vendor-operated MCP integration service.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "External Cloud" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "A vendor-operated MCP server that integrates the assistant with external cloud platforms and services. Introduces supply chain risks including vulnerable or malicious dependencies, excessive permissions, and potential exfiltration of data passed through the integration."
     },
 
     {
       "type": "application",
       "bom-ref": "cloud-service",
       "name": "Cloud Service (AWS/GCP/etc.)",
-      "description": "Underlying cloud infrastructure services.",
-      "properties": [
-        { "name": "cdx:category", "value": "application" },
-        { "name": "cdx:environment", "value": "External Cloud" },
-        { "name": "cdx:usecases", "value": "1a,1b" }
-      ]
+      "description": "Third-party infrastructure and cloud service providers used as dependencies or execution targets—introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices."
     }
   ]
 }
