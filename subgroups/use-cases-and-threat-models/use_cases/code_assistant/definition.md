@@ -215,8 +215,131 @@ Data at rest or data in motion
 ```json
 {
   "bomFormat": "CycloneDX",
-  "specVersion": "1.7",
+  "specVersion": "2.0",
   "version": 1,
+  "actors": [
+    {
+      "bom-ref": "actor-developer",    
+      "party": {
+        "bom-ref": "party-developer",  
+        "roles": [
+          { "role": "developer" }      
+        ],
+        "person": {
+          "name": "Developer",              
+          "jobTitle": "Software Developer"  
+        }
+      },
+      "description": "The human actor who writes, modifies, and maintains code—considered a potential target (e.g. phishing, credential theft) or source of risk (e.g. introducing vulnerabilities or misconfigurations).",
+      "permissions": [
+        "author-code",           
+        "commit-code",           
+        "invoke-code-assistant"  
+      ],
+      "zone": "zone-internal",   
+      "properties": [
+        { "name": "cdx:usecases", "value": "1a,1b" }  
+      ]
+    },
+    {
+      "bom-ref": "actor-agent-static",     
+      "party": {
+        "bom-ref": "party-agent-static",   
+        "roles": [
+          { "role": "agent" }              
+        ],
+        "system": {
+          "kind": "agent",   
+          "permissions": [
+            "generate-text",  
+            "execute-tools",  
+            "call-apis"       
+          ]
+        },
+        "relations": {
+          "delegatedBy": "party-developer"  
+        }
+      },
+      "description": "AI model embedded in the plugin that combines reasoning and tool use (APIs, code execution) directly inside the IDE; treated as an active actor susceptible to prompt injection, data exfiltration, and abuse of integrated services.",
+      "permissions": [
+        "read-codebase",  
+        "suggest-code",   
+        "execute-tools",  
+        "call-apis"       
+      ],
+      "zone": "zone-internal",   
+      "properties": [
+        { "name": "cdx:usecases", "value": "1a,1b" },    
+        { "name": "cdx:parent", "value": "data-plugin" }  
+      ]
+    },
+    {
+      "bom-ref": "actor-agent-dynamic-1a",     
+      "party": {
+        "bom-ref": "party-agent-dynamic-1a",   
+        "roles": [
+          { "role": "agent" }                  
+        ],
+        "system": {
+          "kind": "agent",  
+          "permissions": [
+            "generate-text",             
+            "execute-tools",             
+            "orchestrate-multi-step",    
+            "invoke-external-services"   
+          ]
+        },
+        "relations": {
+          "delegatedBy": "party-developer"  
+        }
+      },
+      "description": "Locally hosted agentic model orchestrating multi-step, multi-tool workflows; expanded blast radius relative to the static agent, susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems.",
+      "permissions": [
+        "orchestrate-workflows",     
+        "invoke-external-services",  
+        "execute-tools",             
+        "read-context-store"         
+      ],
+      "zone": "zone-internal",   
+      "properties": [
+        { "name": "cdx:usecases", "value": "1a" },          
+        { "name": "cdx:parent", "value": "framework-1a" }   
+      ]
+    },
+    {
+      "bom-ref": "actor-agent-dynamic-1b",     
+      "party": {
+        "bom-ref": "party-agent-dynamic-1b",   
+        "roles": [
+          { "role": "agent" }                  
+        ],
+        "system": {
+          "kind": "agent",  
+          "permissions": [
+            "generate-text",             
+            "execute-tools",             
+            "orchestrate-multi-step",    
+            "invoke-external-services"   
+          ]
+        },
+        "relations": {
+          "delegatedBy": "party-developer"  
+        }
+      },
+      "description": "Remotely (SaaS) hosted agentic model orchestrating multi-step, multi-tool workflows; expanded blast radius relative to the static agent, susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems.",
+      "permissions": [
+        "orchestrate-workflows",     
+        "invoke-external-services",  
+        "execute-tools",             
+        "read-context-store"         
+      ],
+      "zone": "zone-external-saas",
+      "properties": [
+        { "name": "cdx:usecases", "value": "1b" },          
+        { "name": "cdx:parent", "value": "framework-1b" }   
+      ]
+    }
+  ],
   "components": [
     {
       "type": "device",
