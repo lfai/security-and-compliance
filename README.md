@@ -137,6 +137,7 @@ The work group intends to collaborate with and reference work from other foundat
 ## Whitepapers
 
 - [OSCAL Mapping Best Practices](./docs/OSCAL_Mapping_Best_Practices.pdf)
+- [AI Safety Best Practices for Regulated Environments](./docs/AI_Safety_Best_Practices.pdf)
 ---
 
 ## References
