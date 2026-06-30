@@ -6,6 +6,33 @@ Diagram (draw.io): ![Diagram](./diagram/ai_code_generator_threat_model_diagram_u
 
 [Edit this diagram (draw.io XML)](./diagram/ai_code_generator_threat_model_diagram_updated_2026_05_12.drawio)
 
+## Overview
+
+The **Code Assistant** use case describes an AI-powered development assistant that is surfaced to a developer directly inside an Integrated Development Environment (IDE). The assistant is installed as a **model plugin** — a first-class IDE extension that embeds agent capabilities into the editing experience without requiring the developer to switch context to a separate application.
+
+### Local agents (in-IDE runtime)
+
+Once the plugin is installed, one or more agents run within a local **agent runtime or harness** on the developer's workstation. A lightweight *static agent* lives directly inside the plugin process and handles low-latency tasks such as inline completions, syntax-aware suggestions, and prompt assembly. For more complex, multi-step tasks — autonomous code generation, repository-wide refactoring, test scaffolding — the static agent delegates to a *dynamic agent* hosted in a local **agentic framework**. The agentic framework provides the orchestration loop, tool-dispatch infrastructure, a retrieval-augmented generation (RAG) pipeline, and a context store. When hardware permits, a locally quantised language model (e.g., an 8 B-parameter model) serves inference entirely on the workstation, keeping code and context within the local trust boundary.
+
+### External connectivity
+
+The plugin and its local agents reach outward through standardised agent protocols — primarily the **Model Context Protocol (MCP)** — to two categories of external endpoint:
+
+1. **Large-model services.** When a task exceeds local model capacity, or when the deployment is configured to delegate the entire agentic framework to a hosted platform, the plugin connects to an **external SaaS agentic platform** via an MCP Gateway. The remote platform hosts its own dynamic agent, a larger or specialised language model, a remote RAG pipeline, and a remote context store. Results flow back through the MCP Gateway to the local plugin.
+
+2. **Information and tooling services.** Agents can invoke any number of **MCP Servers** that expose capabilities as callable tools: internal enterprise services (code search, ticket systems, internal APIs), external cloud-provider APIs (infrastructure provisioning, container registries, secret managers), and data-retrieval endpoints. Each MCP Server acts as a controlled egress point, enforcing authentication, authorisation, and audit logging before forwarding requests to the underlying service.
+
+### Trust boundaries and deployment variants
+
+The architecture supports two primary deployment variants that share the same plugin surface but differ in where the agentic framework runs:
+
+| Variant | Agentic framework | Model | Data residency |
+|---------|------------------|-------|---------------|
+| **Sub Use Case 1a** — Local | Developer's workstation | Local (e.g., 8 B) | Stays on-workstation; cloud calls only via explicit MCP |
+| **Sub Use Case 1b** — SaaS | External SaaS platform | Remote (hosted) | Leaves workstation via MCP Gateway to SaaS |
+
+In both variants the developer's IDE remains the single point of interaction. Authentication and authorisation services guard every outbound connection, and all agent tool invocations are intended to be logged and auditable regardless of where the agentic framework is hosted.
+
 ### CycloneDX 2.0 — `useCase` object
 
 ```json
