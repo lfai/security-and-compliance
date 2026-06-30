@@ -126,6 +126,81 @@ Humans or services that take action
 - **Remote Code Assistant Agent (Dynamic Code)**
   A remotely hosted AI model within the agentic framework that combines reasoning and tool interaction capabilities to orchestrate multi-step workflows, invoke external services, and coordinate with the broader agent ecosystem. In threat modeling it is treated as an active actor with an expanded blast radius relative to its static counterpart—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems.
 
+#### CycloneDX 2.0 Blueprint — `actors` encoding
+
+```json
+{
+  "actors": [
+    {
+      "bom-ref": "actor:developer",
+      "party": {
+        "roles": [
+          { "role": "developer" }
+        ],
+        "persona": {
+          "archetype": "developer",
+          "scope": "internal",
+          "description": "Human actor who writes, modifies, and maintains code—considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations)."
+        }
+      },
+      "description": "The human developer who interacts with the code assistant within the IDE."
+    },
+    {
+      "bom-ref": "actor:code-assistant-agent-static",
+      "party": {
+        "roles": [
+          { "role": "agent" }
+        ],
+        "system": {
+          "kind": "agent",
+          "permissions": [
+            "invoke-ide-apis",
+            "read-local-codebase",
+            "call-llm-inference-endpoint"
+          ]
+        }
+      },
+      "description": "An AI model embedded within the assistant plugin that combines reasoning and tool interaction capabilities (e.g., APIs, code execution) to perform actions directly within the developer environment. Treated as an active actor susceptible to prompt injection and abuse of integrated services."
+    },
+    {
+      "bom-ref": "actor:code-assistant-agent-local-dynamic",
+      "party": {
+        "roles": [
+          { "role": "agent" }
+        ],
+        "system": {
+          "kind": "agent",
+          "permissions": [
+            "orchestrate-multi-step-workflows",
+            "invoke-external-services",
+            "coordinate-agent-ecosystem",
+            "read-local-codebase"
+          ]
+        }
+      },
+      "description": "A locally hosted AI model within the agentic framework that orchestrates multi-step workflows and invokes external services. Treated as an active actor with an expanded blast radius—susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems."
+    },
+    {
+      "bom-ref": "actor:code-assistant-agent-remote-dynamic",
+      "party": {
+        "roles": [
+          { "role": "agent" }
+        ],
+        "system": {
+          "kind": "agent",
+          "permissions": [
+            "orchestrate-multi-step-workflows",
+            "invoke-external-services",
+            "coordinate-agent-ecosystem"
+          ]
+        }
+      },
+      "description": "A remotely hosted AI model within the agentic framework that orchestrates multi-step workflows and invokes external services. Treated as an active actor with an expanded blast radius—susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated systems."
+    }
+  ]
+}
+```
+
 ### Components
 
 #### Group
