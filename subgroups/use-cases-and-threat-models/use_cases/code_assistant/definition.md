@@ -28,8 +28,8 @@ The architecture supports two primary deployment variants that share the same pl
 
 | Variant | Agentic framework | Model | Data residency |
 |---------|------------------|-------|---------------|
-| **Sub Use Case 1a** — Local | Developer's workstation (Code Assistant Agent + Code Assistant Agent (Local Dynamic)) | Local (e.g., small, 8B parameter model) | Stays on-workstation; cloud calls only via explicit MCP |
-| **Sub Use Case 1b** — SaaS | External SaaS platform (External Code Assistant Agent) | Remote (hosted, large, 128B parameter model) | Leaves workstation via MCP Gateway to SaaS |
+| **Sub Use Case 1a** — Local, IDE Agent | IDE accessible Agentic Framework in developer's workstation | Local (e.g., small, 8B parameter model) | Stays on-workstation; cloud calls only via explicit MCP |
+| **Sub Use Case 1b** — Remote, SaaS Agent | External SaaS application with an MCP gateway that provide access to a hosted agentic framwork. | Remote, hosted (e.g., large, 128B parameter model) | Leaves workstation via MCP Gateway to SaaS |
 
 In both variants the developer's IDE remains the single point of interaction. Authentication and authorisation services guard every outbound connection, and all agent tool invocations are intended to be logged and auditable regardless of where the agentic framework is hosted.
 
