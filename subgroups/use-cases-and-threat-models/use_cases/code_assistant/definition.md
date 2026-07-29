@@ -12,7 +12,7 @@ The **Code Assistant** use case describes an AI-powered development assistant th
 
 ### Local agents (in-IDE runtime)
 
-Once the plugin is installed, a **Code Assistant Agent** runs within the plugin process on the developer's workstation. Before installation it is treated as a static software component (the *Code Assistant Plugin*); once activated inside the IDE it becomes an actor with agency. The Code Assistant Agent handles low-latency tasks such as inline completions, syntax-aware suggestions, and prompt assembly. For more complex, multi-step tasks — autonomous code generation, repository-wide refactoring, test scaffolding — the Code Assistant Agent can delegate to a **Code Assistant Agent (Local Dynamic)**, a locally hosted agent embedded within an agentic framework that has *dynamic* access to tool calling, MCP servers, a retrieval-augmented generation (RAG) pipeline, and a context store. When hardware permits, a locally quantised language model (e.g., an 8 B-parameter model) serves inference entirely on the workstation, keeping code and context within the local trust boundary.
+Once the plugin is installed, a **Code Assistant Agent** (local, dynamic) runs within the plugin process on the developer's workstation. Before installation it is treated as a static software component (the *Code Assistant Plugin*); once activated inside the IDE it becomes an actor with agency. *Local* affirms that the agent and its agentic framework run entirely on the developer's workstation, within the internal trust boundary. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. The agent handles the full range of tasks from low-latency inline completions through to complex, multi-step operations such as autonomous code generation, repository-wide refactoring, and test scaffolding. When hardware permits, a locally quantised language model (e.g., an 8 B-parameter model) serves inference entirely on the workstation, keeping code and context within the local trust boundary.
 
 ### External connectivity
 
@@ -155,8 +155,8 @@ The following shows how the `flows` array is added to the blueprint. Only `flows
     },
     {
       "bom-ref": "flow:agent-delegates-to-dynamic",
-      "name": "Code Assistant Agent delegates to Local Dynamic Agent",
-      "description": "The Code Assistant Agent forwards complex or multi-step tasks to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework.",
+      "name": "Code Assistant Agent delegates to local agentic framework",
+      "description": "The Code Assistant Agent forwards complex or multi-step tasks to the local agent (local, dynamic) within the local Agentic Framework.",
       "type": "control",
       "source": "code-asst-agent-static-data",
       "destination": "local-code-asst-agent",
@@ -164,8 +164,8 @@ The following shows how the `flows` array is added to the blueprint. Only `flows
     },
     {
       "bom-ref": "flow:dynamic-agent-invokes-model",
-      "name": "Local Dynamic Agent orchestrates local model",
-      "description": "The Code Assistant Agent (Local Dynamic) orchestrates multi-step workflows using the local model, RAG pipeline, and context store.",
+      "name": "Local agent orchestrates local model",
+      "description": "The local agent (local, dynamic) orchestrates multi-step workflows using the local model and context store.",
       "type": "process",
       "source": "local-code-asst-agent",
       "destination": "model-local",
@@ -225,7 +225,7 @@ Internal
     ├── Code Assistant Plugin
     │   └── Code Assistant Agent
     └── Agentic Framework
-        ├── Code Assistant Agent (Local Dynamic)
+        ├── Code Assistant Agent (local, dynamic)
         ├── Code Assistant Model (e.g. 8b)
         ├── RAG
         └── Context Store
@@ -316,8 +316,8 @@ The following shows the `flows` entries specific to Sub Use Case 1a added to the
     },
     {
       "bom-ref": "flow:1a-agent-delegates-to-dynamic",
-      "name": "Code Assistant Agent delegates to Local Dynamic Agent",
-      "description": "The Code Assistant Agent evaluates the request and, for complex tasks, delegates to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework.",
+      "name": "Code Assistant Agent delegates to local agentic framework",
+      "description": "The Code Assistant Agent evaluates the request and, for complex tasks, delegates to the local agent (local, dynamic) within the local Agentic Framework.",
       "type": "control",
       "source": "code-asst-agent-static-data",
       "destination": "local-code-asst-agent",
@@ -325,8 +325,8 @@ The following shows the `flows` entries specific to Sub Use Case 1a added to the
     },
     {
       "bom-ref": "flow:1a-dynamic-agent-invokes-model",
-      "name": "Local Dynamic Agent orchestrates local model",
-      "description": "The Code Assistant Agent (Local Dynamic) orchestrates the Local Code Assistant Model, invoking Local RAG and Local Context Store to enrich the prompt.",
+      "name": "Local agent orchestrates local model",
+      "description": "The local agent (local, dynamic) orchestrates the Local Code Assistant Model and Local Context Store to enrich the prompt.",
       "type": "process",
       "source": "local-code-asst-agent",
       "destination": "model-local",
@@ -334,8 +334,8 @@ The following shows the `flows` entries specific to Sub Use Case 1a added to the
     },
     {
       "bom-ref": "flow:1a-dynamic-agent-calls-mcp",
-      "name": "Local Dynamic Agent calls MCP Server",
-      "description": "If external data or service integration is required, the Code Assistant Agent (Local Dynamic) calls the Third Party MCP Server or the MCP Server — Cloud Service.",
+      "name": "Local agent calls MCP Server",
+      "description": "If external data or service integration is required, the local agent (local, dynamic) calls the Third Party MCP Server or the MCP Server — Cloud Service.",
       "type": "control",
       "source": "local-code-asst-agent",
       "destination": "local-mcp-server-third-party",
@@ -413,7 +413,7 @@ The following shows the `useCases` entry specific to Sub Use Case 1b added to th
           "name": "Agentic SaaS Platform Unavailable",
           "condition": "The Agentic SaaS platform or MCP Gateway is unreachable due to an outage or network failure.",
           "description": "The developer cannot complete multi-step agentic tasks; the plugin degrades to static-only responses.",
-          "handling": "The Code Assistant Agent (code-asst-agent-static-data) notifies the developer of the degraded state and provides best-effort responses without SaaS delegation."
+          "handling": "The Code Assistant Agent (local, dynamic) notifies the developer of the degraded state and provides best-effort responses without SaaS delegation."
         },
         {
           "name": "Malicious Plugin from Marketplace",
@@ -537,8 +537,7 @@ The following shows the `flows` entries specific to Sub Use Case 1b added to the
 | Authorization Service               | Application            | 1a,1b    | Internal       |
 | Third Party MCP Server              | Application            | 1a,1b    | Internal       |
 | MCP Server — Third Party Service    | Application            | 1a,1b    | Internal       |
-| Code Assistant Agent          | Application            | 1a,1b    | Internal       |
-| Code Assistant Agent (Local Dynamic) | Application       | 1a       | Internal       |
+| Code Assistant Agent (local, dynamic) | Application     | 1a,1b    | Internal       |
 | Remote Code Assistant Agent  | Application           | 1b       | External SaaS  |
 | Agentic Framework                   | Framework              | 1a       | Internal       |
 | Agentic Framework                   | Framework              | 1b       | External SaaS  |
@@ -584,18 +583,13 @@ Humans or services that take action
 
   Example: A backend engineer, a DevOps engineer, a security engineer, a contractor with repo access.
 
-- **Code Assistant Agent**
-  The agent delivered as part of the Code Assistant Plugin. Before installation the plugin is a static software component; once activated inside the IDE the embedded agent becomes an actor with agency over the developer environment. It handles low-latency tasks such as inline completions and prompt assembly, and can invoke local MCP servers for context retrieval. In threat modeling it is treated as an active actor, since its capabilities can be leveraged—intentionally or through manipulation such as prompt injection—to carry out malicious or unintended actions including data exfiltration, unsafe operations, or abuse of integrated services.
+- **Code Assistant Agent** (local, dynamic)
+  The agent delivered as part of the Code Assistant Plugin. Before installation the plugin is a static software component; once activated inside the IDE the embedded agent becomes an actor with agency over the developer environment. *Local* affirms that the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. It handles tasks ranging from low-latency inline completions through to complex multi-step operations such as autonomous code generation and test scaffolding. A context store is available for structured state across workflow steps. A RAG pipeline component exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration. In threat modeling this actor is treated as an active participant with an expanded blast radius — its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated services accessible via MCP.
 
-  Example: GitHub Copilot (in-IDE agent), Amazon Q Developer (in-IDE agent)
+  Example: GitHub Copilot (in-IDE agent), Amazon Q Developer (in-IDE agent), Continue with Ollama, Aider with a locally hosted model, OpenHands with a local LLM
 
-- **Code Assistant Agent (Local Dynamic)**
-  A locally hosted agent embedded within the agentic framework on the developer's workstation. It has *dynamic* capabilities: full access to tool calling, MCP servers, a RAG pipeline, and a context store. It orchestrates multi-step, tool-using workflows on behalf of the developer while keeping all data within the internal trust boundary. In threat modeling it is treated as an active actor with an expanded blast radius—its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated services accessible via MCP.
-
-  Example: Continue with Ollama, Aider with a locally hosted model, OpenHands with a local LLM
-
-- **Remote Code Assistant Agent**
-  An agent hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. It orchestrates multi-step workflows using a large, remotely hosted model and may have access to additional tools, skills, and service connectors that are not individually enumerated in this use case. In threat modeling it is treated as an active actor with a broad blast radius—its external hosting introduces risks around data exfiltration, third-party data handling, prompt injection via remote context, and limited developer visibility into its internal operations.
+- **Remote Code Assistant Agent** (remote, dynamic)
+  An agent hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. *Remote* affirms that the agent and its agentic framework operate outside the developer's workstation, within a third-party platform. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. It may have access to additional tools, skills, and service connectors not individually enumerated in this use case. In threat modeling this actor is treated as an active participant with a broad blast radius — its external hosting introduces risks around data exfiltration, third-party data handling, prompt injection via remote context, and limited developer visibility into its internal operations.
 
   Example: Claude Code (Anthropic), Cursor Agent, Devin (Cognition AI)
 
@@ -619,7 +613,7 @@ Humans or services that take action
       "description": "The human developer who interacts with the code assistant within the IDE."
     },
     {
-      "bom-ref": "code-asst-agent-static-data",
+      "bom-ref": "local-code-asst-agent",
       "party": {
         "roles": [
           { "role": "agent" }
@@ -630,30 +624,13 @@ Humans or services that take action
             "invoke-ide-apis",
             "read-local-codebase",
             "call-llm-inference-endpoint",
-            "invoke-local-mcp-servers"
-          ]
-        }
-      },
-      "description": "The agent embedded within the Code Assistant Plugin. Operates as a static component prior to installation; once activated in the IDE it becomes an actor with agency over the developer environment. Handles low-latency tasks and local MCP tool calls. Susceptible to prompt injection and abuse of integrated services."
-    },
-    {
-      "bom-ref": "local-code-asst-agent",
-      "party": {
-        "roles": [
-          { "role": "agent" }
-        ],
-        "system": {
-          "kind": "agent",
-          "permissions": [
+            "invoke-local-mcp-servers",
             "orchestrate-multi-step-workflows",
-            "invoke-mcp-servers",
-            "invoke-local-rag-pipeline",
-            "read-write-local-context-store",
-            "read-local-codebase"
+            "read-write-local-context-store"
           ]
         }
       },
-      "description": "A locally hosted agent embedded within the agentic framework on the developer's workstation. Has dynamic access to tool calling, MCP servers, a local RAG pipeline, and a local context store. Orchestrates multi-step workflows while keeping data within the internal trust boundary. Susceptible to prompt injection, workflow hijacking, and cascading misuse of MCP-accessible services."
+      "description": "The agent (local, dynamic) delivered as part of the Code Assistant Plugin. Operates as a static component prior to installation; once activated in the IDE it becomes an actor with agency over the developer environment. Local: the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. A context store is available for structured state across steps. A RAG pipeline exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration. Susceptible to prompt injection, workflow hijacking, and cascading misuse of MCP-accessible services."
     },
     {
       "bom-ref": "remote-code-asst-agent",
@@ -670,7 +647,7 @@ Humans or services that take action
           ]
         }
       },
-      "description": "An agent hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Orchestrates multi-step workflows using a large remote model and may access additional tools, skills, and connectors not enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations."
+      "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations."
     }
   ]
 }
@@ -747,10 +724,7 @@ Data at rest or data in motion
   Example: Internal MCP server bridging Jira, Confluence
 
 - **Code Assistant Agent** *(as a component — prior to activation as an actor)*
-  Before the Code Assistant Plugin is installed and activated, the embedded agent is modelled as a static application component. Once activated inside the IDE it transitions to an actor (`code-asst-agent-static-data`). As a component it is subject to supply chain risks: a compromised plugin binary may carry a malicious agent payload.
-
-- **Code Assistant Agent (Local Dynamic)** *(as a component)*
-  The locally hosted dynamic agent component embedded within the agentic framework. Modelled as an application component within the framework boundary. Subject to the same supply chain and configuration risks as other locally deployed software, with the additional risk of tool-call misuse and prompt injection once operating as an actor.
+  Before the Code Assistant Plugin is installed and activated, the embedded agent is modelled as a static application component. Once activated inside the IDE it transitions to an actor (`local-code-asst-agent`). As a component it is subject to supply chain risks: a compromised plugin binary may carry a malicious agent payload.
 
 - **Remote Code Assistant Agent** *(as a component)*
   The agent component hosted within the External SaaS platform. From the developer's perspective it is an opaque, remotely operated component. Its internal implementation, tool access, and data flows are not fully visible or controlled by the developer's organisation.
@@ -894,8 +868,8 @@ Data at rest or data in motion
     {
       "type": "application",
       "bom-ref": "local-code-asst-agent",
-      "name": "Code Assistant Agent (Local Dynamic)",
-      "description": "A locally hosted agent embedded within the agentic framework on the developer's workstation. Has dynamic access to tool calling, MCP servers, a local RAG pipeline, and a local context store. Orchestrates multi-step, tool-using workflows on behalf of the developer while keeping all data within the internal trust boundary. Susceptible to prompt injection, workflow hijacking, and cascading misuse of MCP-accessible services.",
+      "name": "Code Assistant Agent (local, dynamic)",
+      "description": "The agent (local, dynamic) delivered as part of the Code Assistant Plugin. Local: the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. A context store is available for structured state across steps. A RAG pipeline exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration. Susceptible to prompt injection, workflow hijacking, and cascading misuse of MCP-accessible services.",
       "properties": [
       ]
     },
@@ -903,8 +877,8 @@ Data at rest or data in motion
     {
       "type": "application",
       "bom-ref": "remote-code-asst-agent",
-      "name": "Remote Code Assistant Agent",
-      "description": "An agent hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Orchestrates multi-step workflows using a large, remotely hosted model and may have access to additional tools, skills, and service connectors that are not individually enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations.",
+      "name": "Remote Code Assistant Agent (remote, dynamic)",
+      "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations.",
       "properties": [
       ]
     },
@@ -1101,7 +1075,7 @@ Data at rest or data in motion
     {
       "bom-ref": "flow-plugin-to-framework-1a",
       "name": "Local agent delegates to local agentic framework",
-      "description": "The Code Assistant Agent forwards complex or multi-step tasks to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework. Applies to Sub Use Case 1a only.",
+      "description": "The Code Assistant Agent forwards complex or multi-step tasks to the local agent (local, dynamic) within the local Agentic Framework. Applies to Sub Use Case 1a only.",
       "source": "code-asst-agent-static-data",
       "destination": "framework-1a",
       "type": "control",
@@ -1110,8 +1084,8 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1a-to-model-local",
-      "name": "Local dynamic agent invokes local model",
-      "description": "The Code Assistant Agent (Local Dynamic) sends the enriched prompt to the Local Code Assistant Model for inference.",
+      "name": "Local agent invokes local model",
+      "description": "The local agent (local, dynamic) sends the enriched prompt to the Local Code Assistant Model for inference.",
       "source": "local-code-asst-agent",
       "destination": "model-local",
       "type": "data",
@@ -1120,8 +1094,8 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1a-to-rag-local",
-      "name": "Local dynamic agent queries local RAG",
-      "description": "The Code Assistant Agent (Local Dynamic) retrieves augmented context from the Local RAG pipeline.",
+      "name": "Local agent queries local RAG",
+      "description": "The local agent (local, dynamic) retrieves augmented context from the Local RAG pipeline.",
       "source": "local-code-asst-agent",
       "destination": "rag-local",
       "type": "data",
@@ -1130,8 +1104,8 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1a-to-ctx-local",
-      "name": "Local dynamic agent reads local context store",
-      "description": "The Code Assistant Agent (Local Dynamic) fetches structured context from the Local Context Store.",
+      "name": "Local agent reads local context store",
+      "description": "The local agent (local, dynamic) fetches structured context from the Local Context Store.",
       "source": "local-code-asst-agent",
       "destination": "ctx-local",
       "type": "data",
@@ -1140,8 +1114,8 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1a-to-mcp-cloud",
-      "name": "Local dynamic agent calls cloud MCP Server",
-      "description": "The Code Assistant Agent (Local Dynamic) invokes the MCP Server — Cloud Service to interact with an external cloud provider (e.g., AWS, GCP). Applies to Sub Use Case 1a only.",
+      "name": "Local agent calls cloud MCP Server",
+      "description": "The local agent (local, dynamic) invokes the MCP Server — Cloud Service to interact with an external cloud provider (e.g., AWS, GCP). Applies to Sub Use Case 1a only.",
       "source": "local-code-asst-agent",
       "destination": "mcp-cloud",
       "type": "control",
@@ -1194,7 +1168,7 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-mcp-agentic-saas-to-dynamic-1b",
-      "name": "SaaS MCP Server dispatches to remote dynamic agent",
+      "name": "SaaS MCP Server dispatches to remote agent",
       "description": "The MCP Server — Agentic SaaS dispatches the request to the Remote Code Assistant Agent within the Agentic SaaS platform.",
       "source": "mcp-agentic-saas",
       "destination": "remote-code-asst-agent",
@@ -1204,7 +1178,7 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1b-to-model-remote",
-      "name": "Remote dynamic agent invokes remote model",
+      "name": "Remote agent invokes remote model",
       "description": "The Remote Code Assistant Agent sends the enriched prompt to the Remote Code Assistant Model for inference.",
       "source": "remote-code-asst-agent",
       "destination": "model-remote",
@@ -1214,7 +1188,7 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1b-to-rag-remote",
-      "name": "Remote dynamic agent queries remote RAG",
+      "name": "Remote agent queries remote RAG",
       "description": "The Remote Code Assistant Agent retrieves augmented context from the Remote RAG pipeline.",
       "source": "remote-code-asst-agent",
       "destination": "rag-remote",
@@ -1224,7 +1198,7 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1b-to-ctx-remote",
-      "name": "Remote dynamic agent reads remote context store",
+      "name": "Remote agent reads remote context store",
       "description": "The Remote Code Assistant Agent fetches structured context from the Remote Context Store.",
       "source": "remote-code-asst-agent",
       "destination": "ctx-remote",
@@ -1234,7 +1208,7 @@ Data at rest or data in motion
     },
     {
       "bom-ref": "flow-dynamic-1b-to-mcp-third-party",
-      "name": "Remote dynamic agent calls internal MCP Server",
+      "name": "Remote agent calls internal MCP Server",
       "description": "The Remote Code Assistant Agent issues a tool call to the internal Third Party MCP Server (e.g., Jira, GitHub) via a secure channel. Applies to Sub Use Case 1b only.",
       "source": "remote-code-asst-agent",
       "destination": "local-mcp-server-third-party",
