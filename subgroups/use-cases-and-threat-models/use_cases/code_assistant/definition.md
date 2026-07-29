@@ -39,125 +39,176 @@ The architecture supports two primary deployment variants that share the same pl
 
 In both variants the developer's IDE remains the single point of interaction. Authentication and authorisation services guard every outbound connection, and all agent tool invocations are intended to be logged and auditable regardless of where the agentic framework is hosted.
 
-### CycloneDX 2.0 — `useCase` object
+### CycloneDX 2.0 — `blueprint` object
+
+The `blueprint` element is the top-level container for this use case's threat model artefacts. It carries an identity (`bom-ref`, `name`, `description`) and acts as the parent that groups `useCases`, `flows`, and `boundaries`. The sub-sections below each introduce one of those child collections; each code block shows **only the new fields being introduced** and is not intended to be an additive accumulation of all previous blocks.
 
 ```json
 {
-  "bom-ref": "usecase:code-assistant",
+  "bom-ref": "blueprint:code-assistant",
   "name": "Code Assistant",
-  "description": "A developer uses an AI-powered code assistant—composed of a plugin, one or more agents, a language model, a retrieval-augmented generation (RAG) pipeline, and an agentic framework—to accelerate software development tasks such as code generation, explanation, and review. The assistant may run fully on the developer's workstation (Sub Use Case 1a) or offload its agentic components to an external SaaS platform (Sub Use Case 1b).",
-  "preconditions": [
-    "Developer has an IDE installed and a local codebase clone available.",
-    "The Code Assistant Plugin has been installed from a trusted, authenticated Plugin Marketplace (e.g., VS Code Marketplace, JetBrains Marketplace) whose publisher identity and plugin integrity are verified before delivery to the IDE.",
-    "The installed Code Assistant Plugin is authenticated and authorized via the Authentication and Authorization Services.",
-    "The MCP Server — Agentic SaaS (e.g., Claude Code, hosted remotely on the Agentic SaaS platform) is reachable from the developer's workstation.",
-    "The locally installed MCP Server (e.g., a Jira MCP Server installed on the developer's workstation) is running and reachable."
-  ],
-  "postconditions": [
-    "Developer receives AI-generated code suggestions, completions, or reviews.",
-    "Any tool invocations performed by agents are logged and auditable.",
-    "No sensitive code or credentials are unintentionally exfiltrated."
-  ],
-  "exceptions": [
+  "description": "An AI-powered development assistant surfaced to a developer inside an IDE as a model plugin. The assistant embeds agent capabilities directly into the editing experience, supporting both a fully local deployment (Sub Use Case 1a) and a remote SaaS-hosted agentic framework (Sub Use Case 1b)."
+}
+```
+
+### CycloneDX 2.0 — blueprint `useCases`
+
+The following shows how the `useCases` array is added to the blueprint established above.
+
+```json
+{
+  "bom-ref": "blueprint:code-assistant",
+  "useCases": [
     {
-      "name": "Authentication Failure",
-      "condition": "The Authentication Service rejects the Developer's credentials or token.",
-      "description": "The developer cannot authenticate, preventing plugin activation.",
-      "handling": "The plugin displays an authentication error; the developer is prompted to re-authenticate or contact an administrator."
-    },
-    {
-      "name": "MCP Server Unreachable",
-      "condition": "An internal or external MCP Server is unavailable or returns a connection error.",
-      "description": "Tool calls from the agent cannot be completed, potentially stalling multi-step workflows.",
-      "handling": "The agent reports the tool failure to the developer and falls back to model-only responses where possible."
-    },
-    {
-      "name": "Prompt Injection Detected",
-      "condition": "Malicious content in the codebase, context store, or RAG output attempts to redirect agent behavior.",
-      "description": "An injected instruction overrides the developer's intent, potentially causing unauthorized tool invocations or data exfiltration.",
-      "handling": "The agentic framework applies input sanitization; suspicious instructions are flagged and execution is halted pending developer review."
+      "bom-ref": "usecase:code-assistant",
+      "name": "Code Assistant",
+      "description": "A developer uses an AI-powered code assistant—composed of a plugin, one or more agents, a language model, a retrieval-augmented generation (RAG) pipeline, and an agentic framework—to accelerate software development tasks such as code generation, explanation, and review. The assistant may run fully on the developer's workstation (Sub Use Case 1a) or offload its agentic components to an external SaaS platform (Sub Use Case 1b).",
+      "preconditions": [
+        "Developer has an IDE installed and a local codebase clone available.",
+        "The Code Assistant Plugin has been installed from a trusted, authenticated Plugin Marketplace (e.g., VS Code Marketplace, JetBrains Marketplace) whose publisher identity and plugin integrity are verified before delivery to the IDE.",
+        "The installed Code Assistant Plugin is authenticated and authorized via the Authentication and Authorization Services.",
+        "The MCP Server — Agentic SaaS (e.g., Claude Code, hosted remotely on the Agentic SaaS platform) is reachable from the developer's workstation.",
+        "The locally installed MCP Server (e.g., a Jira MCP Server installed on the developer's workstation) is running and reachable."
+      ],
+      "postconditions": [
+        "Developer receives AI-generated code suggestions, completions, or reviews.",
+        "Any tool invocations performed by agents are logged and auditable.",
+        "No sensitive code or credentials are unintentionally exfiltrated."
+      ],
+      "exceptions": [
+        {
+          "name": "Authentication Failure",
+          "condition": "The Authentication Service rejects the Developer's credentials or token.",
+          "description": "The developer cannot authenticate, preventing plugin activation.",
+          "handling": "The plugin displays an authentication error; the developer is prompted to re-authenticate or contact an administrator."
+        },
+        {
+          "name": "MCP Server Unreachable",
+          "condition": "An internal or external MCP Server is unavailable or returns a connection error.",
+          "description": "Tool calls from the agent cannot be completed, potentially stalling multi-step workflows.",
+          "handling": "The agent reports the tool failure to the developer and falls back to model-only responses where possible."
+        },
+        {
+          "name": "Prompt Injection Detected",
+          "condition": "Malicious content in the codebase, context store, or RAG output attempts to redirect agent behavior.",
+          "description": "An injected instruction overrides the developer's intent, potentially causing unauthorized tool invocations or data exfiltration.",
+          "handling": "The agentic framework applies input sanitization; suspicious instructions are flagged and execution is halted pending developer review."
+        }
+      ],
+      "successCriteria": [
+        "Developer receives accurate, contextually relevant code suggestions or completions.",
+        "All agent tool invocations are authorized and within the defined permission scope.",
+        "No sensitive data (credentials, proprietary code) is transmitted to unauthorized endpoints.",
+        "Audit logs capture all agent actions and external service calls."
+      ],
+      "notes": [
+        "This top-level use case is realized by two sub use cases (1a and 1b) that differ in the deployment location of the Agentic Framework and its hosted components."
+      ]
     }
-  ],
-  "successCriteria": [
-    "Developer receives accurate, contextually relevant code suggestions or completions.",
-    "All agent tool invocations are authorized and within the defined permission scope.",
-    "No sensitive data (credentials, proprietary code) is transmitted to unauthorized endpoints.",
-    "Audit logs capture all agent actions and external service calls."
-  ],
-  "notes": [
-    "This top-level use case is realized by two sub use cases (1a and 1b) that differ in the deployment location of the Agentic Framework and its hosted components."
   ]
 }
 ```
 
 ### CycloneDX 2.0 — blueprint `flows`
 
+The following shows how the `flows` array is added to the blueprint. Only `flows` is shown here; `useCases` (introduced above) is omitted for brevity.
+
 ```json
-[
-  {
-    "bom-ref": "flow:developer-installs-plugin",
-    "name": "Developer installs Code Assistant Plugin",
-    "description": "The Developer obtains the Code Assistant Plugin from the Plugin Marketplace and installs it into the IDE.",
-    "type": "process",
-    "source": "actor-developer",
-    "destination": "external-plugin-marketplace",
-    "sequence": 1
-  },
-  {
-    "bom-ref": "flow:developer-activates-plugin",
-    "name": "Developer activates Code Assistant Plugin",
-    "description": "The Developer opens the IDE and activates the Code Assistant Plugin to initiate a coding assistance interaction.",
-    "type": "process",
-    "source": "actor-developer",
-    "destination": "code-asst-plugin",
-    "sequence": 2
-  },
-  {
-    "bom-ref": "flow:agent-authenticates",
-    "name": "Code Assistant Agent authenticates and authorizes",
-    "description": "The Code Assistant Agent authenticates the Developer via the Authentication Service and checks permissions via the Authorization Service.",
-    "type": "control",
-    "source": "code-asst-agent-static-data",
-    "destination": "authn-service",
-    "sequence": 3
-  },
-  {
-    "bom-ref": "flow:agent-queries-codebase",
-    "name": "Code Assistant Agent processes request and queries codebase",
-    "description": "The Code Assistant Agent processes the Developer's request, optionally querying the Local Codebase Clone and dispatching tool calls to the locally installed MCP Server.",
-    "type": "data",
-    "source": "code-asst-agent-static-data",
-    "destination": "data-local-codebase",
-    "sequence": 4
-  },
-  {
-    "bom-ref": "flow:agent-delegates-to-dynamic",
-    "name": "Code Assistant Agent delegates to Local Dynamic Agent",
-    "description": "The Code Assistant Agent forwards complex or multi-step tasks to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework.",
-    "type": "control",
-    "source": "code-asst-agent-static-data",
-    "destination": "local-code-asst-agent",
-    "sequence": 5
-  },
-  {
-    "bom-ref": "flow:dynamic-agent-invokes-model",
-    "name": "Local Dynamic Agent orchestrates local model",
-    "description": "The Code Assistant Agent (Local Dynamic) orchestrates multi-step workflows using the local model, RAG pipeline, and context store.",
-    "type": "process",
-    "source": "local-code-asst-agent",
-    "destination": "model-local",
-    "sequence": 6
-  },
-  {
-    "bom-ref": "flow:model-returns-response",
-    "name": "Local model returns response to Developer",
-    "description": "The local model generates a response, which is returned through the Agentic Framework and Code Assistant Plugin to the Developer in the IDE.",
-    "type": "data",
-    "source": "model-local",
-    "destination": "actor-developer",
-    "sequence": 7
-  }
-]
+{
+  "bom-ref": "blueprint:code-assistant",
+  "flows": [
+    {
+      "bom-ref": "flow:developer-installs-plugin",
+      "name": "Developer installs Code Assistant Plugin",
+      "description": "The Developer obtains the Code Assistant Plugin from the Plugin Marketplace and installs it into the IDE.",
+      "type": "process",
+      "source": "actor-developer",
+      "destination": "external-plugin-marketplace",
+      "sequence": 1
+    },
+    {
+      "bom-ref": "flow:developer-activates-plugin",
+      "name": "Developer activates Code Assistant Plugin",
+      "description": "The Developer opens the IDE and activates the Code Assistant Plugin to initiate a coding assistance interaction.",
+      "type": "process",
+      "source": "actor-developer",
+      "destination": "code-asst-plugin",
+      "sequence": 2
+    },
+    {
+      "bom-ref": "flow:agent-authenticates",
+      "name": "Code Assistant Agent authenticates and authorizes",
+      "description": "The Code Assistant Agent authenticates the Developer via the Authentication Service and checks permissions via the Authorization Service.",
+      "type": "control",
+      "source": "code-asst-agent-static-data",
+      "destination": "authn-service",
+      "sequence": 3
+    },
+    {
+      "bom-ref": "flow:agent-queries-codebase",
+      "name": "Code Assistant Agent processes request and queries codebase",
+      "description": "The Code Assistant Agent processes the Developer's request, optionally querying the Local Codebase Clone and dispatching tool calls to the locally installed MCP Server.",
+      "type": "data",
+      "source": "code-asst-agent-static-data",
+      "destination": "data-local-codebase",
+      "sequence": 4
+    },
+    {
+      "bom-ref": "flow:agent-delegates-to-dynamic",
+      "name": "Code Assistant Agent delegates to Local Dynamic Agent",
+      "description": "The Code Assistant Agent forwards complex or multi-step tasks to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework.",
+      "type": "control",
+      "source": "code-asst-agent-static-data",
+      "destination": "local-code-asst-agent",
+      "sequence": 5
+    },
+    {
+      "bom-ref": "flow:dynamic-agent-invokes-model",
+      "name": "Local Dynamic Agent orchestrates local model",
+      "description": "The Code Assistant Agent (Local Dynamic) orchestrates multi-step workflows using the local model, RAG pipeline, and context store.",
+      "type": "process",
+      "source": "local-code-asst-agent",
+      "destination": "model-local",
+      "sequence": 6
+    },
+    {
+      "bom-ref": "flow:model-returns-response",
+      "name": "Local model returns response to Developer",
+      "description": "The local model generates a response, which is returned through the Agentic Framework and Code Assistant Plugin to the Developer in the IDE.",
+      "type": "data",
+      "source": "model-local",
+      "destination": "actor-developer",
+      "sequence": 7
+    }
+  ]
+}
+```
+
+### CycloneDX 2.0 — blueprint `boundaries`
+
+The following shows how the `boundaries` array is added to the blueprint. Only `boundaries` is shown here; previously introduced fields are omitted for brevity.
+
+```json
+{
+  "bom-ref": "blueprint:code-assistant",
+  "boundaries": [
+    {
+      "bom-ref": "boundary:internal",
+      "name": "Internal",
+      "description": "Represents locally networked resources: the developer's workstation, the IDE, the Code Assistant Plugin and its embedded agent, the local agentic framework, and any MCP servers reachable within the organisation's local network. All components within this boundary are subject to the organisation's own security controls."
+    },
+    {
+      "bom-ref": "boundary:external-saas",
+      "name": "External SaaS",
+      "description": "Represents remotely networked managed services: the Agentic SaaS platform (e.g., Claude Code, Cursor), the External Plugin Marketplace, and any third-party application services accessed over the public internet. Components within this boundary operate under a third-party trust model with limited organisational visibility."
+    },
+    {
+      "bom-ref": "boundary:external-cloud",
+      "name": "External Cloud",
+      "description": "Represents remotely networked cloud infrastructure providers: AWS, GCP, Azure, and similar platforms accessed via MCP Servers. Components within this boundary are governed by the cloud provider's shared-responsibility model."
+    }
+  ]
+}
 ```
 
 ## Sub Use Case 1a:
@@ -184,111 +235,123 @@ External Cloud
     └── Cloud Service
 ```
 
-### CycloneDX 2.0 — `useCase` object
+### CycloneDX 2.0 — blueprint `useCases`
+
+The following shows the `useCases` entry specific to Sub Use Case 1a added to the blueprint. Only `useCases` is shown here.
 
 ```json
 {
-  "bom-ref": "usecase:code-assistant-1a",
-  "name": "Code Assistant — Sub Use Case 1a (Local Agentic Framework)",
-  "description": "The developer's workstation hosts the full agentic framework, including the dynamic agent, model, RAG pipeline, and context store. The assistant plugin communicates directly with locally running components. MCP Servers bridge internal third-party services and external cloud platforms.",
-  "preconditions": [
-    "The developer's workstation has sufficient resources to run the local Code Assistant Model (e.g., an 8B-parameter model).",
-    "The Agentic Framework, RAG pipeline, and Context Store are installed and running locally.",
-    "The Code Assistant Plugin is installed in the IDE and authenticated.",
-    "Internal MCP Server and relevant Third Party Services are reachable.",
-    "External Cloud MCP Server is reachable if cloud service integrations are required."
-  ],
-  "postconditions": [
-    "Developer receives AI-generated code suggestions produced by the locally hosted model.",
-    "All data—including codebase content and context—remains within the internal network boundary unless explicitly forwarded via MCP to an external cloud service.",
-    "Agent tool invocations are logged locally."
-  ],
-  "exceptions": [
+  "bom-ref": "blueprint:code-assistant",
+  "useCases": [
     {
-      "name": "Insufficient Local Resources",
-      "condition": "The workstation does not have enough CPU/GPU/RAM to run the local model.",
-      "description": "Model inference fails or produces degraded responses due to resource constraints.",
-      "handling": "The framework reports an error to the developer; the developer may reduce model size or free system resources."
-    },
-    {
-      "name": "Context Store Poisoning",
-      "condition": "Malicious or manipulated content is present in the Local Context Store.",
-      "description": "Poisoned retrieval data is injected into the model prompt, potentially altering agent behavior.",
-      "handling": "The RAG pipeline applies content validation; suspicious documents are flagged and excluded from context assembly."
+      "bom-ref": "usecase:code-assistant-1a",
+      "name": "Code Assistant — Sub Use Case 1a (Local Agentic Framework)",
+      "description": "The developer's workstation hosts the full agentic framework, including the dynamic agent, model, RAG pipeline, and context store. The assistant plugin communicates directly with locally running components. MCP Servers bridge internal third-party services and external cloud platforms.",
+      "preconditions": [
+        "The developer's workstation has sufficient resources to run the local Code Assistant Model (e.g., an 8B-parameter model).",
+        "The Agentic Framework, RAG pipeline, and Context Store are installed and running locally.",
+        "The Code Assistant Plugin is installed in the IDE and authenticated.",
+        "Internal MCP Server and relevant Third Party Services are reachable.",
+        "External Cloud MCP Server is reachable if cloud service integrations are required."
+      ],
+      "postconditions": [
+        "Developer receives AI-generated code suggestions produced by the locally hosted model.",
+        "All data—including codebase content and context—remains within the internal network boundary unless explicitly forwarded via MCP to an external cloud service.",
+        "Agent tool invocations are logged locally."
+      ],
+      "exceptions": [
+        {
+          "name": "Insufficient Local Resources",
+          "condition": "The workstation does not have enough CPU/GPU/RAM to run the local model.",
+          "description": "Model inference fails or produces degraded responses due to resource constraints.",
+          "handling": "The framework reports an error to the developer; the developer may reduce model size or free system resources."
+        },
+        {
+          "name": "Context Store Poisoning",
+          "condition": "Malicious or manipulated content is present in the Local Context Store.",
+          "description": "Poisoned retrieval data is injected into the model prompt, potentially altering agent behavior.",
+          "handling": "The RAG pipeline applies content validation; suspicious documents are flagged and excluded from context assembly."
+        }
+      ],
+      "successCriteria": [
+        "Code suggestions are generated entirely within the internal trust boundary.",
+        "No developer code or credentials are transmitted to unapproved external endpoints.",
+        "Agent tool calls are restricted to permitted MCP Servers.",
+        "Local model inference completes within an acceptable latency threshold."
+      ],
+      "notes": [
+        "This sub use case is characterized by a fully local agentic stack — the dynamic agent, model, RAG, and context store all run on the developer's workstation.",
+        "MCP Servers act as the sole egress path to third-party and cloud services."
+      ]
     }
-  ],
-  "successCriteria": [
-    "Code suggestions are generated entirely within the internal trust boundary.",
-    "No developer code or credentials are transmitted to unapproved external endpoints.",
-    "Agent tool calls are restricted to permitted MCP Servers.",
-    "Local model inference completes within an acceptable latency threshold."
-  ],
-  "notes": [
-    "This sub use case is characterized by a fully local agentic stack — the dynamic agent, model, RAG, and context store all run on the developer's workstation.",
-    "MCP Servers act as the sole egress path to third-party and cloud services."
   ]
 }
 ```
 
 ### CycloneDX 2.0 — blueprint `flows`
 
+The following shows the `flows` entries specific to Sub Use Case 1a added to the blueprint. Only `flows` is shown here.
+
 ```json
-[
-  {
-    "bom-ref": "flow:1a-developer-submits-request",
-    "name": "Developer submits coding request",
-    "description": "The Developer submits a coding request through the IDE to the Code Assistant Plugin.",
-    "type": "process",
-    "source": "actor-developer",
-    "destination": "code-asst-plugin",
-    "sequence": 1
-  },
-  {
-    "bom-ref": "flow:1a-agent-authenticates",
-    "name": "Code Assistant Agent authenticates and authorizes",
-    "description": "The Code Assistant Agent authenticates and authorizes the request via the Authentication Service and Authorization Service.",
-    "type": "control",
-    "source": "code-asst-agent-static-data",
-    "destination": "authn-service",
-    "sequence": 2
-  },
-  {
-    "bom-ref": "flow:1a-agent-delegates-to-dynamic",
-    "name": "Code Assistant Agent delegates to Local Dynamic Agent",
-    "description": "The Code Assistant Agent evaluates the request and, for complex tasks, delegates to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework.",
-    "type": "control",
-    "source": "code-asst-agent-static-data",
-    "destination": "local-code-asst-agent",
-    "sequence": 3
-  },
-  {
-    "bom-ref": "flow:1a-dynamic-agent-invokes-model",
-    "name": "Local Dynamic Agent orchestrates local model",
-    "description": "The Code Assistant Agent (Local Dynamic) orchestrates the Local Code Assistant Model, invoking Local RAG and Local Context Store to enrich the prompt.",
-    "type": "process",
-    "source": "local-code-asst-agent",
-    "destination": "model-local",
-    "sequence": 4
-  },
-  {
-    "bom-ref": "flow:1a-dynamic-agent-calls-mcp",
-    "name": "Local Dynamic Agent calls MCP Server",
-    "description": "If external data or service integration is required, the Code Assistant Agent (Local Dynamic) calls the Third Party MCP Server or the MCP Server — Cloud Service.",
-    "type": "control",
-    "source": "local-code-asst-agent",
-    "destination": "local-mcp-server-third-party",
-    "sequence": 5
-  },
-  {
-    "bom-ref": "flow:1a-model-returns-response",
-    "name": "Local model returns response to Developer",
-    "description": "The Local Code Assistant Model generates the response, which is returned through the Agentic Framework and Code Assistant Plugin to the Developer in the IDE.",
-    "type": "data",
-    "source": "model-local",
-    "destination": "actor-developer",
-    "sequence": 6
-  }
-]
+{
+  "bom-ref": "blueprint:code-assistant",
+  "flows": [
+    {
+      "bom-ref": "flow:1a-developer-submits-request",
+      "name": "Developer submits coding request",
+      "description": "The Developer submits a coding request through the IDE to the Code Assistant Plugin.",
+      "type": "process",
+      "source": "actor-developer",
+      "destination": "code-asst-plugin",
+      "sequence": 1
+    },
+    {
+      "bom-ref": "flow:1a-agent-authenticates",
+      "name": "Code Assistant Agent authenticates and authorizes",
+      "description": "The Code Assistant Agent authenticates and authorizes the request via the Authentication Service and Authorization Service.",
+      "type": "control",
+      "source": "code-asst-agent-static-data",
+      "destination": "authn-service",
+      "sequence": 2
+    },
+    {
+      "bom-ref": "flow:1a-agent-delegates-to-dynamic",
+      "name": "Code Assistant Agent delegates to Local Dynamic Agent",
+      "description": "The Code Assistant Agent evaluates the request and, for complex tasks, delegates to the Code Assistant Agent (Local Dynamic) within the local Agentic Framework.",
+      "type": "control",
+      "source": "code-asst-agent-static-data",
+      "destination": "local-code-asst-agent",
+      "sequence": 3
+    },
+    {
+      "bom-ref": "flow:1a-dynamic-agent-invokes-model",
+      "name": "Local Dynamic Agent orchestrates local model",
+      "description": "The Code Assistant Agent (Local Dynamic) orchestrates the Local Code Assistant Model, invoking Local RAG and Local Context Store to enrich the prompt.",
+      "type": "process",
+      "source": "local-code-asst-agent",
+      "destination": "model-local",
+      "sequence": 4
+    },
+    {
+      "bom-ref": "flow:1a-dynamic-agent-calls-mcp",
+      "name": "Local Dynamic Agent calls MCP Server",
+      "description": "If external data or service integration is required, the Code Assistant Agent (Local Dynamic) calls the Third Party MCP Server or the MCP Server — Cloud Service.",
+      "type": "control",
+      "source": "local-code-asst-agent",
+      "destination": "local-mcp-server-third-party",
+      "sequence": 5
+    },
+    {
+      "bom-ref": "flow:1a-model-returns-response",
+      "name": "Local model returns response to Developer",
+      "description": "The Local Code Assistant Model generates the response, which is returned through the Agentic Framework and Code Assistant Plugin to the Developer in the IDE.",
+      "type": "data",
+      "source": "model-local",
+      "destination": "actor-developer",
+      "sequence": 6
+    }
+  ]
+}
 ```
 
 ## Sub Use Case 1b:
@@ -321,133 +384,145 @@ External Cloud
     └── Cloud Service (e.g. AWS, GCP)
 ```
 
-### CycloneDX 2.0 — `useCase` object
+### CycloneDX 2.0 — blueprint `useCases`
+
+The following shows the `useCases` entry specific to Sub Use Case 1b added to the blueprint. Only `useCases` is shown here.
 
 ```json
 {
-  "bom-ref": "usecase:code-assistant-1b",
-  "name": "Code Assistant — Sub Use Case 1b (External SaaS Agentic Framework)",
-  "description": "The agentic framework is offloaded to an external SaaS platform, which hosts the dynamic agent, model, RAG pipeline, and context store behind an MCP Gateway. The workstation retains the Code Assistant Plugin and local agent. MCP Servers connect to both internal third-party services and external cloud platforms. The Plugin Marketplace is the source for plugin installation.",
-  "preconditions": [
-    "The Code Assistant Plugin is installed from the External Plugin Marketplace and is authenticated.",
-    "The Agentic SaaS platform is accessible and the developer's account is provisioned.",
-    "The MCP Gateway on the Agentic SaaS platform is reachable from the developer's workstation.",
-    "Internal MCP Server and relevant Third Party Services (e.g., Jira, GitHub) are reachable.",
-    "External Cloud MCP Server is reachable if cloud service integrations are required."
-  ],
-  "postconditions": [
-    "Developer receives AI-generated code suggestions produced by the remotely hosted model.",
-    "Developer code and context submitted to the SaaS platform are governed by the platform's data handling and retention policies.",
-    "Agent tool invocations on the SaaS side are logged by the platform."
-  ],
-  "exceptions": [
+  "bom-ref": "blueprint:code-assistant",
+  "useCases": [
     {
-      "name": "Agentic SaaS Platform Unavailable",
-      "condition": "The Agentic SaaS platform or MCP Gateway is unreachable due to an outage or network failure.",
-      "description": "The developer cannot complete multi-step agentic tasks; the plugin degrades to static-only responses.",
-      "handling": "The Code Assistant Agent (code-asst-agent-static-data) notifies the developer of the degraded state and provides best-effort responses without SaaS delegation."
-    },
-    {
-      "name": "Malicious Plugin from Marketplace",
-      "condition": "A plugin installed from the External Plugin Marketplace contains malicious code.",
-      "description": "The plugin exfiltrates developer credentials, codebase content, or manipulates agent outputs.",
-      "handling": "The Authentication and Authorization Services should enforce least-privilege; organizations should vet plugins prior to installation and monitor plugin network activity."
-    },
-    {
-      "name": "Data Exfiltration via SaaS",
-      "condition": "Code or context submitted to the Agentic SaaS platform is accessed or retained in violation of data handling agreements.",
-      "description": "Sensitive proprietary code or secrets are exposed to the SaaS provider or third parties.",
-      "handling": "Organizations should review SaaS data retention policies, apply code redaction where possible, and avoid submitting secrets or regulated data to external platforms."
-    },
-    {
-      "name": "Prompt Injection via Remote Context Store",
-      "condition": "Malicious content ingested into the Remote Context Store or Remote RAG pipeline redirects the remote agent's behavior.",
-      "description": "An injected instruction overrides the developer's intent, potentially causing unauthorized tool invocations or data exfiltration from the SaaS platform.",
-      "handling": "The SaaS platform and agentic framework apply input sanitization; suspicious instructions are flagged and execution is halted pending developer review."
+      "bom-ref": "usecase:code-assistant-1b",
+      "name": "Code Assistant — Sub Use Case 1b (External SaaS Agentic Framework)",
+      "description": "The agentic framework is offloaded to an external SaaS platform, which hosts the dynamic agent, model, RAG pipeline, and context store behind an MCP Gateway. The workstation retains the Code Assistant Plugin and local agent. MCP Servers connect to both internal third-party services and external cloud platforms. The Plugin Marketplace is the source for plugin installation.",
+      "preconditions": [
+        "The Code Assistant Plugin is installed from the External Plugin Marketplace and is authenticated.",
+        "The Agentic SaaS platform is accessible and the developer's account is provisioned.",
+        "The MCP Gateway on the Agentic SaaS platform is reachable from the developer's workstation.",
+        "Internal MCP Server and relevant Third Party Services (e.g., Jira, GitHub) are reachable.",
+        "External Cloud MCP Server is reachable if cloud service integrations are required."
+      ],
+      "postconditions": [
+        "Developer receives AI-generated code suggestions produced by the remotely hosted model.",
+        "Developer code and context submitted to the SaaS platform are governed by the platform's data handling and retention policies.",
+        "Agent tool invocations on the SaaS side are logged by the platform."
+      ],
+      "exceptions": [
+        {
+          "name": "Agentic SaaS Platform Unavailable",
+          "condition": "The Agentic SaaS platform or MCP Gateway is unreachable due to an outage or network failure.",
+          "description": "The developer cannot complete multi-step agentic tasks; the plugin degrades to static-only responses.",
+          "handling": "The Code Assistant Agent (code-asst-agent-static-data) notifies the developer of the degraded state and provides best-effort responses without SaaS delegation."
+        },
+        {
+          "name": "Malicious Plugin from Marketplace",
+          "condition": "A plugin installed from the External Plugin Marketplace contains malicious code.",
+          "description": "The plugin exfiltrates developer credentials, codebase content, or manipulates agent outputs.",
+          "handling": "The Authentication and Authorization Services should enforce least-privilege; organizations should vet plugins prior to installation and monitor plugin network activity."
+        },
+        {
+          "name": "Data Exfiltration via SaaS",
+          "condition": "Code or context submitted to the Agentic SaaS platform is accessed or retained in violation of data handling agreements.",
+          "description": "Sensitive proprietary code or secrets are exposed to the SaaS provider or third parties.",
+          "handling": "Organizations should review SaaS data retention policies, apply code redaction where possible, and avoid submitting secrets or regulated data to external platforms."
+        },
+        {
+          "name": "Prompt Injection via Remote Context Store",
+          "condition": "Malicious content ingested into the Remote Context Store or Remote RAG pipeline redirects the remote agent's behavior.",
+          "description": "An injected instruction overrides the developer's intent, potentially causing unauthorized tool invocations or data exfiltration from the SaaS platform.",
+          "handling": "The SaaS platform and agentic framework apply input sanitization; suspicious instructions are flagged and execution is halted pending developer review."
+        }
+      ],
+      "successCriteria": [
+        "Developer receives accurate code suggestions from the remote model within acceptable latency.",
+        "All data transmitted to the Agentic SaaS platform is governed by agreed data handling policies.",
+        "Agent tool calls are restricted to permitted internal and external MCP Servers.",
+        "Plugin integrity is verified prior to installation and during runtime."
+      ],
+      "notes": [
+        "This sub use case introduces a third-party trust boundary at the Agentic SaaS platform, which hosts the most capable (e.g., 30B-parameter) model.",
+        "The External Plugin Marketplace is a supply chain risk vector — plugins should be vetted and sourced from trusted publishers.",
+        "MCP Gateway acts as the sole ingress point to the SaaS agentic stack and is a high-value target."
+      ]
     }
-  ],
-  "successCriteria": [
-    "Developer receives accurate code suggestions from the remote model within acceptable latency.",
-    "All data transmitted to the Agentic SaaS platform is governed by agreed data handling policies.",
-    "Agent tool calls are restricted to permitted internal and external MCP Servers.",
-    "Plugin integrity is verified prior to installation and during runtime."
-  ],
-  "notes": [
-    "This sub use case introduces a third-party trust boundary at the Agentic SaaS platform, which hosts the most capable (e.g., 30B-parameter) model.",
-    "The External Plugin Marketplace is a supply chain risk vector — plugins should be vetted and sourced from trusted publishers.",
-    "MCP Gateway acts as the sole ingress point to the SaaS agentic stack and is a high-value target."
   ]
 }
 ```
 
 ### CycloneDX 2.0 — blueprint `flows`
 
+The following shows the `flows` entries specific to Sub Use Case 1b added to the blueprint. Only `flows` is shown here.
+
 ```json
-[
-  {
-    "bom-ref": "flow:1b-developer-installs-plugin",
-    "name": "Developer installs Code Assistant Plugin from Marketplace",
-    "description": "The Developer installs the Code Assistant Plugin from the External Plugin Marketplace and opens it within the IDE.",
-    "type": "process",
-    "source": "actor-developer",
-    "destination": "external-plugin-marketplace",
-    "sequence": 1
-  },
-  {
-    "bom-ref": "flow:1b-agent-authenticates",
-    "name": "Code Assistant Agent authenticates and authorizes",
-    "description": "The Code Assistant Agent authenticates and authorizes the request via the Authentication Service and Authorization Service.",
-    "type": "control",
-    "source": "code-asst-agent-static-data",
-    "destination": "authn-service",
-    "sequence": 2
-  },
-  {
-    "bom-ref": "flow:1b-agent-forwards-to-gateway",
-    "name": "Code Assistant Agent forwards request to MCP Gateway",
-    "description": "The Code Assistant Agent evaluates the request and forwards complex tasks to the Agentic SaaS platform via the MCP Gateway.",
-    "type": "control",
-    "source": "code-asst-agent-static-data",
-    "destination": "mcp-gateway",
-    "sequence": 3
-  },
-  {
-    "bom-ref": "flow:1b-gateway-routes-to-saas",
-    "name": "MCP Gateway routes request to MCP Server — Agentic SaaS",
-    "description": "The MCP Gateway authenticates the inbound request and routes it to the MCP Server — Agentic SaaS.",
-    "type": "control",
-    "source": "mcp-gateway",
-    "destination": "mcp-agentic-saas",
-    "sequence": 4
-  },
-  {
-    "bom-ref": "flow:1b-remote-agent-invokes-model",
-    "name": "Remote Code Assistant Agent orchestrates remote model",
-    "description": "The Remote Code Assistant Agent orchestrates the Remote Code Assistant Model, Remote RAG, and Remote Context Store.",
-    "type": "process",
-    "source": "remote-code-asst-agent",
-    "destination": "model-remote",
-    "sequence": 5
-  },
-  {
-    "bom-ref": "flow:1b-remote-agent-calls-mcp",
-    "name": "Remote Code Assistant Agent calls MCP Server",
-    "description": "If external service integration is required, the Remote Code Assistant Agent calls the Third Party MCP Server or the MCP Server — Cloud Service.",
-    "type": "control",
-    "source": "remote-code-asst-agent",
-    "destination": "local-mcp-server-third-party",
-    "sequence": 6
-  },
-  {
-    "bom-ref": "flow:1b-model-returns-response",
-    "name": "Remote model returns response to Developer",
-    "description": "The Remote Code Assistant Model generates the response, which is returned via the MCP Gateway and Code Assistant Plugin to the Developer in the IDE.",
-    "type": "data",
-    "source": "model-remote",
-    "destination": "actor-developer",
-    "sequence": 7
-  }
-]
+{
+  "bom-ref": "blueprint:code-assistant",
+  "flows": [
+    {
+      "bom-ref": "flow:1b-developer-installs-plugin",
+      "name": "Developer installs Code Assistant Plugin from Marketplace",
+      "description": "The Developer installs the Code Assistant Plugin from the External Plugin Marketplace and opens it within the IDE.",
+      "type": "process",
+      "source": "actor-developer",
+      "destination": "external-plugin-marketplace",
+      "sequence": 1
+    },
+    {
+      "bom-ref": "flow:1b-agent-authenticates",
+      "name": "Code Assistant Agent authenticates and authorizes",
+      "description": "The Code Assistant Agent authenticates and authorizes the request via the Authentication Service and Authorization Service.",
+      "type": "control",
+      "source": "code-asst-agent-static-data",
+      "destination": "authn-service",
+      "sequence": 2
+    },
+    {
+      "bom-ref": "flow:1b-agent-forwards-to-gateway",
+      "name": "Code Assistant Agent forwards request to MCP Gateway",
+      "description": "The Code Assistant Agent evaluates the request and forwards complex tasks to the Agentic SaaS platform via the MCP Gateway.",
+      "type": "control",
+      "source": "code-asst-agent-static-data",
+      "destination": "mcp-gateway",
+      "sequence": 3
+    },
+    {
+      "bom-ref": "flow:1b-gateway-routes-to-saas",
+      "name": "MCP Gateway routes request to MCP Server — Agentic SaaS",
+      "description": "The MCP Gateway authenticates the inbound request and routes it to the MCP Server — Agentic SaaS.",
+      "type": "control",
+      "source": "mcp-gateway",
+      "destination": "mcp-agentic-saas",
+      "sequence": 4
+    },
+    {
+      "bom-ref": "flow:1b-remote-agent-invokes-model",
+      "name": "Remote Code Assistant Agent orchestrates remote model",
+      "description": "The Remote Code Assistant Agent orchestrates the Remote Code Assistant Model, Remote RAG, and Remote Context Store.",
+      "type": "process",
+      "source": "remote-code-asst-agent",
+      "destination": "model-remote",
+      "sequence": 5
+    },
+    {
+      "bom-ref": "flow:1b-remote-agent-calls-mcp",
+      "name": "Remote Code Assistant Agent calls MCP Server",
+      "description": "If external service integration is required, the Remote Code Assistant Agent calls the Third Party MCP Server or the MCP Server — Cloud Service.",
+      "type": "control",
+      "source": "remote-code-asst-agent",
+      "destination": "local-mcp-server-third-party",
+      "sequence": 6
+    },
+    {
+      "bom-ref": "flow:1b-model-returns-response",
+      "name": "Remote model returns response to Developer",
+      "description": "The Remote Code Assistant Model generates the response, which is returned via the MCP Gateway and Code Assistant Plugin to the Developer in the IDE.",
+      "type": "data",
+      "source": "model-remote",
+      "destination": "actor-developer",
+      "sequence": 7
+    }
+  ]
+}
 ```
 
 ## Canonical Diagram Entity Mapping
