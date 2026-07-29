@@ -68,61 +68,44 @@ In both variants the developer's IDE remains the single point of interaction. Au
     {
       "number": 1,
       "description": "The Developer (actor-developer) obtains the Code Assistant Plugin (code-asst-plugin) from a trusted, authenticated Plugin Marketplace (external-plugin-marketplace) and installs it into the IDE (local-ide).",
-      "actor": { "ref": "actor-developer" }
+      "source": "actor-developer",
+      "target": "external-plugin-marketplace"
     },
     {
       "number": 2,
       "description": "The Developer opens the IDE (local-ide) and activates the Code Assistant Plugin (code-asst-plugin) to initiate a coding assistance interaction.",
-      "actor": { "ref": "actor-developer" }
+      "source": "actor-developer",
+      "target": "code-asst-plugin"
     },
     {
       "number": 3,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) authenticates the Developer via the Authentication Service (authn-service) and checks permissions via the Authorization Service (authz-service).",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "authn-service"
     },
     {
       "number": 4,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) processes the Developer's request, optionally querying the Local Codebase Clone (data-local-codebase). Where tool calls are needed, it dispatches requests to the locally installed MCP Server (e.g., Jira MCP Server on the workstation) to retrieve context such as tickets or project metadata.",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "data-local-codebase"
     },
     {
       "number": 5,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) forwards complex or multi-step tasks to the Code Assistant Agent (Local Dynamic) (local-code-asst-agent) running within the Agentic Framework (framework-1a).",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "local-code-asst-agent"
     },
     {
       "number": 6,
       "description": "The Code Assistant Agent (Local Dynamic) (local-code-asst-agent) orchestrates multi-step workflows using the local model (model-local), RAG pipeline (rag-local), and context store (ctx-local). Where remote agentic capabilities are required, requests are routed to the MCP Server — Agentic SaaS (e.g., Claude Code, hosted remotely) via the MCP Gateway (mcp-gateway).",
-      "actor": { "ref": "local-code-asst-agent" }
+      "source": "local-code-asst-agent",
+      "target": "model-local"
     },
     {
       "number": 7,
       "description": "The model generates a response, which is returned through the Agentic Framework and Code Assistant Plugin (code-asst-plugin) to the Developer (actor-developer) in the IDE (local-ide).",
-      "actor": { "ref": "model-local" }
-    }
-  ],
-  "alternativeFlows": [
-    {
-      "name": "External SaaS Agentic Execution (Sub Use Case 1b)",
-      "description": "The Agentic Framework and its components (dynamic agent, model, RAG, context store) are hosted on an external SaaS platform rather than on the developer's workstation.",
-      "condition": "The Code Assistant Plugin is configured to delegate agentic workflows to an external Agentic SaaS platform.",
-      "steps": [
-        {
-          "number": 1,
-          "description": "The Code Assistant Agent (code-asst-agent-static-data) forwards the request to the MCP Gateway (mcp-gateway) on the Agentic SaaS platform.",
-          "actor": { "ref": "code-asst-agent-static-data" }
-        },
-        {
-          "number": 2,
-          "description": "The MCP Gateway (mcp-gateway) routes the request to the MCP Server — Agentic SaaS (mcp-agentic-saas), which dispatches it to the Remote Code Assistant Agent (remote-code-asst-agent).",
-          "actor": { "ref": "mcp-gateway" }
-        },
-        {
-          "number": 3,
-          "description": "The Remote Code Assistant Agent (remote-code-asst-agent) orchestrates the Remote Code Assistant Model (model-remote), Remote RAG (rag-remote), and Remote Context Store (ctx-remote), then returns the result via the MCP Gateway (mcp-gateway) to the Code Assistant Plugin (code-asst-plugin).",
-          "actor": { "ref": "remote-code-asst-agent" }
-        }
-      ]
+      "source": "model-local",
+      "target": "actor-developer"
     }
   ],
   "exceptions": [
@@ -153,7 +136,8 @@ In both variants the developer's IDE remains the single point of interaction. Au
   ],
   "notes": [
     "This top-level use case is realized by two sub use cases (1a and 1b) that differ in the deployment location of the Agentic Framework and its hosted components.",
-    "Actors encoded as CycloneDX 2.0 `actors` objects; bom-ref values must match entries in the `actors` array."
+    "Actors encoded as CycloneDX 2.0 `actors` objects; bom-ref values must match entries in the `actors` array.",
+    "Blueprint-level `flows` capture the variant SaaS execution path (Sub Use Case 1b) as explicit source/destination flow objects referencing actor and component bom-refs."
   ]
 }
 ```
@@ -210,51 +194,38 @@ External Cloud
     {
       "number": 1,
       "description": "The Developer (actor-developer) submits a coding request through the IDE (local-ide) to the Code Assistant Plugin (code-asst-plugin).",
-      "actor": { "ref": "actor-developer" }
+      "source": "actor-developer",
+      "target": "code-asst-plugin"
     },
     {
       "number": 2,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) authenticates and authorizes the request via the Authentication Service (authn-service) and Authorization Service (authz-service).",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "authn-service"
     },
     {
       "number": 3,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) evaluates the request and, for complex tasks, delegates to the Code Assistant Agent (Local Dynamic) (local-code-asst-agent) within the local Agentic Framework (framework-1a).",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "local-code-asst-agent"
     },
     {
       "number": 4,
       "description": "The Code Assistant Agent (Local Dynamic) (local-code-asst-agent) orchestrates the Local Code Assistant Model (model-local), invoking Local RAG (rag-local) and Local Context Store (ctx-local) to enrich the prompt.",
-      "actor": { "ref": "local-code-asst-agent" }
+      "source": "local-code-asst-agent",
+      "target": "model-local"
     },
     {
       "number": 5,
       "description": "If external data or service integration is required, the Code Assistant Agent (Local Dynamic) (local-code-asst-agent) calls the Third Party MCP Server (local-mcp-server-third-party) or the MCP Server — Cloud Service (mcp-cloud).",
-      "actor": { "ref": "local-code-asst-agent" }
+      "source": "local-code-asst-agent",
+      "target": "local-mcp-server-third-party"
     },
     {
       "number": 6,
       "description": "The Local Code Assistant Model (model-local) generates the response, which is returned through the Agentic Framework (framework-1a) and Code Assistant Plugin (code-asst-plugin) to the Developer (actor-developer) in the IDE (local-ide).",
-      "actor": { "ref": "model-local" }
-    }
-  ],
-  "alternativeFlows": [
-    {
-      "name": "Cloud Service Tool Call",
-      "description": "The dynamic agent requires data or actions from an external cloud provider.",
-      "condition": "The developer's request or the agent's workflow requires interaction with a cloud service (e.g., AWS, GCP).",
-      "steps": [
-        {
-          "number": 1,
-          "description": "The Code Assistant Agent (Local Dynamic) (local-code-asst-agent) invokes the MCP Server — Cloud Service (mcp-cloud).",
-          "actor": { "ref": "local-code-asst-agent" }
-        },
-        {
-          "number": 2,
-          "description": "The Cloud Service (cloud-service) processes the request and returns results through the MCP Server — Cloud Service (mcp-cloud) to the Code Assistant Agent (Local Dynamic) (local-code-asst-agent).",
-          "actor": { "ref": "cloud-service" }
-        }
-      ]
+      "source": "model-local",
+      "target": "actor-developer"
     }
   ],
   "exceptions": [
@@ -342,73 +313,44 @@ External Cloud
     {
       "number": 1,
       "description": "The Developer (actor-developer) installs the Code Assistant Plugin (code-asst-plugin) from the External Plugin Marketplace (external-plugin-marketplace) and opens it within the IDE (local-ide).",
-      "actor": { "ref": "actor-developer" }
+      "source": "actor-developer",
+      "target": "external-plugin-marketplace"
     },
     {
       "number": 2,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) authenticates and authorizes the request via the Authentication Service (authn-service) and Authorization Service (authz-service).",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "authn-service"
     },
     {
       "number": 3,
       "description": "The Code Assistant Agent (code-asst-agent-static-data) evaluates the request and forwards complex tasks to the Agentic SaaS platform (agentic-saas) via the MCP Gateway (mcp-gateway).",
-      "actor": { "ref": "code-asst-agent-static-data" }
+      "source": "code-asst-agent-static-data",
+      "target": "mcp-gateway"
     },
     {
       "number": 4,
       "description": "The MCP Gateway (mcp-gateway) authenticates the inbound request and routes it to the MCP Server — Agentic SaaS (mcp-agentic-saas).",
-      "actor": { "ref": "mcp-gateway" }
+      "source": "mcp-gateway",
+      "target": "mcp-agentic-saas"
     },
     {
       "number": 5,
       "description": "The Remote Code Assistant Agent (remote-code-asst-agent) on the Agentic SaaS platform (agentic-saas) orchestrates the Remote Code Assistant Model (model-remote), Remote RAG (rag-remote), and Remote Context Store (ctx-remote).",
-      "actor": { "ref": "remote-code-asst-agent" }
+      "source": "remote-code-asst-agent",
+      "target": "model-remote"
     },
     {
       "number": 6,
       "description": "If external service integration is required, the Remote Code Assistant Agent (remote-code-asst-agent) calls the Third Party MCP Server (local-mcp-server-third-party) or the MCP Server — Cloud Service (mcp-cloud).",
-      "actor": { "ref": "remote-code-asst-agent" }
+      "source": "remote-code-asst-agent",
+      "target": "local-mcp-server-third-party"
     },
     {
       "number": 7,
       "description": "The Remote Code Assistant Model (model-remote) generates the response, which is returned via the MCP Gateway (mcp-gateway) and Code Assistant Plugin (code-asst-plugin) to the Developer (actor-developer) in the IDE (local-ide).",
-      "actor": { "ref": "model-remote" }
-    }
-  ],
-  "alternativeFlows": [
-    {
-      "name": "Internal Third-Party Service Integration",
-      "description": "The remote dynamic agent requires data from an internal third-party service (e.g., Jira, GitHub).",
-      "condition": "The agent's workflow includes a tool call targeting an internally operated Third Party MCP Server.",
-      "steps": [
-        {
-          "number": 1,
-          "description": "The Remote Code Assistant Agent (remote-code-asst-agent) issues a tool call to the internal Third Party MCP Server (local-mcp-server-third-party) via the established secure channel.",
-          "actor": { "ref": "remote-code-asst-agent" }
-        },
-        {
-          "number": 2,
-          "description": "The Third Party MCP Server (local-mcp-server-third-party) processes the request against the third-party service and returns results to the Remote Code Assistant Agent (remote-code-asst-agent).",
-          "actor": { "ref": "local-mcp-server-third-party" }
-        }
-      ]
-    },
-    {
-      "name": "Cloud Service Tool Call",
-      "description": "The Remote Code Assistant Agent requires data or actions from an external cloud provider.",
-      "condition": "The developer's request or the agent's workflow requires interaction with a cloud service (e.g., AWS, GCP).",
-      "steps": [
-        {
-          "number": 1,
-          "description": "The Remote Code Assistant Agent (remote-code-asst-agent) invokes the MCP Server — Cloud Service (mcp-cloud).",
-          "actor": { "ref": "remote-code-asst-agent" }
-        },
-        {
-          "number": 2,
-          "description": "The Cloud Service (cloud-service) processes the request and returns results through the MCP Server — Cloud Service (mcp-cloud) to the Remote Code Assistant Agent (remote-code-asst-agent).",
-          "actor": { "ref": "cloud-service" }
-        }
-      ]
+      "source": "model-remote",
+      "target": "actor-developer"
     }
   ],
   "exceptions": [
