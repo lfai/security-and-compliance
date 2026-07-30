@@ -6,4 +6,4 @@
 .vscode/*.log
 
 # Misc
-# .bob
+.bob
