@@ -12,7 +12,10 @@ The **Code Assistant** use case describes an AI-powered development assistant th
 
 ### Local agents (in-IDE runtime)
 
-Once the plugin is installed, a **Code Assistant Agent** (local, dynamic) runs within the plugin process on the developer's workstation. Before installation it is treated as a static software component (the *Code Assistant Plugin*); once activated inside the IDE it becomes an actor with agency. *Local* affirms that the agent and its agentic framework run entirely on the developer's workstation, within the internal trust boundary. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. The agent handles the full range of tasks from low-latency inline completions through to complex, multi-step operations such as autonomous code generation, repository-wide refactoring, and test scaffolding. When hardware permits, a locally quantised language model (e.g., an 8 B-parameter model) serves inference entirely on the workstation, keeping code and context within the local trust boundary.
+Once the plugin is installed, a **Code Assistant Agent** (local, dynamic) runs within the plugin process on the developer's workstation. Before installation it is treated as a static software component (the *Code Assistant Plugin*); once activated inside the IDE it becomes an actor with agency.
+- When hardware permits, a locally quantised language model (e.g., an 8B parameter model) serves inference entirely on the workstation, keeping code and context within the local trust boundary.
+- *Local* indictes that the agent and its agentic framework run entirely on the developer's workstation, within the internal trust boundary.
+- *Dynamic* indicates that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. The agent handles the full range of tasks from low-latency inline completions through to complex, multi-step operations such as autonomous code generation, repository-wide refactoring, and test scaffolding.
 
 ### External connectivity
 
