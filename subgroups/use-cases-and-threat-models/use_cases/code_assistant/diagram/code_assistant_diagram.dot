@@ -1,0 +1,80 @@
+// Code Assistant Threat Model — generated from CycloneDX JSON
+digraph code_assistant_threat_model {
+	bgcolor=white compound=true fontname=Helvetica fontsize=12 nodesep=0.5 rankdir=LR ranksep=1.2 splines=ortho
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=8]
+	subgraph cluster_internal {
+		color="#2e7d32" fillcolor="#e8f5e9" fontname="Helvetica Bold" fontsize=13 label=Internal margin=20 penwidth=2 style="filled,rounded"
+		"actor-developer" [label=Developer fillcolor="#c8e6c9" margin="0.15,0.1" shape=oval style=filled]
+		"local-ide" [label=IDE fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"code-asst-plugin" [label="Code Assistant
+Plugin" fillcolor="#ffe0b2" margin="0.15,0.1" shape=cylinder style=filled]
+		"data-local-codebase" [label="Local Codebase
+Clone" fillcolor="#ffe0b2" margin="0.15,0.1" shape=cylinder style=filled]
+		"authn-service" [label="Authentication
+Service" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"authz-service" [label="Authorization
+Service" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"local-mcp-server-third-party" [label="Third Party
+MCP Server" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"code-asst-agent-static-data" [label="Code Assistant
+Agent" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"local-code-asst-agent" [label="Code Assistant Agent
+(local, dynamic)" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"framework-1a" [label="Agentic Framework
+(Internal)" fillcolor="#e1bee7" margin="0.15,0.1" shape=component style=filled]
+		"model-local" [label="Local Code
+Assistant Model" fillcolor="#b3e5fc" margin="0.15,0.1" shape=hexagon style=filled]
+		"rag-local" [label="Local RAG" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"ctx-local" [label="Local Context
+Store" fillcolor="#ffe0b2" margin="0.15,0.1" shape=cylinder style=filled]
+	}
+	subgraph cluster_external_saas {
+		color="#e65100" fillcolor="#fff3e0" fontname="Helvetica Bold" fontsize=13 label="External SaaS" margin=20 penwidth=2 style="filled,rounded"
+		"remote-code-asst-agent" [label="Remote Code Assistant
+Agent (remote, dynamic)" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"framework-1b" [label="Agentic Framework
+(External SaaS)" fillcolor="#e1bee7" margin="0.15,0.1" shape=component style=filled]
+		"model-remote" [label="Remote Code
+Assistant Model" fillcolor="#b3e5fc" margin="0.15,0.1" shape=hexagon style=filled]
+		"rag-remote" [label="Remote RAG" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"ctx-remote" [label="Remote Context
+Store" fillcolor="#ffe0b2" margin="0.15,0.1" shape=cylinder style=filled]
+		"mcp-gateway" [label="MCP Gateway" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"mcp-agentic-saas" [label="MCP Server —
+Agentic SaaS" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"external-plugin-marketplace" [label="External Plugin
+Marketplace" fillcolor="#f8bbd0" margin="0.15,0.1" shape=tab style=filled]
+		"agentic-saas" [label="Agentic SaaS" fillcolor="#f8bbd0" margin="0.15,0.1" shape=tab style=filled]
+	}
+	subgraph cluster_external_cloud {
+		color="#1565c0" fillcolor="#e3f2fd" fontname="Helvetica Bold" fontsize=13 label="External Cloud" margin=20 penwidth=2 style="filled,rounded"
+		"mcp-cloud" [label="MCP Server —
+Cloud Service" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+		"cloud-service" [label="Cloud Service
+(AWS/GCP/etc.)" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
+	}
+	"actor-developer" -> "local-ide" [label="submits request" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"local-ide" -> "code-asst-plugin" [label="activates plugin" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"code-asst-agent-static-data" -> "authn-service" [label="🔒 authenticates" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"code-asst-agent-static-data" -> "authz-service" [label="🔒 checks permissions" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"code-asst-agent-static-data" -> "data-local-codebase" [label="reads codebase" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"code-asst-agent-static-data" -> "local-mcp-server-third-party" [label="calls MCP (3rd party)" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"code-asst-agent-static-data" -> "framework-1a" [label="delegates (1a)" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"local-code-asst-agent" -> "model-local" [label="invokes local model" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"local-code-asst-agent" -> "rag-local" [label="queries local RAG" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"local-code-asst-agent" -> "ctx-local" [label="reads context" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"local-code-asst-agent" -> "mcp-cloud" [label="🔒 calls cloud MCP (1a)" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"mcp-cloud" -> "cloud-service" [label="🔒 calls cloud service" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"model-local" -> "actor-developer" [label="returns response" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"code-asst-agent-static-data" -> "mcp-gateway" [label="🔒 forwards request (1b)" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"mcp-gateway" -> "mcp-agentic-saas" [label="🔒 routes to SaaS MCP" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"mcp-agentic-saas" -> "remote-code-asst-agent" [label="dispatches to remote agent" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"remote-code-asst-agent" -> "model-remote" [label="invokes remote model" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"remote-code-asst-agent" -> "rag-remote" [label="queries remote RAG" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"remote-code-asst-agent" -> "ctx-remote" [label="reads remote context" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"remote-code-asst-agent" -> "local-mcp-server-third-party" [label="🔒 calls MCP (3rd party, 1b)" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"remote-code-asst-agent" -> "mcp-cloud" [label="🔒 calls cloud MCP (1b)" arrowsize=0.7 color="#555555" fontcolor="#555555"]
+	"model-remote" -> "actor-developer" [label="returns response" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0"]
+	"external-plugin-marketplace" -> "code-asst-plugin" [label="delivers plugin" arrowsize=0.7 color="#1565c0" fontcolor="#1565c0" style=dashed]
+}
