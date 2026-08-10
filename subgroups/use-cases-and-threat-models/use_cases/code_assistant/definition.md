@@ -42,6 +42,12 @@ The architecture supports two primary deployment variants that share the same pl
 
 In both variants the developer's IDE remains the single point of interaction. Authentication and authorization services guard every outbound connection, and all agent tool invocations are intended to be logged and auditable regardless of where the agentic framework is hosted.
 
+### CycloneDX 2.0
+
+[CycloneDX](https://cyclonedx.org/) is an open standard for creating a Bill of Materials (BOM) - most commonly a Software Bill of Materials (SBOM) - that describes what components make up a piece of software. It is developed by the OWASP and is now an international standard, ECMA-424.
+
+![Image of the structure and links of cyclonedx schema elements applicable to our scenario](./images/cyclonedx_structure.png)
+
 ### CycloneDX 2.0 — `blueprint` identity
 
 A `blueprint` is a top-level element of any CycloneDX BOM that wishes to include its design: the actors, components, boundaries, flows, and use cases that describe how a system behaves. It appears inside a `blueprints` array at the root of the BOM, alongside the standard `components` array. All design elements — `actors`, `boundaries`, `flows`, `useCases`, and references to `components` — live *inside* the blueprint object rather than at the BOM root; `components` itself remains at the BOM root so that inventory tooling can discover every component regardless of whether a blueprint is present.
