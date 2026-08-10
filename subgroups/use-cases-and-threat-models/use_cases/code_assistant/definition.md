@@ -48,6 +48,24 @@ In both variants the developer's IDE remains the single point of interaction. Au
 
 ![Image of the structure and links of cyclonedx schema elements applicable to our scenario](./images/cyclonedx_structure.png)
 
+Sections below define the elements of the BOM, as shown in the diagram above:
+
+ - [Blueprint](#cyclonedx-20--blueprint-identity)
+ - [Boundaries](#cyclonedx-20--boundaries)
+ - [Top-level useCase](#cyclonedx-20--top-level-usecase)
+ - Sub Use Case 1a
+   - [Sub Use Case 1a relationships](#cyclonedx-20--sub-use-case-1a-relationships)
+   - [Sub Use Case 1a flows](#cyclonedx-20--sub-use-case-1a-flows)
+   - [Sub Use Case 1a useCase](#cyclonedx-20--sub-use-case-1a-usecase)
+ - Sub Use Case 1b
+   - [Sub Use Case 1b relationships](#cyclonedx-20--sub-use-case-1b-relationships)
+   - [Sub Use Case 1b flows](#cyclonedx-20--sub-use-case-1b-flows)
+   - [Sub Use Case 1b useCase](#cyclonedx-20--sub-use-case-1b-usecase)
+ - [Top-level useCase revisited](#cyclonedx-20--top-level-usecase-revisited)
+ - [Actors encoding](#cyclonedx-20--actors-encoding)
+ - [Components encoding](#cyclonedx-20--components-encoding)
+ - [Code Assistant Threat Model BOM](#cyclonedx-v20--code-assistant-threat-model-bom)
+
 ### CycloneDX 2.0 — `blueprint` identity
 
 A `blueprint` is a top-level element of any CycloneDX BOM that wishes to include its design: the actors, components, boundaries, flows, and use cases that describe how a system behaves. It appears inside a `blueprints` array at the root of the BOM, alongside the standard `components` array. All design elements — `actors`, `boundaries`, `flows`, `useCases`, and references to `components` — live *inside* the blueprint object rather than at the BOM root; `components` itself remains at the BOM root so that inventory tooling can discover every component regardless of whether a blueprint is present.
