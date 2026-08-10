@@ -169,7 +169,7 @@ The top-level use case groups both sub use cases and will reference the overview
       "notes": [
         "This top-level use case is realized by two sub use cases (1a and 1b) that differ in the deployment location of the Agentic Framework and its hosted components."
       ],
-      "flows": [ // flows will be defined in Sub Use Cases 1a and 1b — see the revisited snippet below
+      "flows": [
         { "ref": "flow:developer-installs-plugin" },
         { "ref": "flow:developer-activates-plugin" },
         { "ref": "flow:agent-authenticates" },
@@ -182,6 +182,8 @@ The top-level use case groups both sub use cases and will reference the overview
   ]
 }
 ```
+
+**Note:** Flows will be defined in Sub Use Cases 1a and 1b — see the revisited snippet below
 
 ---
 
