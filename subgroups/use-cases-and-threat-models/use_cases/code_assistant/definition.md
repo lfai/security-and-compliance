@@ -442,8 +442,7 @@ The structural containment expressed in the ASCII diagram above, encoded using t
         "component:authz-service",
         "component:local-ide",
         "component:data-local-codebase",
-        "component:code-asst-plugin",
-        "component:external-saas-agentic-framework"
+        "component:code-asst-plugin"
       ]
     },
     {
@@ -456,7 +455,8 @@ The structural containment expressed in the ASCII diagram above, encoded using t
       "ref": "boundary:external-saas",
       "aggregates": [
         "component:external-plugin-marketplace",
-        "component:agentic-saas"
+        "component:agentic-saas",
+        "component:external-saas-agentic-framework"
       ]
     },
     {
