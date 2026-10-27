@@ -4,7 +4,7 @@
 
 ### Presentations
 
-- TBD
+- [Work Group presentation](./lf-ai-security-compliance-oct-19.pdf)
 
 ### Whitepapers
 
