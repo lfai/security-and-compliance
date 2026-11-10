@@ -6,6 +6,58 @@ Diagram (draw.io): ![Diagram](./diagram/ai_code_generator_threat_model_diagram_u
 
 [Edit this diagram (draw.io XML)](./diagram/ai_code_generator_threat_model_diagram_updated_2026_05_12.drawio)
 
+## Diagram entity to CycloneDX `refId` mapping
+
+Each entity in the diagram above is listed with its CycloneDX `refId`. Each `refId` links to the JSON fragment that defines it: the [`components` encoding](#cyclonedx-20--components-encoding) for components, and the [`actors` encoding](#cyclonedx-20--actors-encoding) for actors. Each type links to the prose definition of its taxonomy group. An entity that appears in both sub use cases is listed in both tables. Where an agent is both an actor and a component, both `refId` values are shown (see [Component ↔ Party ↔ Actor links](#cyclonedx-20--component--party--actor-links)).
+
+Membership is taken from the `relationships` and `flows` of each sub use case, which are the canonical record. The tables are a navigation aid and the BOM remains the source of truth.
+
+### Sub Use Case 1a — Local agentic framework
+
+| Diagram entity                        | CycloneDX `refId`                                                                                                                                                                                  | Type                                                         | Zone           |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
+| Developer                             | [`actor:developer`](#cyclonedx-20--actors-encoding)                                                                                                                                                | [Actor](#actors-partiesroles)                                | Internal       |
+| IDE                                   | [`component:local-ide`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | Internal       |
+| Code Assistant Plugin                 | [`component:code-asst-plugin`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Data](#data)                                                | Internal       |
+| Code Assistant Agent (static)         | [`component:code-asst-agent`](#cyclonedx-20--components-encoding)                                                                                                                                  | [Application](#application)                                  | Internal       |
+| Local Codebase Clone                  | [`component:data-local-codebase`](#cyclonedx-20--components-encoding)                                                                                                                              | [Data](#data)                                                | Internal       |
+| Authentication Service                | [`component:authn-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | Internal       |
+| Authorization Service                 | [`component:authz-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | Internal       |
+| Third Party MCP Server                | [`component:mcp-server-third-party`](#cyclonedx-20--components-encoding)                                                                                                                           | [Application](#application)                                  | Internal       |
+| Agentic Framework                     | [`component:internal-agentic-framework`](#cyclonedx-20--components-encoding)                                                                                                                       | [Framework](#framework)                                      | Internal       |
+| Code Assistant Agent (local, dynamic) | [`actor:local-code-asst-agent`](#cyclonedx-20--actors-encoding), [`component:local-code-asst-agent`](#cyclonedx-20--components-encoding)                                                           | [Actor](#actors-partiesroles) / [Application](#application)  | Internal       |
+| Local Code Assistant Model            | [`component:code-assistant-model-local`](#cyclonedx-20--components-encoding)                                                                                                                       | [Machine-Learning-Model](#machine-learning-model)            | Internal       |
+| Local RAG                             | [`component:rag-local`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | Internal       |
+| Local Context Store                   | [`component:context-store-local`](#cyclonedx-20--components-encoding)                                                                                                                              | [Data](#data)                                                | Internal       |
+| MCP Server — Cloud Service            | [`component:mcp-cloud`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | External Cloud |
+| Cloud Service                         | [`component:cloud-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | External Cloud |
+
+### Sub Use Case 1b — External SaaS agentic framework
+
+| Diagram entity                        | CycloneDX `refId`                                                                                                                                                                                  | Type                                                         | Zone           |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
+| Developer                             | [`actor:developer`](#cyclonedx-20--actors-encoding)                                                                                                                                                | [Actor](#actors-partiesroles)                                | Internal       |
+| IDE                                   | [`component:local-ide`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | Internal       |
+| Code Assistant Plugin                 | [`component:code-asst-plugin`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Data](#data)                                                | Internal       |
+| Code Assistant Agent (static)         | [`component:code-asst-agent`](#cyclonedx-20--components-encoding)                                                                                                                                  | [Application](#application)                                  | Internal       |
+| Local Codebase Clone                  | [`component:data-local-codebase`](#cyclonedx-20--components-encoding)                                                                                                                              | [Data](#data)                                                | Internal       |
+| Authentication Service                | [`component:authn-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | Internal       |
+| Authorization Service                 | [`component:authz-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | Internal       |
+| Third Party MCP Server                | [`component:mcp-server-third-party`](#cyclonedx-20--components-encoding)                                                                                                                           | [Application](#application)                                  | Internal       |
+| External Plugin Marketplace           | [`component:external-plugin-marketplace`](#cyclonedx-20--components-encoding)                                                                                                                      | [Platform](#platform)                                        | External SaaS  |
+| Agentic SaaS                          | [`component:agentic-saas`](#cyclonedx-20--components-encoding)                                                                                                                                     | [Platform](#platform)                                        | External SaaS  |
+| Agentic Framework                     | [`component:external-saas-agentic-framework`](#cyclonedx-20--components-encoding)                                                                                                                  | [Framework](#framework)                                      | External SaaS  |
+| MCP Gateway                           | [`component:mcp-gateway`](#cyclonedx-20--components-encoding)                                                                                                                                      | [Application](#application)                                  | External SaaS  |
+| MCP Server — Agentic SaaS             | [`component:mcp-agentic-saas`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Application](#application)                                  | External SaaS  |
+| Remote Code Assistant Agent           | [`actor:remote-code-asst-agent`](#cyclonedx-20--actors-encoding), [`component:remote-code-asst-agent`](#cyclonedx-20--components-encoding)                                                         | [Actor](#actors-partiesroles) / [Application](#application)  | External SaaS  |
+| Remote Code Assistant Model           | [`component:code-assistant-model-remote`](#cyclonedx-20--components-encoding)                                                                                                                      | [Machine-Learning-Model](#machine-learning-model)            | External SaaS  |
+| Remote RAG                            | [`component:rag-remote`](#cyclonedx-20--components-encoding)                                                                                                                                       | [Application](#application)                                  | External SaaS  |
+| Remote Context Store                  | [`component:context-store-remote`](#cyclonedx-20--components-encoding)                                                                                                                             | [Data](#data)                                                | External SaaS  |
+| MCP Server — Cloud Service            | [`component:mcp-cloud`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | External Cloud |
+| Cloud Service                         | [`component:cloud-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | External Cloud |
+
+---
+
 ## Overview
 
 The **Code Assistant** use case describes an AI-powered development assistant that is surfaced to a developer directly inside an Integrated Development Environment (IDE). The assistant is installed as a **model plugin** — a first-class IDE extension that embeds agent capabilities into the editing experience without requiring the developer to switch context to a separate application.
@@ -2108,39 +2160,6 @@ The BOM assembles all of the above into a single document. Components and use ca
   ]
 }
 ```
-
----
-
-## Canonical Diagram Entity Mapping
-
-> **Note:** This table is a transitional cross-reference aid. The CycloneDX BOM above is the canonical representation of all entities, types, use case membership, and relationships. This table will be removed once the BOM is the primary reference.
-
-| Canonical Name                        | Taxonomy Group         | Use Cases | Zone           |
-| ------------------------------------- | ---------------------- | --------- | -------------- |
-| Developer                             | Actor                  | 1a, 1b    | Internal       |
-| Code Assistant Plugin                 | Data                   | 1a, 1b    | Internal       |
-| Local Codebase Clone                  | Data                   | 1a, 1b    | Internal       |
-| IDE                                   | Application            | 1a, 1b    | Internal       |
-| Authentication Service                | Application            | 1a, 1b    | Internal       |
-| Authorization Service                 | Application            | 1a, 1b    | Internal       |
-| Third Party MCP Server                | Application            | 1a, 1b    | Internal       |
-| Code Assistant Agent (static)         | Application            | 1a, 1b    | Internal       |
-| Code Assistant Agent (local, dynamic) | Actor (artifact: Application) | 1a, 1b | Internal    |
-| Remote Code Assistant Agent           | Actor (artifact: Application) | 1b     | External SaaS |
-| Agentic Framework                     | Framework              | 1a        | Internal       |
-| Agentic Framework                     | Framework              | 1b        | External SaaS  |
-| Local Code Assistant Model            | Machine-Learning-Model | 1a        | Internal       |
-| Remote Code Assistant Model           | Machine-Learning-Model | 1b        | External SaaS  |
-| Local RAG                             | Application            | 1a        | Internal       |
-| Remote RAG                            | Application            | 1b        | External SaaS  |
-| Local Context Store                   | Data                   | 1a        | Internal       |
-| Remote Context Store                  | Data                   | 1b        | External SaaS  |
-| MCP Gateway                           | Application            | 1b        | External SaaS  |
-| MCP Server — Agentic SaaS             | Application            | 1b        | External SaaS  |
-| External Plugin Marketplace           | Platform               | 1b        | External SaaS  |
-| Agentic SaaS                          | Platform               | 1b        | External SaaS  |
-| MCP Server — Cloud Service            | Application            | 1a, 1b    | External Cloud |
-| Cloud Service (e.g., GitHub, Slack, database) | Application     | 1a, 1b    | External Cloud |
 
 ---
 
