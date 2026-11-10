@@ -17,7 +17,7 @@ tags:
 ## Description
 This skill empowers the Project Bob AI assistant to act as an authoritative expert on the OWASP CycloneDX v1.7 Bill of Materials (BOM) standard (ECMA-424) and the CycloneDX v2.0 standard in development. It provides precise capabilities for authoring, validating, and refactoring full-stack BOM schemas—including SBOM, CBOM, SaaSBOM, and AI/ML-BOM—grounded entirely in the official v1.7 JSON Schema and the OWASP CycloneDX Authoritative Guide to AI/ML-BOM.
 
-CycloneDX version 2.0 schema is nearing final drafting and should be usedfor future-proofing and compatibility with upcoming standards.  Specifically. we will use this for all LF AI & Data Threat modeling use cases.  The current draft JSON schema for 2.0 is copied here: [schema/2.0/model/](schema/2.0/model/).
+CycloneDX version 2.0 schema is nearing final drafting and should be usedfor future-proofing and compatibility with upcoming standards.  Specifically. we will use this for all LF AI & Data Threat modeling use cases.  The JSON schema for 2.0 is a single bundled file (all modular schemas combined), copied from the CycloneDX specification repo: [schema/2.0/cyclonedx-2.0-bundled.schema.json](schema/2.0/cyclonedx-2.0-bundled.schema.json).
 
 ## Core Directives
 1. **Schema Compliance:** All generated snippets, structures, and advice must strictly conform to the CycloneDX v1.7 JSON schema specification.
