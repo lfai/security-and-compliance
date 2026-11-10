@@ -1,6 +1,8 @@
 # CycloneDX Blueprint Relationship Rationale
 
-This document records the reasoning behind the relationship types chosen to encode the structural containment graphs in [`definition.md`](./definition.md). The three types used are drawn directly from the `relationship` object defined in [`cyclonedx-blueprint-2.0.schema.json`](../../../../.bob/skills/cyclonedx/schema/2.0/model/cyclonedx-blueprint-2.0.schema.json).
+This document records the reasoning behind the relationship types chosen to encode the structural containment graphs in [`definition.md`](./definition.md). The three types used are drawn directly from the `relationship` object defined in [`cyclonedx-2.0-bundled.schema.json`](../../../../.bob/skills/cyclonedx/schema/2.0/cyclonedx-2.0-bundled.schema.json) (`#/$defs/cyclonedx-blueprint-2.0/$defs/relationship`).
+
+The complete BOM that these relationships belong to is [`code_assistant_bom_2.0.json`](./code_assistant_bom_2.0.json). Structural relationships (`aggregates`, `composes`, `contains`) use the **component** `refId` for the agents (`component:local-code-asst-agent`, `component:remote-code-asst-agent`). The corresponding **actors** are linked to those components through `party.system.ref` and, optionally, by the `realizes` entries described in [`definition.md`](./definition.md#cyclonedx-20--component--actor-relationship-entries).
 
 ---
 
@@ -8,15 +10,15 @@ This document records the reasoning behind the relationship types chosen to enco
 
 ### `aggregates`
 
-> *"The subject is the whole in a whole-part relationship in which each part may exist independently of the whole."*
+> *"The subject is the whole in a whole-part relationship in which each target part may exist independently of the whole."*
 
-Used for **boundaries → their top-level members**.
+Used for **zones → their top-level members**.
 
-A boundary (`boundary:internal`, `boundary:external-saas`, `boundary:external-cloud`) is a trust or network grouping label. The assets it contains — workstation components, MCP servers, authentication services — exist as deployable artefacts in their own right and would still be meaningful system entities even if the boundary classification were removed or renamed. This loose coupling matches the `aggregates` semantic.
+A zone (`zone:internal`, `zone:external-saas`, `zone:external-cloud`) is a trust grouping of assets that share a security posture or administrative control. (A CycloneDX 2.0 *boundary* is the edge between two zones, so the groupings are zones, not boundaries.) The assets a zone contains — workstation components, MCP servers, authentication services — exist as deployable artefacts in their own right and would still be meaningful system entities even if the zone classification were removed or renamed. This loose coupling matches the `aggregates` semantic.
 
 ### `composes`
 
-> *"The subject is the whole in a whole-part relationship in which each part cannot exist without the whole."*
+> *"The subject is the whole in a whole-part relationship in which each target part cannot exist without the whole."*
 
 Used for **frameworks and platform services → their runtime sub-components**.
 
@@ -37,10 +39,10 @@ Used for **components that structurally wrap or directly embed another component
 
 | Subject | Relationship | Targets |
 |---|---|---|
-| `boundary:internal` | `aggregates` | `component:mcp-server-third-party`, `component:authn-service`, `component:authz-service`, `component:local-ide`, `component:data-local-codebase`, `component:code-asst-plugin`, `component:internal-agentic-framework` |
+| `zone:internal` | `aggregates` | `component:mcp-server-third-party`, `component:authn-service`, `component:authz-service`, `component:local-ide`, `component:data-local-codebase`, `component:code-asst-plugin`, `component:internal-agentic-framework` |
 | `component:code-asst-plugin` | `contains` | `component:code-asst-agent` |
-| `component:internal-agentic-framework` | `composes` | `actor:local-code-asst-agent`, `component:code-assistant-model-local`, `component:rag-local`, `component:context-store-local` |
-| `boundary:external-cloud` | `aggregates` | `component:mcp-cloud` |
+| `component:internal-agentic-framework` | `composes` | `component:local-code-asst-agent`, `component:code-assistant-model-local`, `component:rag-local`, `component:context-store-local` |
+| `zone:external-cloud` | `aggregates` | `component:mcp-cloud` |
 | `component:mcp-cloud` | `contains` | `component:cloud-service` |
 
 ---
@@ -49,12 +51,12 @@ Used for **components that structurally wrap or directly embed another component
 
 | Subject | Relationship | Targets |
 |---|---|---|
-| `boundary:internal` | `aggregates` | `component:mcp-server-third-party`, `component:authn-service`, `component:authz-service`, `component:local-ide`, `component:data-local-codebase`, `component:code-asst-plugin`, `component:external-saas-agentic-framework` |
+| `zone:internal` | `aggregates` | `component:mcp-server-third-party`, `component:authn-service`, `component:authz-service`, `component:local-ide`, `component:data-local-codebase`, `component:code-asst-plugin` |
 | `component:code-asst-plugin` | `contains` | `component:code-asst-agent` |
-| `boundary:external-saas` | `aggregates` | `component:external-plugin-marketplace`, `component:agentic-saas` |
-| `component:agentic-saas` | `composes` | `component:mcp-gateway`, `component:mcp-agentic-saas` |
-| `component:mcp-agentic-saas` | `composes` | `actor:remote-code-asst-agent`, `component:code-assistant-model-remote`, `component:rag-remote`, `component:context-store-remote` |
-| `boundary:external-cloud` | `aggregates` | `component:mcp-cloud` |
+| `zone:external-saas` | `aggregates` | `component:external-plugin-marketplace`, `component:agentic-saas`, `component:external-saas-agentic-framework` |
+| `component:agentic-saas` | `composes` | `component:mcp-gateway`, `component:mcp-agentic-saas`, `component:external-saas-agentic-framework` |
+| `component:mcp-agentic-saas` | `composes` | `component:remote-code-asst-agent`, `component:code-assistant-model-remote`, `component:rag-remote`, `component:context-store-remote` |
+| `zone:external-cloud` | `aggregates` | `component:mcp-cloud` |
 | `component:mcp-cloud` | `contains` | `component:cloud-service` |
 
 ---
@@ -64,6 +66,6 @@ Used for **components that structurally wrap or directly embed another component
 | Question | Answer |
 |---|---|
 | Why not `aggregates` for framework sub-components? | The model, RAG, and context store are instantiated and torn down with the framework — they have no independent existence at runtime. `composes` captures this lifecycle dependency. |
-| Why not `composes` for boundary members? | Boundaries are logical groupings for security and trust analysis. Their member components could be redeployed, renamed, or regrouped without ceasing to exist as system entities. `aggregates` preserves that independence. |
-| Why not `composes` for plugin → agent? | The agent is embedded within the plugin but is also referenced independently by flows and use cases (e.g. `flow:1a:agent-authenticates`). `contains` correctly models the nesting without asserting that the agent's existence is entirely contingent on the plugin. |
+| Why not `composes` for zone members? | Zones are logical groupings for security and trust analysis. Their member components could be redeployed, renamed, or regrouped without ceasing to exist as system entities. `aggregates` preserves that independence. |
+| Why not `composes` for plugin → agent? | The agent is embedded within the plugin but is also referenced independently by flows and use cases (e.g. `flow:plugin-to-authn`, shared by Sub Use Cases 1a and 1b). `contains` correctly models the nesting without asserting that the agent's existence is entirely contingent on the plugin. |
 | Why not `dependsOn` for any of these? | `dependsOn` captures runtime or build-time dependency (A needs B to function), not structural containment. All relationships here model *where things live in the architecture*, not *what they call at runtime* — that is the role of `flows`. |
