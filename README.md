@@ -18,11 +18,11 @@ This repository is used to develop and manage the Security and Compliance Work G
 The work group has 2 subgroups which have separate meetings you can sign up for:
 
 > - **Use Cases and Threat Modeling** subgroup:
->   - Weekly meetings, Tuesdays @12pm US Eastern, 16:00 GMT
+>   - Weekly meetings, Thursdays @10am US Eastern, 3pm GMT (UTC-5)
 >     - [LF AI & Data calendar entry]( https://zoom-lfx.platform.linuxfoundation.org/meeting/93191199454?password=83a7bf08-2b26-44bc-aefd-8ad68b29c733)
 >   - Slack: [#security-use-cases-and-threat-modeling](https://lfaifoundation.slack.com/archives/C09DHAQ399P)
 > - **Risk and Compliance** subgroup:
->   - Bi-weekly meetings, Tuesdays @10am US Eastern, 14:00 GMT
+>   - Bi-weekly meetings, Tuesdays @10am US Eastern, 3pm GMT (UTC-5)
 >     -  [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/92920325389?password=c20c64b0-eec4-4b87-bb45-1b14ca247654)
 >   - Slack: [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
 
