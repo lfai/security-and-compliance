@@ -13,7 +13,7 @@ This repository is used to develop and manage the Security and Compliance Work G
 #### Meetings
 
 > [!IMPORTANT]
-> The *Security & Compliance Work Group* meets, bi-weekly on Tuesdays @9am US Central, 7am US Pacific, 14:00 UTC/GMT using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)  and join us!
+> The *Security & Compliance Work Group* meets, Bi-weekly meetings, Tuesdays @10am US Eastern, 3pm GMT (UTC-5) using Zoom. Select the "Need an invite" link on our [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/91257777568?password=86d1de0e-c7bc-4710-b140-e63badd5eecd)  and join us!
 
 The work group has 2 subgroups which have separate meetings you can sign up for:
 
@@ -22,7 +22,7 @@ The work group has 2 subgroups which have separate meetings you can sign up for:
 >     - [LF AI & Data calendar entry]( https://zoom-lfx.platform.linuxfoundation.org/meeting/93191199454?password=83a7bf08-2b26-44bc-aefd-8ad68b29c733)
 >   - Slack: [#security-use-cases-and-threat-modeling](https://lfaifoundation.slack.com/archives/C09DHAQ399P)
 > - **Risk and Compliance** subgroup:
->   - Bi-weekly meetings, Tuesdays @10am US Eastern, 3pm GMT (UTC-5)
+>   - Bi-weekly meetings (alternates with WG meetings), Tuesdays @10am US Eastern, 3pm GMT (UTC-5) 
 >     -  [LF AI & Data calendar entry](https://zoom-lfx.platform.linuxfoundation.org/meeting/92920325389?password=c20c64b0-eec4-4b87-bb45-1b14ca247654)
 >   - Slack: [#risk-and-compliance-subgroup](https://lfaifoundation.slack.com/archives/C041ZAXCSJ0)
 
