@@ -2,7 +2,7 @@
 
 This is the namespace for official CycloneDX properties specific to the Artificial Intelligence (AI) and Machine Learning (ML).
 
-The official rules and processes apply - see [parent document](../cdx.md).
+The official rules and processes apply - see [parent document](https://github.com/CycloneDX/cyclonedx-property-taxonomy/blob/main/cdx.md).
 
 ----
 

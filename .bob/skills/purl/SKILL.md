@@ -1,13 +1,6 @@
 ---
-name: package-url-purl-format-standard-expert
-description: "OWASP Package URL (PURL) format expert"
-version: "1.0.0"
-author: ""
-tags:
-  - purl
-  - bom
-  - package-url
-  - package-identity
+name: purl
+description: Use when the user wants to write, parse, validate or normalize a Package URL (purl, ECMA-427), for example to identify a component in a CycloneDX BOM, including npm, PyPI, Maven, Go, Docker, GitHub and Hugging Face model or dataset identifiers.
 ---
 
 # Skill: Package URL (purl) Format & Ecosystem Standard Expert
@@ -42,7 +35,7 @@ This skill teaches the Project Bob AI assistant how to act as an authoritative e
 | **`pypi`** | Prohibited | **Strictly Lowercase**; replace underscores `_` with hyphens `-` | None | `pkg:pypi/django-filter@2.4.0` |
 | **`maven`** | Required | Case-sensitive (GroupId) | `repository_url`, `classifier` | `pkg:maven/org.apache.commons/commons-lang3@3.12.0` |
 | **`cargo`** | Prohibited | Case-sensitive | None | `pkg:cargo/rand@0.8.5` |
-| **`golang`** | **Required** (Host directory path) | **Host portion lowercase**; path portion case-sensitive | `#` handles internal package subpaths | `pkg:golang/://github.com` |
+| **`golang`** | **Required** (Host directory path) | **Host portion lowercase**; path portion case-sensitive | `#` handles internal package subpaths | `pkg:golang/github.com/gorilla/context@234fd47e07d1004f0aed9c` |
 | **`docker`** | Optional (`library` default) | Lowercase name/namespace | `repository_url`, `arch` | `pkg:docker/library/ubuntu@20.04?arch=amd64` |
 | **`github`** | Required (Owner org/user) | Case-sensitive | `#` handles directory subpaths | `pkg:github/package-url/purl-spec@244fd47e07d1004` |
 | **`huggingface`** | Optional (Defaults to root user) | Case-sensitive name/namespace | `version` **must** be a lowercased commit hash. | `pkg:huggingface/microsoft/deberta-v3-base@559062ad13d311b87b2c455e67dcd5f1c8f65111` |
@@ -57,7 +50,7 @@ This skill teaches the Project Bob AI assistant how to act as an authoritative e
 * **Namespace Constraints:** Python package URLs strictly prohibit the use of namespaces.
 
 ### 2. Go Modules (`pkg:golang`)
-* **Namespace Constraints:** The `namespace` field must contain the lowercased host-part and intermediate path elements matching the module's distribution layout (e.g., `://google.com` or `://github.com`).
+* **Namespace Constraints:** The `namespace` field must contain the lowercased host-part and intermediate path elements matching the module's distribution layout (e.g., `cloud.google.com/go` or `github.com/gorilla`), with no scheme.
 * **Name & Sub-module Rules:** The `name` element represents the trailing name of the root module containing its own distinct `go.mod` layout descriptor.
 * **Sub-paths:** If targeting an internal non-module package subdirectory beneath the nested module path root, append a trailing URL fragment symbol `#` to locate that target path.
 
@@ -93,8 +86,8 @@ purl String:     pkg:pypi/flask-sqlalchemy@3.0.3
 
 ### Example B: Go (`golang`) Monorepo Module Mapping
 ```text
-Raw Parameters: Type: golang, Namespace: ://google.com, Module Name: storage, Version: v1.30.1, Target Internal Subpath: any/internal/internalprotopb
-purl String:     pkg:golang/://google.com/storage@v1.30.1#any/internal/internalprotopb
+Raw Parameters: Type: golang, Namespace: cloud.google.com/go, Module Name: storage, Version: v1.30.1, Target Internal Subpath: internal/apiv2/storagepb
+purl String:     pkg:golang/cloud.google.com/go/storage@v1.30.1#internal/apiv2/storagepb
 ```
 
 ### Example C: Hugging Face Dataset Reference

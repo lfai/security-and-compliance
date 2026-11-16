@@ -1,0 +1,3 @@
+# Test runner for scripts/tests (MIT).
+-r requirements.txt
+pytest>=8,<10

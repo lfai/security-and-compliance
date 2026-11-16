@@ -6,4 +6,9 @@
 .vscode/*.log
 
 # Misc
-.bob
+# IBM Bob local state is ignored; shared skills under .bob/skills/ are tracked.
+.bob/*
+!.bob/skills/
+# Claude Code local settings are ignored; shared skills under .claude/skills/ are tracked.
+.claude/*
+!.claude/skills/

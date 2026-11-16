@@ -1,0 +1,4 @@
+# validate_bom.py: JSON Schema validation (MIT). Pulls in referencing, jsonschema-specifications,
+# attrs and rpds-py (all MIT). rfc3339-validator (MIT) enables the date-time format check.
+jsonschema>=4.18,<5
+rfc3339-validator>=0.1.4,<0.2
