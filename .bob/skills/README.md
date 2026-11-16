@@ -10,7 +10,7 @@ Skills for AI coding assistants used by the working group. Each skill is a direc
 ## Using them
 
 - **IBM Bob** loads skills from `.bob/skills/<name>/SKILL.md` in the workspace, so open the repository in Bob and the skills are available in the next task (`/cyclonedx`, or ask in plain language).
-- **Claude Code** loads [`.claude/skills/cyclonedx/SKILL.md`](../../.claude/skills/cyclonedx/SKILL.md), a thin entry point that points at the shared files here. Keep the shared content in `.bob/skills/` and edit the Claude entry point only for Claude-specific instructions.
+- **Claude Code** loads [`.claude/skills/claude-cyclonedx/SKILL.md`](../../.claude/skills/claude-cyclonedx/SKILL.md), a thin entry point that points at the shared files here. Keep the shared content in `.bob/skills/` and edit the Claude entry point only for Claude-specific instructions.
 
 A skill name must match its directory name and be lowercase kebab-case. Bob skips a skill with an invalid name silently.
 
