@@ -1,5 +1,5 @@
 # OWASP Top 10 for LLM Applications, edition 2025. Source: https://genai.owasp.org/llm-top-10/
-# CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied.
+# CC BY-SA 4.0 (OWASP Foundation), https://creativecommons.org/licenses/by-sa/4.0/. IDs, titles and links only are copied.
 id,title,group,url
 LLM01:2025,Prompt Injection,,https://genai.owasp.org/llm-top-10/
 LLM02:2025,Sensitive Information Disclosure,,https://genai.owasp.org/llm-top-10/

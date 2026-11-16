@@ -1,5 +1,5 @@
 # MITRE ATT&CK Enterprise, edition 20.1. Source: https://github.com/mitre-attack/attack-stix-data
-# © The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation. ATT&CK® is a registered trademark of The MITRE Corporation.
+# © The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation. ATT&CK® is a registered trademark of The MITRE Corporation. Licence (https://attack.mitre.org/resources/legal-and-branding/terms-of-use/): The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK® for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.
 id,title,group,url
 TA0001,Initial Access,tactic,https://attack.mitre.org/tactics/TA0001
 TA0002,Execution,tactic,https://attack.mitre.org/tactics/TA0002

@@ -64,10 +64,13 @@ class References:
         self.capec = self._wg("mitre_capec.csv", lambda r: (r["id"], r["name"]))
         self.nist53 = self._wg("NIST_SP-800-53_rev5_catalog_load.csv", lambda r: (r["identifier"], r["name"]))
         self.aicm = self._wg("aicm_controls.csv", lambda r: (r["control_id"].strip(), r["control_title"]))
-        self.nist30 = {}
-        for name in ("nist_800_30_threat_sources.csv", "nist_800_30_threat_events.csv",
-                     "nist_800_30_adverse_impacts.csv"):
-            self.nist30.update(self._wg(name, lambda r: (r["id"], r["subcategory"])))
+        # One table per kind, keyed by the property suffix that must use it.
+        self.nist30_by_kind = {
+            kind: self._wg(name, lambda r: (r["id"], r["subcategory"]))
+            for kind, name in (("threat-source", "nist_800_30_threat_sources.csv"),
+                               ("threat-event", "nist_800_30_threat_events.csv"),
+                               ("adverse-impact", "nist_800_30_adverse_impacts.csv"))}
+        self.nist30 = {k: v for table in self.nist30_by_kind.values() for k, v in table.items()}
 
     @staticmethod
     def _wg(name, pick):
@@ -83,6 +86,19 @@ class References:
             if k:
                 out[k] = v
         return out
+
+
+def _all_refids(inst, acc=None):
+    acc = set() if acc is None else acc
+    if isinstance(inst, dict):
+        if isinstance(inst.get("refId"), str):
+            acc.add(inst["refId"])
+        for v in inst.values():
+            _all_refids(v, acc)
+    elif isinstance(inst, list):
+        for v in inst:
+            _all_refids(v, acc)
+    return acc
 
 
 def _threat_items(doc):
@@ -119,6 +135,18 @@ def check_ids(doc, refs, report):
                         f"'{refs.capec[str(cid)]}' in the reference file")
 
     cwe, cwe_old = refs.catalogues.get("cwe", {}), refs.deprecated.get("cwe", {})
+    ids = _all_refids(doc)
+
+    def check_capec_or_cwe(where, ident, name):
+        """'CAPEC-<n>' must be in the CAPEC file and 'CWE-<n>' in the CWE catalogue."""
+        allowed = {"lfai:mitigates": ("CAPEC-", "CWE-"), "lfai:capec-rationale": ("CAPEC-",),
+                   "lfai:cwe-rationale": ("CWE-",)}[name]
+        if not ident.startswith(allowed):
+            report.error(f"{where}: '{ident}' must start with " + " or ".join(allowed))
+        elif ident.startswith("CAPEC-") and refs.capec and ident[len("CAPEC-"):] not in refs.capec:
+            report.error(f"{where}: {ident} is not in reference_files/mitre_capec.csv")
+        elif ident.startswith("CWE-") and cwe and ident not in cwe:
+            report.error(f"{where}: {ident} is " + ("deprecated in CWE" if ident in cwe_old else "not in the CWE catalogue"))
     for w in (doc.get("definitions") or {}).get("weaknesses") or []:
         for ident in w.get("identifiers") or []:
             value = ident.get("value")
@@ -162,8 +190,24 @@ def check_ids(doc, refs, report):
         for name, value in _props(holder):
             if name.startswith("lfai:nist-800-30:") and refs.nist30:
                 ident = (value or "").split(" ", 1)[0]
+                kind = name[len("lfai:nist-800-30:"):]
+                table = refs.nist30_by_kind.get(kind, {})
                 if ident not in refs.nist30:
                     report.error(f"property {name}: '{ident}' is not a NIST SP 800-30 id in reference_files")
+                elif table and ident not in table:
+                    report.error(f"property {name}: '{ident}' is a NIST SP 800-30 id, but not a {kind}")
+            elif name in ("lfai:mitigates", "lfai:capec-rationale", "lfai:cwe-rationale"):
+                check_capec_or_cwe(f"property {name}", (value or "").split(":", 1)[0].strip(), name)
+            elif name == "lfai:control-tier" and (value or "").strip() not in ("1", "2"):
+                report.error(f"property {name}: '{value}' must be 1 or 2")
+            elif name == "lfai:lifecycle" and (value or "").strip() not in ("training", "inference"):
+                report.error(f"property {name}: '{value}' must be 'training' or 'inference' (lower case)")
+            elif name == "lfai:aicm-parent":
+                left, sep, right = (value or "").partition("<")
+                left, right = left.strip(), right.strip()
+                if not sep or left not in ids or right not in ids:
+                    report.error(f"property {name}: '{value}' must be '<AICM requirement refId> < "
+                                 "<NIST 800-53 requirement refId>', both declared in definitions.standards")
             elif name == "lfai:technique":
                 check_technique(f"property {name}", value)
             elif name == "lfai:catalogue-item":
@@ -223,6 +267,13 @@ def _not_applicable(doc, refs):
     return found, records, bad
 
 
+def is_threat_model(doc):
+    """A TM-BOM: it has threats, or slice_use_case.py marked it with the use case it models."""
+    if ((doc.get("threats") or {}).get("threats")):
+        return True
+    return any(name == "lfai:threat-model:use-case" for name, _ in _props(doc.get("metadata") or {}))
+
+
 def classify(doc, policy):
     """{element refId: (set of classification tags, how they were found)} for components and assets.
 
@@ -243,11 +294,28 @@ def classify(doc, policy):
             out[item["refId"]] = (tags, "tags")
         elif item.get("type") in fallback:
             out[item["refId"]] = (set(fallback[item["type"]]), "type")
+    # An actor whose party is an agent makes its realizing component an agent too, whatever
+    # else the component is tagged or typed as; an agent actor with no component is swept itself.
     for actor in bp.get("actors") or []:
         party = actor.get("party") or {}
         is_agent = isinstance(party, dict) and (party.get("system") or {}).get("kind") in ("agent", "bot", "automation")
-        if is_agent and canon.get(actor["refId"]) not in out:
+        if not is_agent:
+            continue
+        comp = canon.get(actor["refId"])
+        if comp in out:
+            tags, how = out[comp]
+            out[comp] = (tags | {"agent"}, how)
+        elif comp:
+            out[comp] = ({"agent"}, "actor")
+        else:
             out.setdefault(actor["refId"], ({"agent"}, "actor"))
+    # An asset that represents a component is the same element as that component.
+    for asset in bp.get("assets") or []:
+        comp = asset.get("componentRef")
+        if comp and asset.get("refId") in out:
+            tags, how = out.pop(asset["refId"])
+            prev = out.get(comp, (set(), how))
+            out[comp] = (prev[0] | tags, prev[1])
     return out
 
 
@@ -281,8 +349,11 @@ def check_coverage(doc, refs, report, strict=False):
     """Every sliced element has a threat or a not-applicable record; every control mitigates something."""
     warn = report.error if strict else report.warn
     threats, scenarios, _ = _threat_items(doc)
+    if not threats and not is_threat_model(doc):
+        return None  # a system BOM: no threat-model checks
     if not threats:
-        return None  # not a threat model
+        warn("coverage: this threat-model BOM has no threats; Step 3 has not been done, "
+             "or every element and item needs a not-applicable annotation")
     bp = (doc.get("blueprints") or [{}])[0]
     canon = tm_rules.element_groups(doc)
     na, na_records, bad = _not_applicable(doc, refs)
@@ -290,6 +361,11 @@ def check_coverage(doc, refs, report, strict=False):
     for i, text in bad:
         report.error(f"annotations[{i}]: not-applicable text must be '{fmt}', got '{text[:80]}'")
     tm_rules.check_reasons(na_records, refs.policy, report)
+    for index, key, item, _ in na_records:
+        if key not in refs.catalogues:
+            report.error(f"annotations[{index}]: not-applicable names unknown catalogue '{key}'")
+        elif item not in refs.catalogues[key]:
+            report.error(f"annotations[{index}]: '{item}' is not an item of {key}")
     reviewed = tm_rules.reviewed_records(doc, refs.policy, report)
 
     affected = set()

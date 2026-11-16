@@ -1,5 +1,5 @@
 # OWASP API Security Top 10, edition 2023. Source: https://owasp.org/API-Security/editions/2023/en/0x11-t10/
-# CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied.
+# CC BY-SA 4.0 (OWASP Foundation), https://creativecommons.org/licenses/by-sa/4.0/. IDs, titles and links only are copied.
 id,title,group,url
 API1:2023,Broken Object Level Authorization,,https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/
 API2:2023,Broken Authentication,,https://owasp.org/API-Security/editions/2023/en/0xa2-broken-authentication/

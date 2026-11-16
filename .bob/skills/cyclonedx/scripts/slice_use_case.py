@@ -232,35 +232,35 @@ def build_slice(system, use_case_ref):
     # Data assets such as credentials, API keys and model weights are modelled this
     # way, and threats need them as `affects` targets.
     assets_all = by_refid(bp.get("assets", []))
-    for aref, asset in assets_all.items():
-        if asset.get("componentRef") in members or asset.get("partyRef") in members:
-            members.add(aref)
     holds = ("contains", "composes", "aggregates", "associates")
-    for rel in rels:
-        if rel.get("ref") in members and rel.get("ref") not in zones_all:
-            for t in rel_targets(rel, holds):
-                if t in assets_all:
-                    members.add(t)
-    # Zones that sliced actors, assets and data stores sit in.
-    for table in (actors_all, assets_all, stores_all):
-        for r, obj in table.items():
-            if r in members and obj.get("zone") in zones_all:
-                members.add(obj["zone"])
 
-    # Close over every in-document reference inside the elements being copied,
-    # so the slice never points at something it does not contain.
+    def collect_assets_and_zones():
+        before = len(members)
+        for aref, asset in assets_all.items():
+            if asset.get("componentRef") in members or asset.get("partyRef") in members:
+                members.add(aref)
+        for rel in rels:
+            if rel.get("ref") in members and rel.get("ref") not in zones_all:
+                members.update(t for t in rel_targets(rel, holds) if t in assets_all)
+        # Zones that sliced actors, assets and data stores sit in.
+        for table in (actors_all, assets_all, stores_all):
+            for r, obj in table.items():
+                if r in members and obj.get("zone") in zones_all:
+                    members.add(obj["zone"])
+        return len(members) != before
+
+    # Close over every in-document reference inside the elements being copied, so the
+    # slice never points at something it does not contain. Repeat everything until no
+    # step adds an element: a component that joins late brings its assets and zones too.
     elements = {**comps_all, **actors_all, **zones_all, **stores_all, **assets_all, **parties_all}
     while True:
-        added = set()
-        for r in list(members):
-            for target in local_refs(elements.get(r), elements):
-                if target not in members:
-                    added.add(target)
-        if not added:
-            break
+        changed = collect_assets_and_zones()
+        added = {t for r in list(members) for t in local_refs(elements.get(r), elements)} - members
         members |= added
         while close_over_actors() | close_over_parents():
-            pass
+            changed = True
+        if not (changed or added):
+            break
 
     zones = [z for r, z in zones_all.items() if r in members]
     zone_refs = {z["refId"] for z in zones}
@@ -367,6 +367,8 @@ TM_DEFINITIONS = ("weaknesses", "standards", "requirements", "businessObjectives
 
 
 def cmd_slice(system, use_case_ref, out_path, system_path, update=False):
+    if out_path == "-":
+        out_path = None  # '-' means standard output
     if not serial_uuid(system):
         sys.exit(f"{system_path} has no serialNumber, so a TM-BOM cannot BOM-Link to it. "
                  "Run with --assign-serial first (it edits the system BOM in place).")

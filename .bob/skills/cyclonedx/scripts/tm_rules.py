@@ -24,6 +24,9 @@ def element_groups(doc):
         sysref = (party.get("system") or {}).get("ref") if isinstance(party, dict) else None
         if sysref:
             canon.setdefault(actor["refId"], sysref)
+    for asset in bp.get("assets") or []:
+        if asset.get("componentRef") and asset.get("refId"):
+            canon.setdefault(asset["refId"], asset["componentRef"])
     return canon
 
 

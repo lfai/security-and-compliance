@@ -19,11 +19,24 @@ Checks, in order:
   6. Checks that also run with --no-schema: no CycloneDX 1.7 keys (bomFormat,
      bom-ref, top-level components or services), exactly one kind per
      relationship, and no BOM-Link in a field that takes only a refId.
+  7. For a threat-model BOM (tm_checks.py, tm_rules.py):
+     errors   - CAPEC, CWE, ATT&CK, ATLAS, NIST 800-53, AICM and NIST 800-30
+                IDs not in their reference files (including in lfai:mitigates
+                and the rationale properties); unregistered lfai: properties;
+                malformed or thin not-applicable annotations, or ones naming
+                an unknown catalogue item; a not-applicable that contradicts a
+                citing threat; tactics given as names; malformed reviews.
+     warnings - (errors with --strict) a TM-BOM with no threats; coverage of
+                elements and controls; catalogue sweep completeness;
+                unreviewed assumptions and use cases; citations outside the
+                element's swept catalogues; NIST 800-30 text not matching its
+                ID; elements classified by type or with no chosen catalogue.
 
 Usage:
   validate_bom.py BOM.json
   validate_bom.py TM-BOM.json --system SYSTEM-BOM.json
   validate_bom.py SYSTEM-BOM.json --linked TM-BOM-1.json --linked TM-BOM-2.json
+  validate_bom.py TM-BOM.json --system SYSTEM-BOM.json --strict --report-json COVERAGE.json
 
 Exit code 0 when there are no errors (warnings allowed), 1 on errors,
 2 when the tool cannot run.
@@ -56,6 +69,8 @@ SLICE_SECTIONS = ("blueprints", "definitions.components", "definitions.useCases"
 # Fields slice_use_case.py filters down to the slice's members (or drops), so a
 # sliced copy may hold an ordered subset of the system BOM's list.
 TRIMMED_LISTS = ("relatedAssets", "actors", "requirements", "businessObjectives")
+# Use-case fields slice_use_case.py removes entirely, because the TM-BOM does not carry them.
+DROPPED_FROM_USE_CASES = ("requirements", "businessObjectives")
 
 
 def load_json(path):
@@ -356,6 +371,11 @@ def check(doc, schema, report, system=None, system_path=None, linked=()):
                 a, b = here_obj.get(key), there_obj.get(key)
                 if isinstance(a, list) and isinstance(b, list) and [x for x in b if x in a] == a:
                     here_obj[key] = there_obj[key] = None
+            # Lists the slicer removes from a sliced use case: allowed to be absent here.
+            if section == "definitions.useCases":
+                for key in DROPPED_FROM_USE_CASES:
+                    if key not in here_obj:
+                        there_obj.pop(key, None)
             diff = _first_difference(here_obj, there_obj)
             if diff is not None:
                 where, here, there = diff

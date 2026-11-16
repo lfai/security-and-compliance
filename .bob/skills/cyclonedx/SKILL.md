@@ -17,6 +17,9 @@ All paths below are relative to the repository root. The skill directory is `.bo
 
 ## Choose the workflow
 
+People setting this up for the first time should read `.bob/skills/cyclonedx/GETTING-STARTED.md`; this file is for the assistant.
+
+
 | The user wants to… | Read and follow |
 |---|---|
 | Turn a diagram, image or description of a system into a system BOM | [workflows/diagram-to-system-bom.md](workflows/diagram-to-system-bom.md) |
@@ -36,7 +39,7 @@ Read the workflow file with `read_file` before starting. Each workflow is the pr
 5. **Threat models** go in `threats`, `controls` and `risks`. Their reference fields take in-document refIds only. A link to another BOM is a BOM-Link (`urn:cdx:<serial>/<version>#<refId>`) and is allowed only in `externalReferences` and component, weakness and party references. The threat-model workflow explains how a TM-BOM carries a slice of the system BOM so that its references resolve.
 6. **Properties:** names under `cdx:` must come from the registered [CycloneDX property taxonomy](https://github.com/CycloneDX/cyclonedx-property-taxonomy); the AI/ML namespace is copied in [cyclonedx-property-taxonomy/ai-ml.md](cyclonedx-property-taxonomy/ai-ml.md). Working-group properties use the `lfai:` prefix. Never invent `cdx:` names.
 7. **Component identity:** to give a component a Package URL, use `identifiers: [{ "party": "<party refId>", "identities": [{ "scheme": "purl", "value": "pkg:…" }] }]`. Follow the [purl skill](../purl/SKILL.md) for purl syntax.
-8. **No speculation:** confirm fields and enum values from the schema, and CAPEC, NIST and AICM IDs from the reference files in `subgroups/use-cases-and-threat-models/reference_files/`. CWE and ATT&CK/ATLAS IDs have no file in the repository: check them at the MITRE sites when you can, and otherwise mark them as unverified. Never present an unconfirmed ID as checked, and do not guess.
+8. **No speculation:** confirm fields and enum values from the schema. Confirm CAPEC, NIST SP 800-53, CSA AICM and NIST SP 800-30 IDs against `subgroups/use-cases-and-threat-models/reference_files/`, and CWE, MITRE ATT&CK, MITRE ATLAS and OWASP catalogue items against `.bob/skills/cyclonedx/reference/catalogues/` (search them with grep). The validator rejects an ID that is not in its file. Never present an unconfirmed ID as checked, and do not guess.
 9. **Python:** run the scripts with a Python 3.9+ that has the packages in `.bob/skills/cyclonedx/scripts/requirements.txt` installed; if `python` is not that interpreter, use the one that is.
 10. **Validate before you present:** run `validate_bom.py` and fix every error. If `jsonschema` is not installed (`pip install -r .bob/skills/cyclonedx/scripts/requirements.txt`), run with `--no-schema` and tell the user that schema validation did not run.
 
@@ -53,14 +56,19 @@ Read the workflow file with `read_file` before starting. Each workflow is the pr
 | Path | Purpose |
 |---|---|
 | `workflows/` | The two step-by-step workflows. |
-| `scripts/validate_bom.py` | Schema validation, refId uniqueness, dangling references, BOM-Link checks between a TM-BOM and its system BOM. |
-| `scripts/slice_use_case.py` | Lists use cases, cuts the system slice for one use case into a TM-BOM skeleton, adds serial numbers and back-links. |
-| `scripts/schema_tool.py` | Module-by-module navigation and extraction of the bundled schema. |
-| `reference/` | Generated system and TM schema references, and the 1.7 quick reference. |
+| `scripts/validate_bom.py` | Validates a BOM: schema, refId uniqueness, dangling references, BOM-Links, and the slice against its system BOM. For a threat-model BOM it also runs the checks in `tm_checks.py`. |
+| `scripts/tm_checks.py`, `scripts/tm_rules.py` | Threat-model checks: identifiers against the reference files, registered `lfai:` properties, coverage, the catalogue sweep, contradictions, reasons and reviews. |
+| `scripts/slice_use_case.py` | Lists use cases, cuts the system slice for one use case into a TM-BOM skeleton (or updates an existing TM-BOM), adds serial numbers and back-links. |
+| `scripts/schema_tool.py` | Module-by-module navigation and extraction of the bundled schema; regenerates the schema references. |
+| `scripts/fetch_catalogues.py` | Refreshes the threat catalogues in `reference/catalogues/` from their publishers. |
+| `scripts/tests/` | The test suite for the scripts. |
+| `reference/threat-model-policy.json` | Which catalogues are swept for which kind of element, the allowed `lfai:` properties, and the recorded catalogue decisions. |
+| `reference/catalogues/` | ID, title and link for each threat catalogue, with its edition and licence notice. |
+| `reference/` (other files) | Generated system and TM schema references, and the 1.7 quick reference. |
 | `examples/` | The Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b. Both validate. |
 | `schema/2.0/` | The bundled CycloneDX 2.0 schema. |
 
-The scripts need Python 3.9 or later. `validate_bom.py` also needs `jsonschema`, listed in `scripts/requirements.txt`; the other scripts use the standard library only.
+The scripts need Python 3.9 or later. `validate_bom.py` also needs the packages in `scripts/requirements.txt` (`jsonschema`, `rfc3339-validator`); `fetch_catalogues.py` also needs `pyyaml` and `pypdf` (`scripts/requirements-dev.txt`). The other scripts use the standard library only.
 
 ## Reminders
 

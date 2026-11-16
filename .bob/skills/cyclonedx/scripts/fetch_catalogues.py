@@ -11,9 +11,21 @@ Usage (from the repository root, needs network access):
   python .bob/skills/cyclonedx/scripts/fetch_catalogues.py           # fetch all
   python .bob/skills/cyclonedx/scripts/fetch_catalogues.py --only cwe
 
-Editions are pinned below. To move to a new edition, change the pin, rerun,
-and review the diff. Standard library only, except PyYAML for ATLAS and pypdf for the agentic Top 10
-(pip install pyyaml pypdf); if one is missing, that catalogue is skipped with a message.
+Editions: the OWASP lists are pinned to the edition named below. MITRE
+ATLAS, MITRE ATT&CK and CWE are fetched at their current release, and the
+release fetched is recorded in catalogues.json; rerun and review the diff to
+move to a newer one.
+
+Catalogues marked "pending" in CATALOGUES (awaiting a licence decision) are
+not fetched by default; name them with --only to fetch them anyway.
+
+Each catalogue is written to a temporary file first and the index is updated
+only after all requested catalogues succeed, so a failure leaves the existing
+files unchanged.
+
+Standard library only, except PyYAML for ATLAS and pypdf for the agentic
+Top 10 (pip install pyyaml pypdf); if one is missing, that catalogue is
+skipped with a message.
 """
 
 import argparse
@@ -32,11 +44,22 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "reference", "catalogues"))
 UA = {"User-Agent": "cyclonedx-skill-catalogue-fetch"}
 
-OWASP_LICENCE = "CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied."
-MITRE_ATTACK_NOTICE = ("© The MITRE Corporation. This work is reproduced and distributed with the permission of "
-                       "The MITRE Corporation. ATT&CK® is a registered trademark of The MITRE Corporation.")
-MITRE_CWE_NOTICE = ("Copyright © The MITRE Corporation. CWE is a trademark of The MITRE Corporation. Used under the "
-                    "CWE Terms of Use (non-exclusive, royalty-free licence): https://cwe.mitre.org/about/termsofuse.html")
+OWASP_LICENCE = ("CC BY-SA 4.0 (OWASP Foundation), https://creativecommons.org/licenses/by-sa/4.0/. "
+                 "IDs, titles and links only are copied.")
+# The MITRE terms require the copyright designation and the licence text in every copy, so both are reproduced.
+MITRE_ATTACK_NOTICE = (
+    "\u00a9 The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE "
+    "Corporation. ATT&CK\u00ae is a registered trademark of The MITRE Corporation. Licence "
+    "(https://attack.mitre.org/resources/legal-and-branding/terms-of-use/): The MITRE Corporation (MITRE) hereby "
+    "grants you a non-exclusive, royalty-free license to use ATT&CK\u00ae for research, development, and commercial "
+    "purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright "
+    "designation and this license in any such copy.")
+MITRE_CWE_NOTICE = (
+    "Copyright \u00a9 The MITRE Corporation. CWE is a trademark of The MITRE Corporation. Licence "
+    "(https://cwe.mitre.org/about/termsofuse.html): The MITRE Corporation hereby grants you a non-exclusive, "
+    "royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for "
+    "such purposes is authorized on the condition that you reproduce MITRE's copyright designation and this "
+    "license in any such copy.")
 
 
 def get(url, binary=False):
@@ -172,6 +195,7 @@ CATALOGUES = {
                             "source": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"},
     "owasp-mcp-top10": {"name": "OWASP MCP Top 10", "edition": "2025 (beta, v0.1)", "fetch": owasp_mcp,
                         "expect": 10,
+                        "pending": "licence unresolved; see threat-model-policy.json catalogueDecisions.tool-server",
                         "licence": "CC-BY-SA-4.0 per the project's LICENSE.md (the project page says CC BY-NC-SA 4.0; "
                                    "this mismatch is unresolved). IDs and titles only are copied.",
                         "source": "https://owasp.org/www-project-mcp-top-10/"},
@@ -183,7 +207,8 @@ CATALOGUES = {
     "owasp-llm-top10": {"name": "OWASP Top 10 for LLM Applications", "edition": "2025", "fetch": owasp_llm,
                         "expect": 10, "licence": OWASP_LICENCE, "source": "https://genai.owasp.org/llm-top-10/"},
     "mitre-atlas": {"name": "MITRE ATLAS", "edition": None, "fetch": mitre_atlas, "expect": None,
-                    "licence": "Apache-2.0 (Copyright The MITRE Corporation)",
+                    "licence": "Apache-2.0 (Copyright The MITRE Corporation), "
+                               "https://github.com/mitre-atlas/atlas-data/blob/main/LICENSE",
                     "source": "https://github.com/mitre-atlas/atlas-data"},
     "mitre-attack-enterprise": {"name": "MITRE ATT&CK Enterprise", "edition": None, "fetch": mitre_attack,
                                 "expect": None, "licence": MITRE_ATTACK_NOTICE,
@@ -193,8 +218,8 @@ CATALOGUES = {
 }
 
 
-def write_csv(key, spec, rows, edition):
-    path = os.path.join(OUT, f"{key}.csv")
+def write_csv(key, spec, rows, edition, suffix=""):
+    path = os.path.join(OUT, f"{key}.csv{suffix}")
     with open(path, "w", encoding="utf-8", newline="") as f:
         f.write(f"# {spec['name']}, edition {edition}. Source: {spec['source']}\n")
         f.write(f"# {spec['licence']}\n")
@@ -216,21 +241,35 @@ def main(argv=None):
         with open(index_path, encoding="utf-8") as f:
             index = json.load(f).get("catalogues", {})
     today = datetime.date.today().isoformat()
-    for key in args.only or CATALOGUES:
-        spec = CATALOGUES[key]
-        print(f"Fetching {spec['name']}...", file=sys.stderr)
-        rows = spec["fetch"]()
-        if rows is None:
-            continue
-        edition = spec["edition"] or getattr(spec["fetch"], "version", "")
-        if spec["expect"] and len(rows) != spec["expect"]:
-            sys.exit(f"{spec['name']}: expected {spec['expect']} items, got {len(rows)}. "
-                     "The source page may have changed; nothing written for it.")
-        path = write_csv(key, spec, rows, edition)
-        index[key] = {"name": spec["name"], "edition": edition, "items": len(rows),
-                      "file": os.path.basename(path), "source": spec["source"],
-                      "licence": spec["licence"], "fetched": today}
-        print(f"  {len(rows)} items, edition {edition} -> {os.path.relpath(path)}", file=sys.stderr)
+    keys = args.only or [k for k, spec in CATALOGUES.items() if not spec.get("pending")]
+    for k in CATALOGUES:
+        if CATALOGUES[k].get("pending") and k not in keys:
+            print(f"Skipping {CATALOGUES[k]['name']}: {CATALOGUES[k]['pending']}", file=sys.stderr)
+    written = []  # (temporary path, final path)
+    try:
+        for key in keys:
+            spec = CATALOGUES[key]
+            print(f"Fetching {spec['name']}...", file=sys.stderr)
+            rows = spec["fetch"]()
+            if rows is None:
+                continue
+            edition = spec["edition"] or getattr(spec["fetch"], "version", "")
+            if spec["expect"] and len(rows) != spec["expect"]:
+                raise SystemExit(f"{spec['name']}: expected {spec['expect']} items, got {len(rows)}. "
+                                 "The source may have changed; no catalogue files were changed.")
+            tmp = write_csv(key, spec, rows, edition, suffix=".tmp")
+            written.append((tmp, tmp[:-len(".tmp")]))
+            index[key] = {"name": spec["name"], "edition": edition, "items": len(rows),
+                          "file": f"{key}.csv", "source": spec["source"],
+                          "licence": spec["licence"], "fetched": today}
+            print(f"  {len(rows)} items, edition {edition}", file=sys.stderr)
+    except BaseException:
+        for tmp, _ in written:
+            os.remove(tmp)
+        raise
+    for tmp, final in written:
+        os.replace(tmp, final)
+        print(f"Wrote {os.path.relpath(final)}", file=sys.stderr)
     with open(index_path, "w", encoding="utf-8", newline="\n") as f:
         json.dump({"$comment": "Generated by scripts/fetch_catalogues.py. Do not edit by hand.",
                    "catalogues": dict(sorted(index.items()))}, f, indent=2, ensure_ascii=False)

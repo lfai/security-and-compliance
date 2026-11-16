@@ -66,7 +66,7 @@ Boundaries in the system BOM may be trust boundaries (`type: "trust"`) or only f
 
 **Lifecycle scope.** A use case may carry a property `lfai:lifecycle` of `training` or `inference` (set in the system BOM). The policy's `lifecycleScope` lists catalogue items that cannot apply in a stage, with the reason; they are not swept there and need no annotation. The coverage report lists them, so the scoping stays visible.
 
-**Overlapping items.** Some items of two swept catalogues overlap (for example LLM06 Excessive Agency and ASI02 Tool Misuse). Write one threat and cite both items on it; do not write two threats for the same thing.
+**Overlapping items.** Some items of two swept catalogues cover the same ground. Write one threat and cite both items on it; do not write two threats for the same thing.
 
 The policy file is the source of truth if this table and it ever differ. The item lists, with pinned editions, are in [reference/catalogues/](../reference/catalogues/); read the CSV for each catalogue you sweep.
 
@@ -129,7 +129,7 @@ For each threat, add these to the TM-BOM:
 ]
 ```
 
-**Properties.** The `lfai:` prefix marks working-group properties. Use only the names listed in [reference/threat-model-policy.json](../reference/threat-model-policy.json) under `properties`, with the value formats given there: the three NIST 800-30 names above, `lfai:catalogue-item`, `lfai:technique`, `lfai:capec-rationale`, `lfai:cwe-rationale`, `lfai:unverified-id` and `lfai:control-tier`. The validator rejects any other `lfai:` name. If you need something the list lacks, record it in the report as a proposal rather than inventing a name. Never put these under `cdx:`, which is reserved for registered CycloneDX taxonomy names.
+**Properties.** The `lfai:` prefix marks working-group properties. Use only the names listed in [reference/threat-model-policy.json](../reference/threat-model-policy.json) under `properties`, with the value formats given there. The validator rejects any other `lfai:` name. If you need something the list lacks, record it in the report as a proposal rather than inventing a name. Never put these under `cdx:`, which is reserved for registered CycloneDX taxonomy names.
 
 **`threat.source`.** Say where the threat came from in this model: `"structural pass (STRIDE)"`, `"catalogue sweep"`, or `"use case and assumption review"`.
 
@@ -173,13 +173,19 @@ python .bob/skills/cyclonedx/scripts/validate_bom.py <tm-bom>.json --system <sys
 ```
 
 It checks, as **errors**:
-- the schema (including formats such as `date-time`), local references, BOM-Links, and that every sliced element is identical to its system BOM counterpart (apart from the back-links the slicer adds and lists it trims to the slice);
-- that every CAPEC, CWE, ATT&CK, ATLAS, NIST 800-53, AICM and NIST 800-30 ID exists in its reference file, and that catalogue citations name a real item;
-- that every `lfai:` property name is in the policy file, and that not-applicable annotations follow the format.
+- the schema (including formats such as `date-time`), local references, BOM-Links, and that every sliced element is identical to its system BOM counterpart (apart from the back-links the slicer adds and the lists it trims or removes);
+- that every CAPEC, CWE, ATT&CK, ATLAS, NIST 800-53, AICM and NIST 800-30 ID exists in its reference file, including IDs in `lfai:mitigates` and the rationale properties, and that NIST 800-30 IDs are of the right kind;
+- that catalogue citations and not-applicable annotations name a real catalogue item;
+- that every `lfai:` property name is in the policy file, with a valid value where the policy defines one (`lfai:control-tier`, `lfai:lifecycle`, `lfai:aicm-parent`);
+- that not-applicable annotations follow the format, give a real reason, and do not contradict a threat that cites the same item;
+- that `technique.tactic` is a tactic ID, and that review annotations follow the format.
 
 It checks, as **warnings** (errors with `--strict`):
+- a threat-model BOM with no threats;
 - coverage: every component, actor, flow, boundary and asset is in some threat's `affects` or has a not-applicable annotation; every control mitigates a threat; every threat has mitigations or an accepted risk; `methodologies` is not empty;
 - the catalogue sweep: every item of every sweep catalogue has a decision for every element it applies to;
+- every assumption and use case has a review annotation;
+- citations of a catalogue that is not swept for any element the threat affects, and NIST 800-30 text that does not match its ID;
 - elements whose tag has no chosen catalogue, and elements classified by component type because they have no tag.
 
 It cannot check SPDX licence IDs or the crypto and behaviour taxonomies offline, and it cannot judge whether a not-applicable reason is sound; that needs human review. Fix every error, and every warning you can. Remove `threats`, `controls` or `risks` arrays that you left empty.

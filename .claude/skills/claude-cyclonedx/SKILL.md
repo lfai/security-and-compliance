@@ -17,6 +17,9 @@ diagram + .md ──▶ [1] system BOM (JSON) ──▶ [2] TM-BOM per use case 
 
 ## Choose the workflow
 
+People setting this up for the first time should read `.bob/skills/cyclonedx/GETTING-STARTED.md`; this file is for the assistant.
+
+
 | The user wants to… | Read and follow |
 |---|---|
 | Turn a diagram, image or description of a system into a system BOM | `.bob/skills/cyclonedx/workflows/diagram-to-system-bom.md` |
@@ -36,7 +39,7 @@ Read the workflow file in full before starting, and follow its steps in order. P
 5. **Threat models** go in `threats`, `controls` and `risks`. Their reference fields take in-document refIds only. A link to another BOM is a BOM-Link (`urn:cdx:<serial>/<version>#<refId>`) and is allowed only in `externalReferences` and component, weakness and party references. The threat-model workflow explains how a TM-BOM carries a slice of the system BOM so that its references resolve.
 6. **Properties:** names under `cdx:` must come from the registered [CycloneDX property taxonomy](https://github.com/CycloneDX/cyclonedx-property-taxonomy); the AI/ML namespace is copied in `.bob/skills/cyclonedx/cyclonedx-property-taxonomy/ai-ml.md`. Working-group properties use the `lfai:` prefix. Never invent `cdx:` names.
 7. **Component identity:** to give a component a Package URL, use `identifiers: [{ "party": "<party refId>", "identities": [{ "scheme": "purl", "value": "pkg:…" }] }]`. For purl syntax, read `.bob/skills/purl/SKILL.md`.
-8. **No speculation:** confirm fields and enum values from the schema, and CAPEC, NIST and AICM IDs from the reference files in `subgroups/use-cases-and-threat-models/reference_files/`. CWE and ATT&CK/ATLAS IDs have no file in the repository: check them at the MITRE sites when you can, and otherwise mark them as unverified. Never present an unconfirmed ID as checked, and do not guess.
+8. **No speculation:** confirm fields and enum values from the schema. Confirm CAPEC, NIST SP 800-53, CSA AICM and NIST SP 800-30 IDs against `subgroups/use-cases-and-threat-models/reference_files/`, and CWE, MITRE ATT&CK, MITRE ATLAS and OWASP catalogue items against `.bob/skills/cyclonedx/reference/catalogues/` (search them with grep). The validator rejects an ID that is not in its file. Never present an unconfirmed ID as checked, and do not guess.
 9. **Python:** run the scripts with a Python 3.9+ that has the packages in `.bob/skills/cyclonedx/scripts/requirements.txt` installed; if `python` is not that interpreter, use the one that is.
 10. **Validate before you present:** run `validate_bom.py` and fix every error. If `jsonschema` is not installed (`pip install -r .bob/skills/cyclonedx/scripts/requirements.txt`), run with `--no-schema` and tell the user that schema validation did not run.
 

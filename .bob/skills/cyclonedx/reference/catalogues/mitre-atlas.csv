@@ -1,5 +1,5 @@
 # MITRE ATLAS, edition 5.6.0. Source: https://github.com/mitre-atlas/atlas-data
-# Apache-2.0 (Copyright The MITRE Corporation)
+# Apache-2.0 (Copyright The MITRE Corporation), https://github.com/mitre-atlas/atlas-data/blob/main/LICENSE
 id,title,group,url
 AML.TA0002,Reconnaissance,tactic,https://atlas.mitre.org/tactics/AML.TA0002
 AML.TA0003,Resource Development,tactic,https://atlas.mitre.org/tactics/AML.TA0003

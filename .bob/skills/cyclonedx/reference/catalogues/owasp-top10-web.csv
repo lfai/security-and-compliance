@@ -1,5 +1,5 @@
 # OWASP Top 10 (web applications), edition 2025. Source: https://owasp.org/Top10/2025/
-# CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied.
+# CC BY-SA 4.0 (OWASP Foundation), https://creativecommons.org/licenses/by-sa/4.0/. IDs, titles and links only are copied.
 id,title,group,url
 A01:2025,Broken Access Control,,https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/
 A02:2025,Security Misconfiguration,,https://owasp.org/Top10/2025/A02_2025-Security_Misconfiguration/

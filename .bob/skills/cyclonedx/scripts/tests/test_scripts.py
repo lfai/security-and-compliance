@@ -159,6 +159,8 @@ def test_slice_drops_use_case_requirements(tmp_path, system):
     tm_path = tmp_path / "tm.json"
     assert run("slice_use_case.py", sys_path, "--use-case", UC_1B, "-o", tm_path)[0] == 0
     assert "requirements" not in load(tm_path)["definitions"]["useCases"][0]
+    code, out = run("validate_bom.py", tm_path, "--system", sys_path)
+    assert code == 0, out
 
 
 def test_slice_includes_asset_component(tmp_path, system):
@@ -474,11 +476,97 @@ def test_extract_to_stdout_writes_no_file(tmp_path):
 
 
 def test_policy_names_whole_catalogues_only():
+    """The sweep rules and notes name catalogues, never items (lifecycleScope is the documented exception)."""
+    import re
     policy = load(os.path.join(SKILL, "reference", "threat-model-policy.json"))
     index = load(os.path.join(SKILL, "reference", "catalogues", "catalogues.json"))["catalogues"]
+    item_id = re.compile(r"\b(?:LLM\d{2}|ASI\d{2}|API\d{1,2}|A\d{2}:20\d{2}|MCP\d{2}|AML\.T\d{4}|T\d{4}|CWE-\d+|CAPEC-\d+)\b")
     for rule in policy["sweeps"]:
         for key in rule.get("sweep", []) + rule.get("consult", []):
             assert key in index, f"{rule['tag']}: '{key}' is not a catalogue in catalogues.json"
+        assert not item_id.search(json.dumps(rule)), f"sweep rule {rule['tag']} names a catalogue item"
+    for note in policy["sweepNotes"]:
+        assert not item_id.search(note), f"sweep note names a catalogue item: {note}"
+    assert "lifecycleScope" in policy["$comment"], "the exception must be stated in the policy comment"
+
+
+def test_empty_threat_model_fails_strict(tmp_path):
+    tm_path = tmp_path / "tm.json"
+    assert run("slice_use_case.py", SYSTEM, "--use-case", UC_1B, "-o", tm_path)[0] == 0
+    code, out = run("validate_bom.py", tm_path, "--system", SYSTEM, "--strict")
+    assert code == 1 and "has no threats" in out
+
+
+def test_empty_threat_model_still_checks_annotations(tmp_path):
+    tm_path = tmp_path / "tm.json"
+    run("slice_use_case.py", SYSTEM, "--use-case", UC_1B, "-o", tm_path)
+    tm = load(tm_path)
+    tm["annotations"] = [na_annotation(["component:local-ide"], "not-applicable owasp-top10-web:A07:2025: n/a")]
+    code, out = run("validate_bom.py", save(tm_path, tm), "--system", SYSTEM)
+    assert code == 1 and "too thin" in out
+
+
+def test_untagged_agent_gets_the_agentic_sweep(tmp_path):
+    report = tmp_path / "coverage.json"
+    run("validate_bom.py", TM, "--system", SYSTEM, "--report-json", report)
+    agentic = [r["element"] for r in load(report)["sweep"] if r["catalogue"] == "owasp-agentic-top10"]
+    assert agentic == ["component:remote-code-asst-agent"]
+
+
+def test_slice_keeps_assets_of_components_that_join_late(tmp_path, system):
+    component(system, "component:local-ide")["components"] = [{"ref": "component:rag-local"}]
+    blueprint(system)["assets"] = [{"refId": "asset:rag-index", "type": "data", "name": "RAG index"}]
+    blueprint(system)["relationships"].append({"ref": "component:rag-local", "contains": ["asset:rag-index"]})
+    tm = slice_ok(tmp_path, system)
+    assert "asset:rag-index" in {a["refId"] for a in blueprint(tm).get("assets", [])}
+
+
+@pytest.mark.parametrize("name,value,needle", [
+    ("lfai:mitigates", "CAPEC-99999", "CAPEC-99999 is not in"),
+    ("lfai:mitigates", "CWE-999999", "CWE-999999 is not in"),
+    ("lfai:capec-rationale", "CAPEC-99999: made up", "CAPEC-99999 is not in"),
+    ("lfai:cwe-rationale", "CWE-999999: made up", "CWE-999999 is not in"),
+    ("lfai:aicm-parent", "req:nope < req:nope2", "both declared"),
+    ("lfai:control-tier", "seven", "must be 1 or 2"),
+    ("lfai:lifecycle", "Training", "lower case"),
+])
+def test_property_values_are_checked(tmp_path, name, value, needle):
+    def mutate(tm):
+        tm["controls"][0].setdefault("properties", []).append({"name": name, "value": value})
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and needle in out, out
+
+
+def test_not_applicable_unknown_item_is_an_error(tmp_path):
+    def mutate(tm):
+        tm["annotations"] = [na_annotation(["component:local-ide"],
+            "not-applicable owasp-top10-web:A99:2025, made-up-cat:X1: the IDE has no web interface of its own")]
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "A99:2025" in out and "made-up-cat" in out
+
+
+def test_nist_800_30_id_must_match_its_kind(tmp_path):
+    def mutate(tm):
+        first_threat(tm)["properties"][0]["value"] = "TE-20 Deliver/insert/install malicious capabilities"
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "not a threat-source" in out
+
+
+def test_slicer_writes_stdout_for_dash(tmp_path):
+    proc = subprocess.run([sys.executable, os.path.join(SCRIPTS, "slice_use_case.py"), SYSTEM,
+                           "--use-case", UC_1B, "-o", "-"], capture_output=True, text=True, encoding="utf-8",
+                          cwd=tmp_path)
+    assert proc.returncode == 0 and proc.stdout.lstrip().startswith("{")
+    assert not (tmp_path / "-").exists()
+
+
+def test_mcp_catalogue_is_pending_not_included():
+    policy = load(os.path.join(SKILL, "reference", "threat-model-policy.json"))
+    index = load(os.path.join(SKILL, "reference", "catalogues", "catalogues.json"))["catalogues"]
+    assert "owasp-mcp-top10" not in index
+    rule = next(r for r in policy["sweeps"] if r["tag"] == "tool-server")
+    assert rule["sweep"] == [] and "DECISION NEEDED" in rule["pending"]
+    assert "PENDING DECISION" in policy["catalogueDecisions"]["tool-server"]
 
 
 # ---------------------------------------------------------------- schema tool

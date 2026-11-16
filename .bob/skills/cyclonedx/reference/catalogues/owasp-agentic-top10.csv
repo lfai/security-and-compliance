@@ -1,5 +1,5 @@
 # OWASP Top 10 for Agentic Applications, edition 2026. Source: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
-# CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied.
+# CC BY-SA 4.0 (OWASP Foundation), https://creativecommons.org/licenses/by-sa/4.0/. IDs, titles and links only are copied.
 id,title,group,url
 ASI01:2026,Agent Goal Hijack,,https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
 ASI02:2026,Tool Misuse and Exploitation,,https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
