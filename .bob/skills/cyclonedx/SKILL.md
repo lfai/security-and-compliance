@@ -37,7 +37,8 @@ Read the workflow file with `read_file` before starting. Each workflow is the pr
 6. **Properties:** names under `cdx:` must come from the registered [CycloneDX property taxonomy](https://github.com/CycloneDX/cyclonedx-property-taxonomy); the AI/ML namespace is copied in [cyclonedx-property-taxonomy/ai-ml.md](cyclonedx-property-taxonomy/ai-ml.md). Working-group properties use the `lfai:` prefix. Never invent `cdx:` names.
 7. **Component identity:** to give a component a Package URL, use `identifiers: [{ "party": "<party refId>", "identities": [{ "scheme": "purl", "value": "pkg:…" }] }]`. Follow the [purl skill](../purl/SKILL.md) for purl syntax.
 8. **No speculation:** confirm fields and enum values from the schema, and CAPEC, NIST and AICM IDs from the reference files in `subgroups/use-cases-and-threat-models/reference_files/`. CWE and ATT&CK/ATLAS IDs have no file in the repository: check them at the MITRE sites when you can, and otherwise mark them as unverified. Never present an unconfirmed ID as checked, and do not guess.
-9. **Validate before you present:** run `validate_bom.py` and fix every error. If `jsonschema` is not installed (`pip install -r .bob/skills/cyclonedx/scripts/requirements.txt`), run with `--no-schema` and tell the user that schema validation did not run.
+9. **Python:** run the scripts with a Python 3.9+ that has the packages in `.bob/skills/cyclonedx/scripts/requirements.txt` installed; if `python` is not that interpreter, use the one that is.
+10. **Validate before you present:** run `validate_bom.py` and fix every error. If `jsonschema` is not installed (`pip install -r .bob/skills/cyclonedx/scripts/requirements.txt`), run with `--no-schema` and tell the user that schema validation did not run.
 
 ## Do not read the bundled schema whole
 
@@ -45,7 +46,7 @@ Read the workflow file with `read_file` before starting. Each workflow is the pr
 
 - [reference/system-schema.md](reference/system-schema.md) is the generated field reference for the system modules (`blueprint`, `usecase`, `definitions`, `inventories`, `component`, `party`).
 - [reference/tm-schema.md](reference/tm-schema.md) is the generated field reference for the threat-model modules (`threat`, `control`, `risk`, `weakness`, `standard`).
-- `python .bob/skills/cyclonedx/scripts/schema_tool.py modules` lists all 34 modules, `outline <module>:<object>` prints one object's fields and enums, and `extract <module>:<object> -o <file>` writes a standalone schema for one module (for example `threat:threats`).
+- `python .bob/skills/cyclonedx/scripts/schema_tool.py modules` lists all 34 modules, `outline <module>:<object>` prints one object's fields and enums, and `extract <module>:<object> -o <file>` writes a standalone schema for one module (write it to a scratch folder, not into the repository; `-o -` prints it) (for example `threat:threats`).
 
 ## Files in this skill
 

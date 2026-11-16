@@ -57,6 +57,10 @@ Required: `name`, `modelTypes`
 
 The type of model being represented, either a predefined value from the enumeration or a custom name and description for types not covered by the enumeration. Threat, risk, and privacy analyses are represented in their own models, which reference the blueprint, rather than as blueprint model types.
 
+One of:
+- Predefined Model Type: a plain string, enum: architecture, behavioral, conceptual, data-flow, deployment, logical, network, operational, physical, process
+- Custom Model Type: an object with `name`, `description` (required: `name`)
+
 ### `blueprint:metadata`
 
 Metadata about the creation, review, and approval of the blueprint.
@@ -394,6 +398,10 @@ Required: `name`, `type`
 
 The type of diagram or visual representation.
 
+One of:
+- Predefined Visualization Type: an object with `type` (required: `type`)
+- Custom Visualization Type: an object with `name`, `description` (required: `name`)
+
 ### `blueprint:assetClassification`
 
 | Field | Type | Description |
@@ -426,9 +434,17 @@ Type: array of → party:partyChoice
 
 The authentication method or protocol used to verify identity, either a predefined value from the enumeration or a custom object describing a method not covered by the enumeration.
 
+One of:
+- Predefined Authentication Type: a plain string, enum: api-key, basic, bearer, biometric, certificate, digest, eap, fido2, form, hmac, jwt, kerberos, ldap, magic-link, mtls, none, ntlm, oauth1, oauth2, oidc, pin, psk, push, radius, saml, scram, session-cookie, ssh, totp
+- Custom Authentication Type: an object with `name`, `description` (required: `name`)
+
 ### `blueprint:authorizationType`
 
 The authorization model used to determine and enforce access permissions, either a predefined value from the enumeration or a custom object describing a model not covered by the enumeration.
+
+One of:
+- Predefined Authorization Type: a plain string, enum: abac, acl, capability, dac, mac, none, pbac, radac, rbac, rebac
+- Custom Authorization Type: an object with `name`, `description` (required: `name`)
 
 ### `usecase:useCases`
 
@@ -653,4 +669,8 @@ Identity attributes for a party that is a software system, hardware system, serv
 ### `party:role`
 
 A role that a party fulfils. May be a predefined role from the CycloneDX role taxonomy or a custom role definition. The optional `order` property ranks parties that share the same role, supporting use cases such as primary versus alternate suppliers in hardware manufacturing supply chains.
+
+One of:
+- party:preDefinedRole: an object with `role`, `order` (required: `role`)
+- Custom Role: an object with `name`, `description`, `order` (required: `name`)
 

@@ -28,6 +28,10 @@ Threat-modelling content, including the documented threats, the threat scenarios
 
 A threat modeling methodology applied to produce this threat model. Use the custom option for methodologies not covered by the enumeration.
 
+One of:
+- Predefined Threat Modeling Methodology: a plain string, enum: STRIDE, LINDDUN, PASTA, MAESTRO, OWASP, TRIKE, VAST, ATFAA, attack-tree
+- Custom Threat Modeling Methodology: an object with `name`, `description` (required: `name`)
+
 ### `threat:threat`
 
 A documented threat, describing what can go wrong independent of any specific actor or occurrence. A threat can be catalogued on its own; a threat scenario references it to describe a specific realization.
@@ -342,6 +346,10 @@ Required: `refId`, `name`
 
 The implementation status of a control or response. Use the custom option for a status specific to an organization's process.
 
+One of:
+- Predefined Implementation Status: a plain string, enum: recommended, proposed, approved, rejected, planned, in-progress, implemented, verified, decommissioned
+- Custom Implementation Status: an object with `name`, `description` (required: `name`)
+
 ### `control:effectiveness`
 
 The measured or assessed effectiveness of a control or response.
@@ -480,6 +488,10 @@ Required: `refId`, `strategy`
 ### `risk:riskAttribute`
 
 A security or privacy attribute representing a potential impact area when a risk is realized. Use the custom option for attributes specific to an organization's risk taxonomy.
+
+One of:
+- Predefined Risk Attribute: a plain string, enum: accountability, authentication, authorization, authenticity, availability, compliance, confidentiality, connectivity, control, data-subject-rights, integrity, minimization, non-repudiation, possession, privacy, purpose-limitation, transparency, utility
+- Custom Risk Attribute: an object with `name`, `description` (required: `name`)
 
 ### `weakness:weakness`
 

@@ -369,6 +369,110 @@ def test_tags_override_type_fallback(tmp_path):
     assert "component:local-ide (owasp-top10-web)" not in out
 
 
+def na_annotation(subjects, text):
+    return {"subjects": subjects, "annotator": {"component": {"type": "application", "name": "test"}},
+            "timestamp": "2026-01-01T00:00:00Z", "text": text}
+
+
+def test_thin_not_applicable_reason_is_an_error(tmp_path):
+    def mutate(tm):
+        tm["annotations"] = [na_annotation(["component:local-ide"], "not-applicable owasp-top10-web:A07:2025: not relevant")]
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "too thin" in out
+
+
+def test_multi_item_not_applicable_counts_each_item(tmp_path):
+    tm = load(TM)
+    tm["annotations"] = [na_annotation(
+        ["component:local-ide"],
+        "not-applicable owasp-top10-web:A07:2025, owasp-top10-web:A10:2025: the IDE has no login and no server-side error handling of its own")]
+    tm_path = save(tmp_path / "tm.json", tm)
+    report = tmp_path / "coverage.json"
+    code, out = run("validate_bom.py", tm_path, "--system", SYSTEM, "--report-json", report)
+    assert code == 0, out
+    rows = {(r["element"], r["catalogue"]): r for r in load(report)["sweep"]}
+    assert rows[("component:local-ide", "owasp-top10-web")]["decided"] == 3  # A03 cited + A07 + A10
+
+
+def test_contradiction_between_citation_and_not_applicable(tmp_path):
+    def mutate(tm):
+        tm["annotations"] = [na_annotation(
+            ["component:local-ide"],
+            "not-applicable owasp-top10-web:A03:2025: the IDE installs nothing from outside the organisation")]
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "marked not applicable but a threat" in out
+
+
+def test_citation_outside_swept_catalogues_warns(tmp_path):
+    def mutate(tm):
+        first_threat(tm)["properties"].append({"name": "lfai:catalogue-item", "value": "owasp-mcp-top10:MCP01:2025"})
+    code, out = tm_with(tmp_path, mutate)
+    assert "owasp-mcp-top10 is not swept for any element it affects" in out
+
+
+def test_nist_800_30_text_mismatch_warns(tmp_path):
+    def mutate(tm):
+        first_threat(tm)["properties"][0]["value"] = "TS-ADV-01 Accidental - Privileged User"
+    code, out = tm_with(tmp_path, mutate)
+    assert "TS-ADV-01" in out and "but the value says" in out
+
+
+def test_tactic_must_be_an_id(tmp_path):
+    def mutate(tm):
+        tm["threats"]["attackPaths"][0]["steps"][1]["technique"]["tactic"] = "initial-access"
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "must be a tactic ID" in out
+
+
+def test_agent_actor_and_component_are_one_element(tmp_path, system):
+    tm = slice_ok(tmp_path, system)
+    tm["threats"]["threats"] = [{"refId": "threat:x", "name": "x", "affects": ["component:remote-code-asst-agent"],
+                                 "mitigations": []}]
+    report = tmp_path / "coverage.json"
+    run("validate_bom.py", save(tmp_path / "tm2.json", tm), "--system", tmp_path / "system.json", "--report-json", report)
+    elements = [r["element"] for r in load(report)["sweep"] if r["catalogue"] == "owasp-agentic-top10"]
+    assert "actor:remote-code-asst-agent" not in elements
+    assert "actor actor:remote-code-asst-agent" not in load(report)["uncovered"]
+
+
+def test_lifecycle_scope_skips_training_items(tmp_path, system):
+    uc = next(u for u in system["definitions"]["useCases"] if u["refId"] == UC_1B)
+    uc["properties"] = [{"name": "lfai:lifecycle", "value": "training"}]
+    tm = slice_ok(tmp_path, system)
+    tm["threats"]["threats"] = [{"refId": "threat:x", "name": "x", "affects": ["component:local-ide"]}]
+    report = tmp_path / "coverage.json"
+    run("validate_bom.py", save(tmp_path / "tm2.json", tm), "--system", tmp_path / "system.json", "--report-json", report)
+    data = load(report)
+    assert data["lifecycle"] == "training"
+    assert "LLM01:2025" in data["outOfScopeForLifecycle"]["owasp-llm-top10"]
+    llm_rows = [r for r in data["sweep"] if r["catalogue"] == "owasp-llm-top10"]
+    assert llm_rows and all(r["items"] == 5 for r in llm_rows)
+
+
+def test_review_annotations(tmp_path):
+    code, out = run("validate_bom.py", TM, "--system", SYSTEM)
+    assert "review: usecase:code-assistant-1b" not in out   # the example records its review
+    code, out = tm_with(tmp_path, lambda tm: tm.pop("annotations"))
+    assert "review: usecase:code-assistant-1b has no" in out
+    code, out = tm_with(tmp_path, lambda tm: tm.update(annotations=[
+        na_annotation(["usecase:code-assistant-1b"], "reviewed usecase:code-assistant-1b")]))
+    assert code == 1 and "review text must be" in out
+
+
+def test_slice_keeps_assumptions_linked_by_flow(tmp_path, system):
+    flow = next(u for u in blueprint(system)["useCases"] if u["ref"] == UC_1B)["flows"][0]
+    blueprint(system)["assumptions"] = [{"refId": "assumption:by-flow", "description": "x", "relatedAssets": [flow]}]
+    tm = slice_ok(tmp_path, system)
+    assert [a["refId"] for a in blueprint(tm).get("assumptions", [])] == ["assumption:by-flow"]
+
+
+def test_extract_to_stdout_writes_no_file(tmp_path):
+    proc = subprocess.run([sys.executable, os.path.join(SCRIPTS, "schema_tool.py"), "extract", "threat:threatProfile",
+                           "-o", "-"], capture_output=True, text=True, encoding="utf-8", cwd=tmp_path)
+    assert proc.returncode == 0 and proc.stdout.lstrip().startswith("{")
+    assert not (tmp_path / "-").exists()
+
+
 def test_policy_names_whole_catalogues_only():
     policy = load(os.path.join(SKILL, "reference", "threat-model-policy.json"))
     index = load(os.path.join(SKILL, "reference", "catalogues", "catalogues.json"))["catalogues"]

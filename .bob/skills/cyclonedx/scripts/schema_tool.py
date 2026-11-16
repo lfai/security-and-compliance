@@ -175,6 +175,25 @@ def outline_object(name, node, root, out):
     if node.get("type") == "array" or ("$ref" in node and "properties" not in node):
         out.append(f"Type: {describe_type(node, root)}\n")
         return
+    # A union with no fields of its own (oneOf/anyOf of enums or objects): show each variant.
+    branches = node.get("oneOf") or node.get("anyOf")
+    if branches and "properties" not in node:
+        out.append("One of:")
+        for b in branches:
+            target = resolve(root, b["$ref"]) if isinstance(b, dict) and str(b.get("$ref", "")).startswith("#") else b
+            label = ref_label(b["$ref"]) if isinstance(b, dict) and "$ref" in b else (target.get("title") or "variant")
+            if isinstance(target, dict) and "enum" in target:
+                out.append(f"- {label}: a plain string, enum: " + ", ".join(map(str, target["enum"])))
+            elif isinstance(target, dict) and target.get("properties"):
+                fields = ", ".join(f"`{k}`" for k in target["properties"])
+                req = ", ".join(f"`{k}`" for k in target.get("required") or [])
+                inner = enum_summary(target, root)
+                out.append(f"- {label}: an object with {fields}" + (f" (required: {req})" if req else "")
+                           + (f"; {inner}" if inner else ""))
+            else:
+                out.append(f"- {label}: {describe_type(target, root)}")
+        out.append("")
+        return
     req = node.get("required")
     if req:
         out.append("Required: " + ", ".join(f"`{r}`" for r in req) + "\n")
@@ -345,7 +364,7 @@ def cmd_extract(root, args):
         "$defs": defs,
     }
     text = json.dumps(schema, indent=2, ensure_ascii=False) + "\n"
-    if args.output:
+    if args.output and args.output != "-":
         with open(args.output, "w", encoding="utf-8", newline="\n") as f:
             f.write(text)
         print(f"Wrote {args.output} ({len(seen)} definitions, {len(text) // 1024} KB)", file=sys.stderr)

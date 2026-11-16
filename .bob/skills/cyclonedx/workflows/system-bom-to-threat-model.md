@@ -50,6 +50,8 @@ Identify threats in three passes: a **structural** pass, a **catalogue sweep**, 
 - every component, actor and blueprint asset in the slice;
 - every boundary: what changes in trust across it, and what someone on the less trusted side can reach.
 
+Boundaries in the system BOM may be trust boundaries (`type: "trust"`) or only functional, process or deployment boundaries. Annotate a `trustBoundary` (Step 4) only for boundaries the system BOM types `trust`, or ones you have evidence are trust boundaries; give the evidence in its `description`. If the system BOM draws no trust boundary, do not invent trust levels: apply STRIDE to the crossings anyway, record the missing trust boundaries as an open question in the report, and leave `trustBoundaries` empty. A flow between zones crosses a boundary only at the outermost zones that differ, as the system-BOM workflow defines it.
+
 **3b. Catalogue sweep.** Each element is classified by the tags the system BOM gives it (see [diagram-to-system-bom.md](diagram-to-system-bom.md), "Classify for the threat sweep"). [reference/threat-model-policy.json](../reference/threat-model-policy.json) maps each tag to the catalogues to use. Its `sweep` catalogues are swept **item by item**; its `consult` catalogues are too large for that, and you use them to classify the threats you find.
 
 | Tag | Sweep, item by item | Consult |
@@ -60,11 +62,17 @@ Identify threats in three passes: a **structural** pass, a **catalogue sweep**, 
 | `agent` | OWASP Top 10 for Agentic Applications | MITRE ATLAS |
 | `tool-server` | OWASP MCP Top 10 (beta edition) | MITRE ATT&CK |
 
+**One element, not two.** An agent appears as a component and as the actor it `realizes`. They are one element: sweep and annotate the component, and a threat or annotation on either counts for both.
+
+**Lifecycle scope.** A use case may carry a property `lfai:lifecycle` of `training` or `inference` (set in the system BOM). The policy's `lifecycleScope` lists catalogue items that cannot apply in a stage, with the reason; they are not swept there and need no annotation. The coverage report lists them, so the scoping stays visible.
+
+**Overlapping items.** Some items of two swept catalogues overlap (for example LLM06 Excessive Agency and ASI02 Tool Misuse). Write one threat and cite both items on it; do not write two threats for the same thing.
+
 The policy file is the source of truth if this table and it ever differ. The item lists, with pinned editions, are in [reference/catalogues/](../reference/catalogues/); read the CSV for each catalogue you sweep.
 
 For **every element and every item** of each sweep catalogue that applies to it, record a decision:
 - **It applies:** write a threat (Step 4) whose `affects` includes the element, and cite the item with a property `{ "name": "lfai:catalogue-item", "value": "<catalogue key>:<item id>" }`, for example `owasp-top10-web:A01:2025`. One threat may cite several items.
-- **It does not apply:** add an annotation saying why. Its `subjects` are the element refIds it covers, and its `text` follows the format in the policy file: `not-applicable <catalogue key>:<item id>: <reason>`. Give a real reason specific to the element, not "not relevant".
+- **It does not apply:** add an annotation saying why. Its `subjects` are the element refIds it covers, and its `text` follows the format in the policy file: `not-applicable <catalogue key>:<item id>[, <catalogue key>:<item id>...]: <reason>`. Several items can share one annotation when one reason covers them. Give a real reason specific to the element, not "not relevant".
 
 ```json
 "annotations": [
@@ -84,7 +92,11 @@ If a tag ever has no sweep catalogue, rely on 3a and 3c for those elements, and 
 - data that keeps its sensitivity, or loses its access controls, as it moves between components;
 - the use case's `exceptions`, `preconditions` and blueprint `assumptions`: every one that describes something going wrong, or that might not hold, should lead to a threat or to a recorded reason why not. If the use case has none, say so in the report.
 
+Record the review of every blueprint assumption and every use case in the slice as an annotation whose `subjects` include it and whose `text` is `reviewed <refId>: <outcome>`, where the outcome names the threats it led to or says why it led to none (for example `reviewed assumption:patient-data: led to threat:phi-channel-interception`). The validator warns about any assumption or use case without one.
+
 Threats from 3c cite no catalogue item, which is expected.
+
+**Threats shared with other use cases.** Each TM-BOM must stand on its own, so a threat on an element or flow that appears in several use cases is written in each TM-BOM where it applies. Write it once per TM-BOM, and mention in its `description` when the same threat is modelled in another use case's TM-BOM.
 
 **Write each threat statement in the working group's format and perspective**:
 
@@ -104,7 +116,7 @@ For each threat, add these to the TM-BOM:
 | attacker `party` | `definitions.parties[]` | `roles` + one of `persona`/`organization`/`person` | `roles: [{ "role": "attacker" }]`, `persona.archetype` (`attacker`, `insider-threat`, `nation-state`, `organized-crime`, …). This belongs in the TM-BOM, not in the system BOM. |
 | `attackPattern` | `threats.attackPatterns[]` | `refId`, `name` | `capecId` (integer), `description` |
 | `weakness` | `definitions.weaknesses[]` | `name` or `identifiers` | `refId`, `kind: "flaw"`, `identifiers: [{ "scheme": "cwe", "value": "CWE-494" }]`. Threats reference them as `{ "ref": "weakness:..." }`. |
-| `attackPath` (for multi-step threats) | `threats.attackPaths[]` | `refId`, `name`, `steps[]` | each step has a `description`, `source`/`destination` (sliced refIds), `boundaryCrossed`, `technique` (`{id, name, tactic}` from ATT&CK or ATLAS), `attackPattern`, `exploits`, `mitigations` |
+| `attackPath` (for multi-step threats) | `threats.attackPaths[]` | `refId`, `name`, `steps[]` | each step has a `description`, `source`/`destination` (sliced refIds), `boundaryCrossed`, `technique` (`{id, name, tactic}`, where `tactic` is a tactic **ID**: `TA0001` for ATT&CK or `AML.TA0005` for ATLAS; from ATT&CK or ATLAS), `attackPattern`, `exploits`, `mitigations` |
 | `trustBoundary` (annotation) | `threats.trustBoundaries[]` | `refId`, `boundary` | `trustLevel`, `threatsAtBoundary[]`, `controlsAtBoundary[]` |
 
 **NIST SP 800-30 enrichment.** The 2.0 `threat` has no 800-30 fields beyond `origin`, so record the specific entries as properties, using the IDs from the reference files in `subgroups/use-cases-and-threat-models/reference_files/`:
@@ -118,6 +130,8 @@ For each threat, add these to the TM-BOM:
 ```
 
 **Properties.** The `lfai:` prefix marks working-group properties. Use only the names listed in [reference/threat-model-policy.json](../reference/threat-model-policy.json) under `properties`, with the value formats given there: the three NIST 800-30 names above, `lfai:catalogue-item`, `lfai:technique`, `lfai:capec-rationale`, `lfai:cwe-rationale`, `lfai:unverified-id` and `lfai:control-tier`. The validator rejects any other `lfai:` name. If you need something the list lacks, record it in the report as a proposal rather than inventing a name. Never put these under `cdx:`, which is reserved for registered CycloneDX taxonomy names.
+
+**`threat.source`.** Say where the threat came from in this model: `"structural pass (STRIDE)"`, `"catalogue sweep"`, or `"use case and assumption review"`.
 
 **Threats outside STRIDE.** Some threats fit no STRIDE category, for example an AI model's misinformation. Give them their MAESTRO category, and say in the report which threats have no STRIDE category.
 
@@ -133,7 +147,7 @@ For each threat, add these to the TM-BOM:
 | MITRE ATT&CK techniques | `.bob/skills/cyclonedx/reference/catalogues/mitre-attack-enterprise.csv` |
 | MITRE ATLAS techniques | `.bob/skills/cyclonedx/reference/catalogues/mitre-atlas.csv` |
 
-Search these files with grep rather than reading them whole. The validator checks every one of these IDs, and an ID that is not in its file is an error. Give each CAPEC and CWE its one-line justification, as `capec_prompt.txt` asks, in a `lfai:capec-rationale` or `lfai:cwe-rationale` property on the threat. Give ATT&CK and ATLAS technique IDs on attack path steps (`technique.id`), or as `lfai:technique` properties on the threat. ATLAS tactics have no place in `threat.categories`, which only accepts MITRE-ATTACK tactics, so record ATLAS by technique.
+Search these files with grep rather than reading them whole. The validator checks every one of these IDs, and an ID that is not in its file is an error. CAPEC has no pattern for most AI-specific threats (prompt injection, data and model poisoning, hallucination). For those, leave `attackPatterns` empty and give ATLAS techniques instead; that is expected, not a gap. Give each CAPEC and CWE its one-line justification, as `capec_prompt.txt` asks, in a `lfai:capec-rationale` or `lfai:cwe-rationale` property on the threat. Give ATT&CK and ATLAS technique IDs on attack path steps (`technique.id`), or as `lfai:technique` properties on the threat. ATLAS tactics have no place in `threat.categories`, which only accepts MITRE-ATTACK tactics, so record ATLAS by technique.
 
 ## Step 5: Map controls
 
@@ -143,10 +157,12 @@ Follow [control_prompt.txt](../../../../subgroups/use-cases-and-threat-models/pr
 2. Write each control as a system-specific safeguard in `controls[]`, with `refId`, `name`, `description`, `category` (`preventive`, `detective`, `corrective`, …), `status` (`recommended` unless the source says it is in place), `appliesTo` (sliced refIds), and `satisfies` (the requirement refIds, both NIST and AICM).
 3. Tier 1 (direct mitigations) are usually `preventive` and Tier 2 (supporting controls) are usually `detective`, `corrective` or `compensating`. To keep the tier explicitly, add `{ "name": "lfai:control-tier", "value": "1" }`.
 4. Link threats to controls through `threat.mitigations`, and boundaries to controls through `trustBoundary.controlsAtBoundary`.
+5. `control_prompt.txt` asks which CAPEC and CWE each control mitigates. Record them on the control as properties `{ "name": "lfai:mitigates", "value": "CAPEC-185" }` (one per ID).
+6. `csa_aicm_prompt.txt` treats each AICM control as a child of a NIST SP 800-53 control. `satisfies` is a flat list, so record each pairing on the control as `{ "name": "lfai:aicm-parent", "value": "req:csa-aicm:ais-13 < req:nist-800-53:sc-7" }`.
 
 ## Step 6: Risks (optional, recommended)
 
-For each threat scenario, add a `damageScenario` (`refId`, `name`, `affects`, `impacts: [{ level, categories, riskAttributes }]`) and a `risk` (`refId`, `name`, `statement` in the form source, event, impact; `relatedThreats`, `relatedDamageScenarios`, `inherentRisk`, `responses: [{ refId, strategy, controls }]`, `status: "identified"`). Several scenarios with the same consequence can share one damage scenario.
+For each threat scenario, add a `damageScenario` (`refId`, `name`, `affects`, `impacts: [{ level, categories, riskAttributes }]`) and a `risk` (`refId`, `name`, `statement` in the form source, event, impact; `relatedThreats`, `relatedDamageScenarios`, `inherentRisk`, `responses: [{ refId, strategy, controls }]`, `status: "identified"`). Several scenarios with the same consequence can share one damage scenario, and several closely related scenarios can share one risk (list them all in `relatedThreats`); one risk per scenario is not required.
 
 At design stage, ratings are judgements, not measurements. Give an `inherentRisk` rating only with a `rationale` that says what it rests on (for example "the flow crosses into a third-party zone with no stated authentication"). If you have no basis for a rating, leave `inherentRisk` out, and say in the report which risks are unrated.
 

@@ -16,6 +16,10 @@ import csv
 import json
 import os
 import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tm_rules  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL = os.path.normpath(os.path.join(HERE, ".."))
@@ -169,6 +173,13 @@ def check_ids(doc, refs, report):
                 elif item not in refs.catalogues[key]:
                     report.error(f"property {name}: '{item}' is not an item of {key}")
 
+    tm_rules.check_nist30_text(_all_property_holders(doc), refs.nist30, _norm, report)
+
+    def tactic_ids(key):
+        path = os.path.join(CATALOGUE_DIR, (refs.catalogue_meta.get(key) or {}).get("file", ""))
+        return [r["id"] for r in _read_csv(path) if r.get("group") == "tactic"] if os.path.isfile(path) else []
+    tm_rules.check_tactics(doc, tactic_ids("mitre-attack-enterprise"), tactic_ids("mitre-atlas"), report)
+
 
 def check_properties(doc, refs, report):
     """Only the lfai: names in the policy are allowed, so runs do not invent their own."""
@@ -185,28 +196,44 @@ def check_properties(doc, refs, report):
 
 
 def _not_applicable(doc, refs):
-    """{(subject refId, catalogue key, item id)} from not-applicable annotations, plus malformed ones."""
+    """Parse not-applicable annotations.
+
+    Text format: 'not-applicable <key>:<item>[, <key>:<item>...]: <reason>'.
+    Returns (set of (subject, key, item), list of (index, key, item, reason), malformed list).
+    """
     prefix = ((refs.policy.get("notApplicable") or {}).get("annotationPrefix") or "not-applicable") + " "
-    found, bad = set(), []
+    found, records, bad = set(), [], []
+    key_re = re.compile(r"[a-z0-9-]+")
     for i, a in enumerate(doc.get("annotations") or []):
         text = a.get("text") or ""
         if not text.startswith(prefix):
             continue
-        m = re.match(re.escape(prefix) + r"([a-z0-9-]+):(\S+?):\s+(\S.*)", text)
-        if not m:
+        # Item IDs contain ':' but no spaces, so the first ': ' ends the item list.
+        header, sep, reason = text[len(prefix):].partition(": ")
+        refs_in = [r.strip() for r in header.split(",")]
+        parsed = [r.partition(":") for r in refs_in]
+        if not sep or not reason.strip() or not all(
+                key_re.fullmatch(k) and item and " " not in item for k, _, item in parsed):
             bad.append((i, text))
             continue
-        for subject in a.get("subjects") or []:
-            found.add((subject, m.group(1), m.group(2)))
-    return found, bad
+        for key, _, item in parsed:
+            records.append((i, key, item, reason))
+            for subject in a.get("subjects") or []:
+                found.add((subject, key, item))
+    return found, records, bad
 
 
 def classify(doc, policy):
-    """{element refId: (set of classification tags, how they were found)} for components, assets and agents."""
+    """{element refId: (set of classification tags, how they were found)} for components and assets.
+
+    An agent actor is the same element as the component that realizes it, so it is
+    not swept separately; an agent actor with no realizing component is swept as an agent.
+    """
     cls = policy.get("classification") or {}
     vocab = set((cls.get("tags") or {}).keys())
     fallback = cls.get("fallbackByType") or {}
     bp = (doc.get("blueprints") or [{}])[0]
+    canon = tm_rules.element_groups(doc)
     out = {}
     for item in ((doc.get("definitions") or {}).get("components") or []) + (bp.get("assets") or []):
         if "refId" not in item:
@@ -218,9 +245,19 @@ def classify(doc, policy):
             out[item["refId"]] = (set(fallback[item["type"]]), "type")
     for actor in bp.get("actors") or []:
         party = actor.get("party") or {}
-        if isinstance(party, dict) and (party.get("system") or {}).get("kind") in ("agent", "bot", "automation"):
+        is_agent = isinstance(party, dict) and (party.get("system") or {}).get("kind") in ("agent", "bot", "automation")
+        if is_agent and canon.get(actor["refId"]) not in out:
             out.setdefault(actor["refId"], ({"agent"}, "actor"))
     return out
+
+
+def _lifecycle(doc):
+    """The use case's lifecycle stage, from the slice's use case (`lfai:lifecycle` property), or None."""
+    for uc in (doc.get("definitions") or {}).get("useCases") or []:
+        for name, value in _props(uc):
+            if name == "lfai:lifecycle":
+                return value
+    return None
 
 
 def _sweep_targets(doc, policy):
@@ -234,6 +271,12 @@ def _sweep_targets(doc, policy):
     return out
 
 
+def _items_for(key, items, lifecycle, policy):
+    """Catalogue items to sweep for this lifecycle stage, and those skipped by the policy."""
+    skip = set(((policy.get("lifecycleScope") or {}).get(key) or {}).get(lifecycle or "", []))
+    return [i for i in items if i not in skip], sorted(skip & set(items))
+
+
 def check_coverage(doc, refs, report, strict=False):
     """Every sliced element has a threat or a not-applicable record; every control mitigates something."""
     warn = report.error if strict else report.warn
@@ -241,22 +284,28 @@ def check_coverage(doc, refs, report, strict=False):
     if not threats:
         return None  # not a threat model
     bp = (doc.get("blueprints") or [{}])[0]
-    na, bad = _not_applicable(doc, refs)
+    canon = tm_rules.element_groups(doc)
+    na, na_records, bad = _not_applicable(doc, refs)
+    fmt = (refs.policy.get("notApplicable") or {}).get("format", "not-applicable <key>:<id>: <reason>")
     for i, text in bad:
-        report.error(f"annotations[{i}]: not-applicable text must be '"
-                     + (refs.policy.get("notApplicable") or {}).get("format", "not-applicable <key>:<id>: <reason>")
-                     + f"', got '{text[:80]}'")
+        report.error(f"annotations[{i}]: not-applicable text must be '{fmt}', got '{text[:80]}'")
+    tm_rules.check_reasons(na_records, refs.policy, report)
+    reviewed = tm_rules.reviewed_records(doc, refs.policy, report)
+
     affected = set()
     for t in threats + scenarios:
         affected.update(t.get("affects") or [])
     for p in (doc.get("threats") or {}).get("attackPaths") or []:
         for s in p.get("steps") or []:
             affected.update(x for x in (s.get("source"), s.get("destination"), s.get("boundaryCrossed")) if x)
+    # A component and the actor it realizes are one element: covering either covers both.
+    covered = affected | {canon[a] for a in affected if a in canon} | {a for a, c in canon.items() if c in affected}
     na_subjects = {s for s, _, _ in na}
+    na_subjects |= {canon[s] for s in na_subjects if s in canon} | {a for a, c in canon.items() if c in na_subjects}
     elements = [("component", c["refId"]) for c in (doc.get("definitions") or {}).get("components") or []]
     for key, label in (("actors", "actor"), ("flows", "flow"), ("boundaries", "boundary"), ("assets", "asset")):
         elements += [(label, x["refId"]) for x in bp.get(key) or [] if "refId" in x]
-    uncovered = [f"{kind} {rid}" for kind, rid in elements if rid not in affected and rid not in na_subjects]
+    uncovered = [f"{kind} {rid}" for kind, rid in elements if rid not in covered and rid not in na_subjects]
     for item in uncovered:
         warn(f"coverage: {item} is not in any threat's affects and has no not-applicable annotation")
 
@@ -285,19 +334,26 @@ def check_coverage(doc, refs, report, strict=False):
             warn(f"coverage: threat {t.get('refId')} affects nothing")
     if not (doc.get("threats") or {}).get("methodologies"):
         warn("coverage: threats.methodologies is empty; record the methodologies applied")
+    unreviewed = tm_rules.check_reviews(doc, refs.policy, reviewed, warn)
 
-    # Catalogue sweep completeness.
+    # Catalogue sweep completeness, with a component and its actor counted as one element.
     cited = {}
     for t in threats:
         for name, value in _props(t):
             if name == "lfai:catalogue-item":
                 for subject in t.get("affects") or []:
-                    cited.setdefault(subject, set()).add(value)
-    sweep_rows, pending, done = [], set(), set()
+                    for target in {subject, canon.get(subject, subject)}:
+                        cited.setdefault(target, set()).add(value)
+    na_canon = {(canon.get(s, s), k, i) for s, k, i in na} | na
+    tm_rules.check_contradictions(na, cited, canon, report)
+
+    lifecycle = _lifecycle(doc)
+    sweep_rows, pending, done, swept_by_element, scoped_out = [], set(), set(), {}, {}
     for rid, rule in _sweep_targets(doc, refs.policy):
         if rule.get("pending") and not rule.get("sweep"):
             pending.add((rule["tag"], rid))
         for key in rule.get("sweep") or []:
+            swept_by_element.setdefault(rid, set()).add(key)
             if (rid, key) in done:  # two tags can share a catalogue
                 continue
             done.add((rid, key))
@@ -305,12 +361,16 @@ def check_coverage(doc, refs, report, strict=False):
             if items is None:
                 warn(f"sweep: catalogue '{key}' has no reference file; run scripts/fetch_catalogues.py")
                 continue
-            missing = [i for i in items if f"{key}:{i}" not in cited.get(rid, set())
-                       and (rid, key, i) not in na]
-            sweep_rows.append((rid, key, len(items), len(items) - len(missing)))
+            in_scope, skipped = _items_for(key, items, lifecycle, refs.policy)
+            if skipped:
+                scoped_out[key] = skipped
+            missing = [i for i in in_scope if f"{key}:{i}" not in cited.get(rid, set())
+                       and (rid, key, i) not in na_canon]
+            sweep_rows.append((rid, key, len(in_scope), len(in_scope) - len(missing)))
             if missing:
-                warn(f"sweep: {rid} ({key}) has no decision for {len(missing)} of {len(items)} items: "
+                warn(f"sweep: {rid} ({key}) has no decision for {len(missing)} of {len(in_scope)} items: "
                      + ", ".join(missing))
+    tm_rules.check_citation_scope(threats, swept_by_element, canon, report)
     for tag, rid in sorted(pending):
         report.warn(f"sweep: no catalogue chosen yet for '{tag}' elements ({rid}); see threat-model-policy.json")
     by_type = sorted(rid for rid, (_, how) in classify(doc, refs.policy).items() if how == "type")
@@ -319,9 +379,11 @@ def check_coverage(doc, refs, report, strict=False):
                     f"(check these are right, and tag them in the system BOM): {', '.join(by_type)}")
 
     return {
+        "lifecycle": lifecycle,
         "elements": len(elements), "uncovered": uncovered,
         "controls": len(controls), "unmappedControls": sorted(controls - mitigating - {None}),
-        "threats": len(threats),
+        "threats": len(threats), "unreviewed": unreviewed,
         "sweep": [{"element": r, "catalogue": k, "items": n, "decided": d} for r, k, n, d in sweep_rows],
+        "outOfScopeForLifecycle": scoped_out,
         "pendingCatalogues": sorted(f"{e}:{r}" for e, r in pending),
     }

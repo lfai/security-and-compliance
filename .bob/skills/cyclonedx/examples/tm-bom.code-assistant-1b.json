@@ -774,7 +774,7 @@
         "refId": "threat:malicious-marketplace-plugin",
         "name": "Malicious look-alike Code Assistant Plugin installed from a marketplace",
         "description": "Developer uses an unofficial marketplace and unknowingly installs a malicious version of the official plugin into the IDE. This results in code being sent to an external, attacker-controlled backend.",
-        "source": "LF AI & Data Use Cases and Threat Modeling subgroup (README worked example)",
+        "source": "catalogue sweep",
         "origin": "adversarial",
         "categories": [
           {
@@ -930,7 +930,7 @@
             "technique": {
               "id": "T1195.002",
               "name": "Compromise Software Supply Chain",
-              "tactic": "initial-access"
+              "tactic": "TA0001"
             },
             "exploits": [
               "weakness:cwe-494"
@@ -948,7 +948,7 @@
             "technique": {
               "id": "T1041",
               "name": "Exfiltration Over C2 Channel",
-              "tactic": "exfiltration"
+              "tactic": "TA0010"
             },
             "exploits": [
               "weakness:cwe-829"
@@ -1089,5 +1089,20 @@
         "status": "identified"
       }
     ]
-  }
+  },
+  "annotations": [
+    {
+      "subjects": [
+        "usecase:code-assistant-1b"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-16T00:00:00Z",
+      "text": "reviewed usecase:code-assistant-1b: its 'Malicious Plugin from Marketplace' exception led to threat:malicious-marketplace-plugin; the other exceptions are not modelled in this one-threat example"
+    }
+  ]
 }

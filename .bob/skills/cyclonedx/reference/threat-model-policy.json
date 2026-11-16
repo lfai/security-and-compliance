@@ -92,9 +92,12 @@
   ],
   "sweepNotes": [
     "`sweep` catalogues are swept item by item: every item gets a threat that cites it (lfai:catalogue-item) or a not-applicable annotation.",
+    "A component and the actor it realizes (an agent) are one element: sweep and annotate the component; decisions on either count for both.",
+    "Items in lifecycleScope for the use case's lifecycle are not swept.",
+    "Where items of two swept catalogues overlap (for example LLM06 and ASI02), cite both on the same threat rather than writing two threats.",
     "`consult` catalogues are too large to sweep item by item. Use them to classify threats (techniques, weaknesses) and cite the items that apply.",
     "Every element and flow also gets STRIDE.",
-    "Attack behaviour is classified with CAPEC (reference_files/mitre_capec.csv); human actors and threat sources use NIST SP 800-30 (reference_files/nist_800_30_*.csv)."
+    "Attack behaviour is classified with CAPEC (reference_files/mitre_capec.csv) where CAPEC has a pattern; it has none for most AI-specific threats (prompt injection, poisoning, hallucination), so use ATLAS techniques for those and leave attackPatterns empty. Human actors and threat sources use NIST SP 800-30 (reference_files/nist_800_30_*.csv)."
   ],
   "properties": {
     "lfai:nist-800-30:threat-source": "A NIST SP 800-30 threat source: '<id> <category> - <subcategory>', for example 'TS-ADV-01 Adversarial - Individual - Outsider'.",
@@ -107,17 +110,55 @@
     "lfai:unverified-id": "An identifier that could not be checked against a reference file. Value is the ID.",
     "lfai:control-tier": "1 (direct mitigation) or 2 (supporting, risk-reducing).",
     "lfai:threat-model:system-bom": "Set by slice_use_case.py: the BOM-Link of the system BOM.",
-    "lfai:threat-model:use-case": "Set by slice_use_case.py: the use case refId this TM-BOM models."
+    "lfai:threat-model:use-case": "Set by slice_use_case.py: the use case refId this TM-BOM models.",
+    "lfai:lifecycle": "On a use case in the system BOM: the AI lifecycle stage it covers, 'training' (collecting data, training, fine-tuning, evaluating a model) or 'inference' (the system in use). Leave it out when the use case is neither or both; then every sweep item applies.",
+    "lfai:mitigates": "On a control: a CAPEC or CWE the control mitigates, as 'CAPEC-<n>' or 'CWE-<n>'. Repeat for each.",
+    "lfai:aicm-parent": "On a control: pairs an AICM requirement with the NIST SP 800-53 requirement it instantiates, as '<AICM refId> < <NIST refId>', for example 'req:csa-aicm:ais-13 < req:nist-800-53:sc-7'."
   },
   "notApplicable": {
-    "$comment": "Record a sweep decision that a catalogue item does not apply to one or more elements as an annotation whose subjects are those elements. One item per annotation.",
+    "$comment": "Record a sweep decision that one or more catalogue items do not apply to one or more elements as an annotation whose subjects are those elements. Several items may share one annotation when the same reason covers them all.",
     "annotationPrefix": "not-applicable",
-    "format": "not-applicable <catalogue key>:<item id>: <reason>",
-    "example": "not-applicable owasp-top10-web:A07:2025: the component has no login of its own; users authenticate at the Authentication Service"
+    "format": "not-applicable <catalogue key>:<item id>[, <catalogue key>:<item id>...]: <reason>",
+    "example": "not-applicable owasp-top10-web:A07:2025: the component has no login of its own; users authenticate at the Authentication Service",
+    "minReasonWords": 6,
+    "bannedReasons": [
+      "not relevant",
+      "n/a",
+      "na",
+      "not applicable",
+      "does not apply",
+      "out of scope",
+      "none"
+    ]
   },
   "catalogueDecisions": {
     "$comment": "Recorded on 2026-11-16 for the working group; revisit when editions change.",
     "agent": "OWASP Top 10 for Agentic Applications 2026 (peer-reviewed). The earlier OWASP 'Agentic AI - Threats and Mitigations' guide (T1-T17) is its predecessor and is not swept, to avoid double counting. The OWASP Agentic Skills Top 10 (AST10, incubator) applies only to agent skill packages and is not swept unless a system has a skills layer.",
     "tool-server": "OWASP MCP Top 10 2025 (beta). Its licence is CC BY-SA 4.0 in LICENSE.md but CC BY-NC-SA 4.0 on the project page; to be raised with the project leads."
+  },
+  "lifecycleScope": {
+    "$comment": "Sweep items that cannot apply in a lifecycle stage, so they are not swept there and need no not-applicable annotation. The validator lists them in the coverage report (outOfScopeForLifecycle) so the scoping stays visible. Recorded 2026-11-16 from the clinician scribe test; the working group should review it.",
+    "owasp-llm-top10": {
+      "training": [
+        "LLM01:2025",
+        "LLM05:2025",
+        "LLM06:2025",
+        "LLM07:2025",
+        "LLM08:2025"
+      ]
+    },
+    "rationale": {
+      "LLM01:2025": "Prompt injection needs a running model reading a prompt; instructions planted in training data are poisoning (LLM04).",
+      "LLM05:2025": "Output handling concerns components that consume model output at runtime.",
+      "LLM06:2025": "Agency is the tools and permissions a deployed model or agent holds.",
+      "LLM07:2025": "A system prompt exists only when the model is deployed with one.",
+      "LLM08:2025": "Vector and embedding weaknesses concern retrieval stores used at runtime, not training."
+    }
+  },
+  "review": {
+    "$comment": "Step 3c: record that every blueprint assumption and every use case in the slice was reviewed, as an annotation whose subjects include the reviewed element. The outcome names the threats it led to, or says why it led to none.",
+    "annotationPrefix": "reviewed",
+    "format": "reviewed <refId>: <outcome>",
+    "example": "reviewed assumption:patient-data: led to threat:phi-channel-interception and threat:phi-retained-by-model-hosting"
   }
 }

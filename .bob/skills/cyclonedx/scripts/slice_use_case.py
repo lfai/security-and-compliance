@@ -298,15 +298,21 @@ def build_slice(system, use_case_ref):
     stores = [copy.deepcopy(s) for r, s in stores_all.items() if r in members]
     data_sets = [copy.deepcopy(d) for d in bp.get("dataSets", []) if d.get("refId") in members]
     # Assumptions are kept when general, or when they touch the slice; their links are trimmed to it.
-    assumptions = []
+    # Assumptions are kept when general, or when they touch the slice (an element or a
+    # flow of it); their links are trimmed to the slice. Report the ones left out.
+    in_slice = members | {f["refId"] for f in flows}
+    assumptions, left_out = [], []
     for a in bp.get("assumptions", []):
         related = a.get("relatedAssets")
-        if related and not any(x in members for x in related):
+        if related and not any(x in in_slice for x in related):
+            left_out.append(a.get("refId") or a.get("description", "")[:40])
             continue
         a = copy.deepcopy(a)
         if related:
-            a["relatedAssets"] = [x for x in related if x in members]
+            a["relatedAssets"] = [x for x in related if x in in_slice]
         assumptions.append(a)
+    if left_out:
+        print(f"Assumptions not in this slice (they relate to nothing in it): {', '.join(left_out)}", file=sys.stderr)
 
     definition = copy.deepcopy(definition)
     # Use case links to requirements and business objectives are not part of the slice.
