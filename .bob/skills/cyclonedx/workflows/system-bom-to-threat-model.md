@@ -2,7 +2,7 @@
 
 Generate a **threat model** from a CycloneDX 2.0 system BOM: **one threat-model BOM (TM-BOM) per use case**, each linked to the system BOM by BOM-Link. This follows the LF AI & Data Use Cases and Threat Modeling subgroup's method ([README](../../../../subgroups/use-cases-and-threat-models/README.md)): perspective-correct threat statements, NIST SP 800-30 enrichment, CAPEC and CWE mapping, and controls mapped to NIST SP 800-53 and CSA AICM.
 
-The reference output is [examples/tm-bom.code-assistant-1b.json](../examples/tm-bom.code-assistant-1b.json), one fully worked threat for the Code Assistant Sub Use Case 1b, linked to [examples/system-bom.code-assistant.json](../examples/system-bom.code-assistant.json).
+The reference output is [examples/tm-bom.code-assistant-1b.json](../examples/tm-bom.code-assistant-1b.json), one fully worked threat for the Code Assistant Sub Use Case 1b, linked to [examples/system-bom.code-assistant.json](../examples/system-bom.code-assistant.json). It shows the **shape** of one threat end to end (scenario, attack path, controls, risk, catalogue citation, rationales), not the scale: a real TM-BOM covers every element and sweep item, so the validator's coverage and sweep warnings on this one-threat example are expected.
 
 ## How the two documents link
 
@@ -31,7 +31,7 @@ python .bob/skills/cyclonedx/scripts/slice_use_case.py <system>.json --list
 - If the system BOM has errors, stop and fix them, or ask the user to.
 - If it has no `serialNumber`, it cannot be linked to. Ask the user before running `python .bob/skills/cyclonedx/scripts/slice_use_case.py <system>.json --assign-serial`, which edits the system BOM in place.
 - `--list` flags umbrella use cases, whose flows are exactly the union of other use cases. Make TM-BOMs for the specific use cases, not the umbrella, unless the user asks for it.
-- Confirm with the user which use cases to model and which methodologies to apply. Default to STRIDE per element and flow, MAESTRO for agentic and AI components, and MITRE ATLAS techniques where relevant; the 2.0 `methodologies` enum is `STRIDE, LINDDUN, PASTA, MAESTRO, OWASP, TRIKE, VAST, ATFAA, attack-tree`.
+- Confirm with the user which use cases to model and which methodologies to apply. Default to STRIDE for every element and flow, plus MAESTRO categories for AI and agentic elements. Record them in `threats.methodologies` (the 2.0 enum is `STRIDE, LINDDUN, PASTA, MAESTRO, OWASP, TRIKE, VAST, ATFAA, attack-tree`). If you cannot ask, use the defaults and say so in the report.
 
 ## Step 2: Create one TM-BOM skeleton per use case
 
@@ -43,13 +43,48 @@ The script refuses to overwrite an existing file; see "Regenerating" below to up
 
 ## Step 3: Identify threats
 
-Work through the slice systematically. Do not stop at the obvious threats.
+Identify threats in three passes: a **structural** pass, a **catalogue sweep**, and a pass for what neither finds. This workflow deliberately names catalogues, not threats: do not start from a list of "usual" threats, because a list steers you toward its items and away from everything else.
 
-1. **Each flow** in `blueprints[0].flows`, and above all every flow whose source and destination are in different zones (it crosses a `boundary`). Apply STRIDE to the flow and to both endpoints.
-2. **Each component and actor**, by type: `machine-learning-model` (prompt injection, model poisoning, output handling), agents and `framework` (excessive agency, tool misuse, goal hijacking: MAESTRO `agent-frameworks`), `data` (disclosure, poisoning: `data-operations`), marketplaces and plugins (supply chain: `agent-ecosystem`), MCP servers and gateways (authorization, confused deputy).
-3. **Each boundary**: what changes in trust across it, and what an attacker on the less trusted side can reach.
-4. **The use case's `exceptions`**, which often name threats already (for example "Prompt Injection Detected", "Malicious Plugin from Marketplace"). Every exception that describes an attack should map to a threat.
-5. Cross-check against the OWASP Top 10 for LLM Applications ([OWASP_TOP_10_LLM.md](../../../../subgroups/use-cases-and-threat-models/OWASP_TOP_10_LLM.md)).
+**3a. Structural pass (STRIDE).** Apply all six STRIDE categories to:
+- every flow in `blueprints[0].flows`, giving most attention to flows whose source and destination are in different zones (they cross a `boundary`);
+- every component, actor and blueprint asset in the slice;
+- every boundary: what changes in trust across it, and what someone on the less trusted side can reach.
+
+**3b. Catalogue sweep.** Each element is classified by the tags the system BOM gives it (see [diagram-to-system-bom.md](diagram-to-system-bom.md), "Classify for the threat sweep"). [reference/threat-model-policy.json](../reference/threat-model-policy.json) maps each tag to the catalogues to use. Its `sweep` catalogues are swept **item by item**; its `consult` catalogues are too large for that, and you use them to classify the threats you find.
+
+| Tag | Sweep, item by item | Consult |
+|---|---|---|
+| `web-app` | OWASP Top 10 (web applications) | CWE |
+| `api` | OWASP API Security Top 10 | CWE |
+| `ai-model`, `ai-data`, `ai-pipeline` | OWASP Top 10 for LLM Applications | MITRE ATLAS |
+| `agent` | *not yet chosen by the working group* | MITRE ATLAS |
+| `tool-server` | *not yet chosen by the working group* | MITRE ATT&CK |
+
+The policy file is the source of truth if this table and it ever differ. The item lists, with pinned editions, are in [reference/catalogues/](../reference/catalogues/); read the CSV for each catalogue you sweep.
+
+For **every element and every item** of each sweep catalogue that applies to it, record a decision:
+- **It applies:** write a threat (Step 4) whose `affects` includes the element, and cite the item with a property `{ "name": "lfai:catalogue-item", "value": "<catalogue key>:<item id>" }`, for example `owasp-top10-web:A01:2025`. One threat may cite several items.
+- **It does not apply:** add an annotation saying why. Its `subjects` are the element refIds it covers, and its `text` follows the format in the policy file: `not-applicable <catalogue key>:<item id>: <reason>`. Give a real reason specific to the element, not "not relevant".
+
+```json
+"annotations": [
+  {
+    "subjects": ["component:local-ide"],
+    "annotator": { "component": { "type": "application", "name": "cyclonedx skill" } },
+    "timestamp": "2026-01-01T00:00:00Z",
+    "text": "not-applicable owasp-top10-web:A07:2025: the IDE has no login of its own; the developer authenticates at the Authentication Service"
+  }
+]
+```
+
+If an element's tag has no chosen catalogue (agents and tool servers, for now), rely on 3a and 3c for it, and list it in the report. If the system BOM gives an element no tag, the validator falls back to classifying it by component type and warns you; check the fallback is right, and say in the report which elements were classified that way.
+
+**3c. Beyond the catalogues.** Catalogues miss what is specific to this system. Trace each use case end to end and ask what an attacker, an insider, a failing component or a careless user could do at each step that neither pass found. Include:
+- what happens when a security component (guard, filter, authorization service) fails or times out;
+- data that keeps its sensitivity, or loses its access controls, as it moves between components;
+- the use case's `exceptions`, `preconditions` and blueprint `assumptions`: every one that describes something going wrong, or that might not hold, should lead to a threat or to a recorded reason why not. If the use case has none, say so in the report.
+
+Threats from 3c cite no catalogue item, which is expected.
 
 **Write each threat statement in the working group's format and perspective**:
 
@@ -78,48 +113,70 @@ For each threat, add these to the TM-BOM:
 "properties": [
   { "name": "lfai:nist-800-30:threat-source", "value": "TS-ADV-01 Adversarial - Individual - Outsider" },
   { "name": "lfai:nist-800-30:threat-event", "value": "TE-20 Deliver/insert/install malicious capabilities - Insert tampered critical components into systems" },
-  { "name": "lfai:nist-800-30:adverse-impact", "value": "AI-AST-06 HARM TO ASSETS - Loss of intellectual property" },
-  { "name": "lfai:owasp-llm-top-10", "value": "LLM03:2025 Supply Chain" }
+  { "name": "lfai:nist-800-30:adverse-impact", "value": "AI-AST-06 HARM TO ASSETS - Loss of intellectual property" }
 ]
 ```
 
-The `lfai:` prefix marks these as working-group properties. Never put them under `cdx:`, which is reserved for registered CycloneDX taxonomy names.
+**Properties.** The `lfai:` prefix marks working-group properties. Use only the names listed in [reference/threat-model-policy.json](../reference/threat-model-policy.json) under `properties`, with the value formats given there: the three NIST 800-30 names above, `lfai:catalogue-item`, `lfai:technique`, `lfai:capec-rationale`, `lfai:cwe-rationale`, `lfai:unverified-id` and `lfai:control-tier`. The validator rejects any other `lfai:` name. If you need something the list lacks, record it in the report as a proposal rather than inventing a name. Never put these under `cdx:`, which is reserved for registered CycloneDX taxonomy names.
+
+**Threats outside STRIDE.** Some threats fit no STRIDE category, for example an AI model's misinformation. Give them their MAESTRO category, and say in the report which threats have no STRIDE category.
+
+**Scenario actors.** `threatScenario.actor` is the party who causes the harm. For an adversary, declare an attacker party in `definitions.parties`. For a mistake by someone in the diagram, reference that actor's party. For a failure with no one behind it (`origin: "structural"` or `"environmental"`), leave `actor` out. The threat statement still centres on the diagram's actors, as described in Step 3.
 
 **CAPEC and CWE.** Follow [capec_prompt.txt](../../../../subgroups/use-cases-and-threat-models/prompts_for_threat_modelling/capec_prompt.txt): CAPEC describes attacker behaviour (`attackPatterns`), CWE describes the system weakness (`weaknesses`), and the two are never mixed. Prefer the most specific entry and never invent IDs. Check each ID against its source:
 
 | Identifier | Check against |
 |---|---|
-| CAPEC | `reference_files/mitre_capec.csv` (in the repository) |
-| NIST SP 800-30 | `reference_files/nist_800_30_*.csv` |
-| CWE | not in the repository. Use the MITRE CWE list (https://cwe.mitre.org/) if you can fetch it; otherwise use only CWEs you are certain of, and mark each one as unverified in the report |
-| MITRE ATT&CK / ATLAS techniques | not in the repository. Use https://attack.mitre.org/ or https://atlas.mitre.org/ if you can fetch them; otherwise mark each one as unverified in the report |
+| CAPEC | `subgroups/use-cases-and-threat-models/reference_files/mitre_capec.csv` |
+| NIST SP 800-30 | `subgroups/use-cases-and-threat-models/reference_files/nist_800_30_*.csv` |
+| CWE | `.bob/skills/cyclonedx/reference/catalogues/cwe.csv` (deprecated entries are marked; do not use them) |
+| MITRE ATT&CK techniques | `.bob/skills/cyclonedx/reference/catalogues/mitre-attack-enterprise.csv` |
+| MITRE ATLAS techniques | `.bob/skills/cyclonedx/reference/catalogues/mitre-atlas.csv` |
 
-If you cannot confirm an ID, either leave it out, or keep it and list it as unverified; never present it as checked.
+Search these files with grep rather than reading them whole. The validator checks every one of these IDs, and an ID that is not in its file is an error. Give each CAPEC and CWE its one-line justification, as `capec_prompt.txt` asks, in a `lfai:capec-rationale` or `lfai:cwe-rationale` property on the threat. Give ATT&CK and ATLAS technique IDs on attack path steps (`technique.id`), or as `lfai:technique` properties on the threat. ATLAS tactics have no place in `threat.categories`, which only accepts MITRE-ATTACK tactics, so record ATLAS by technique.
 
 ## Step 5: Map controls
 
 Follow [control_prompt.txt](../../../../subgroups/use-cases-and-threat-models/prompts_for_threat_modelling/control_prompt.txt) and [csa_aicm_prompt.txt](../../../../subgroups/use-cases-and-threat-models/prompts_for_threat_modelling/csa_aicm_prompt.txt):
 
-1. Declare each control catalogue once, as a `standard` in `definitions.standards[]`, with only the `requirements[]` you use: `{ refId, identifier, title }` (for example `req:nist-800-53:cm-14`, `CM-14`, `Signed Components`). Check identifiers and titles against `reference_files/NIST_SP-800-53_rev5_catalog_load.csv` and `reference_files/aicm_controls.csv`.
+1. Declare each control catalogue once, as a `standard` in `definitions.standards[]`, with only the `requirements[]` you use: `{ refId, identifier, title }` (for example `req:nist-800-53:cm-14`, `CM-14`, `Signed Components`). Check identifiers and titles against `reference_files/NIST_SP-800-53_rev5_catalog_load.csv` and `reference_files/aicm_controls.csv`; the validator checks them too. Those files have two quirks: some NIST titles contain a garbled character where a dash should be, and some AICM titles contain line breaks. Write the title with a plain hyphen and on one line. AICM IDs have the form `AIS-08`, with no `.X` suffix, whatever `csa_aicm_prompt.txt` says.
 2. Write each control as a system-specific safeguard in `controls[]`, with `refId`, `name`, `description`, `category` (`preventive`, `detective`, `corrective`, …), `status` (`recommended` unless the source says it is in place), `appliesTo` (sliced refIds), and `satisfies` (the requirement refIds, both NIST and AICM).
 3. Tier 1 (direct mitigations) are usually `preventive` and Tier 2 (supporting controls) are usually `detective`, `corrective` or `compensating`. To keep the tier explicitly, add `{ "name": "lfai:control-tier", "value": "1" }`.
 4. Link threats to controls through `threat.mitigations`, and boundaries to controls through `trustBoundary.controlsAtBoundary`.
 
 ## Step 6: Risks (optional, recommended)
 
-For each threat scenario, add a `damageScenario` (`refId`, `name`, `affects`, `impacts: [{ level, categories, riskAttributes }]`) and a `risk` (`refId`, `name`, `statement` in the form source, event, impact; `relatedThreats`, `relatedDamageScenarios`, `inherentRisk`, `responses: [{ refId, strategy, controls }]`, `status: "identified"`). Rate likelihood and impact only when there is evidence for it, and give a `rationale`.
+For each threat scenario, add a `damageScenario` (`refId`, `name`, `affects`, `impacts: [{ level, categories, riskAttributes }]`) and a `risk` (`refId`, `name`, `statement` in the form source, event, impact; `relatedThreats`, `relatedDamageScenarios`, `inherentRisk`, `responses: [{ refId, strategy, controls }]`, `status: "identified"`). Several scenarios with the same consequence can share one damage scenario.
+
+At design stage, ratings are judgements, not measurements. Give an `inherentRisk` rating only with a `rationale` that says what it rests on (for example "the flow crosses into a third-party zone with no stated authentication"). If you have no basis for a rating, leave `inherentRisk` out, and say in the report which risks are unrated.
 
 ## Step 7: Validate, link back, report
 
 ```
-python .bob/skills/cyclonedx/scripts/validate_bom.py <tm-bom>.json --system <system>.json
+python .bob/skills/cyclonedx/scripts/validate_bom.py <tm-bom>.json --system <system>.json --report-json <tm-bom>.coverage.json
 ```
 
-This checks the schema (including formats such as `date-time`), that every local reference resolves, that every sliced element is identical to its system BOM counterpart (apart from the back-links the slicer adds and lists it trims to the slice), and that every BOM-Link fragment resolves in the system BOM. It cannot check SPDX licence IDs or the crypto and behaviour taxonomies offline. Fix every error. Remove `threats`, `controls` or `risks` arrays that you left empty.
+It checks, as **errors**:
+- the schema (including formats such as `date-time`), local references, BOM-Links, and that every sliced element is identical to its system BOM counterpart (apart from the back-links the slicer adds and lists it trims to the slice);
+- that every CAPEC, CWE, ATT&CK, ATLAS, NIST 800-53, AICM and NIST 800-30 ID exists in its reference file, and that catalogue citations name a real item;
+- that every `lfai:` property name is in the policy file, and that not-applicable annotations follow the format.
+
+It checks, as **warnings** (errors with `--strict`):
+- coverage: every component, actor, flow, boundary and asset is in some threat's `affects` or has a not-applicable annotation; every control mitigates a threat; every threat has mitigations or an accepted risk; `methodologies` is not empty;
+- the catalogue sweep: every item of every sweep catalogue has a decision for every element it applies to;
+- elements whose tag has no chosen catalogue, and elements classified by component type because they have no tag.
+
+It cannot check SPDX licence IDs or the crypto and behaviour taxonomies offline, and it cannot judge whether a not-applicable reason is sound; that needs human review. Fix every error, and every warning you can. Remove `threats`, `controls` or `risks` arrays that you left empty.
 
 If the user wants links in both directions, run `python .bob/skills/cyclonedx/scripts/slice_use_case.py <system>.json --link <tm-bom>.json` for each TM-BOM. It edits the system BOM in place, so ask first. Then validate the system BOM with `--linked <tm-bom>.json`.
 
-Report, for each TM-BOM: the file, its serialNumber, the use case it covers, the number of threats per STRIDE and MAESTRO category, the elements and flows with **no** threat (coverage gaps), the controls with no threat mapped, the CAPEC, CWE and control IDs you could not confirm, and the validator result.
+Report, for each TM-BOM, using the validator's output and `--report-json` file rather than counting by hand:
+- the file, its serialNumber, and the use case it covers;
+- the number of threats per STRIDE and MAESTRO category, and the threats with no STRIDE category;
+- coverage: the elements and flows with no threat, and the controls with no threat;
+- the catalogue sweep: items decided per element and catalogue, how many items were marked not applicable, elements with no chosen catalogue, and elements classified by component type;
+- risks left unrated, and any defaults you chose because you could not ask the user;
+- the validator result, with any warnings you could not resolve.
 
 ## Regenerating after the system BOM changes
 

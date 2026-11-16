@@ -52,7 +52,8 @@ Read the workflow file in full before starting, and follow its steps in order. P
 
 - **Images:** read the diagram image with the Read tool; it renders PNG and JPG. If it is a Mermaid or other text diagram, read the source instead.
 - **Scripts:** run them with Bash from the repository root. They need Python 3.9 or later; `validate_bom.py` also needs `jsonschema`.
-- **Questions:** ask the user with AskUserQuestion when a step says to ask, for example before `--assign-serial` or `--link`, which edit a system BOM in place, or to confirm which use cases and methodologies to model.
+- **Questions:** ask the user with AskUserQuestion when a step says to ask, for example before `--assign-serial` or `--link`, which edit a system BOM in place, or to confirm which use cases and methodologies to model. If you cannot ask (for example when running as a subagent), never edit a file in place: work on a copy, take the default the step gives, and list every default you chose in the report.
+- **Ignore the Bob entry point.** `.bob/skills/cyclonedx/SKILL.md` is the IBM Bob version of this file and names Bob's tools (`read_file`, `execute_command`, `ask_followup_question`). Do not follow its tool instructions; this file replaces it. The workflows, scripts and reference files under `.bob/skills/cyclonedx/` are shared and apply as written.
 - **Large outputs:** a TM-BOM can be long. Build it with the slice script, then add the threats, controls and risks with Edit, or with a short Python script for many entries. Do not retype the system slice by hand.
-- **Examples:** `.bob/skills/cyclonedx/examples/` holds the Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b. Match their shape.
+- **Examples:** `.bob/skills/cyclonedx/examples/` holds the Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b with a single threat. Match its shape, not its scale: a real TM-BOM covers every element and sweep item.
 - Never present a BOM that has not been through `validate_bom.py`, and report its result.

@@ -34,8 +34,15 @@ Classify each element using this table:
 | A box drawn inside another box, or inside a zone | `relationship` (see Step 4) | `blueprints[].relationships[]` |
 | A named scenario, variant or numbered sequence | `useCase` | `definitions.useCases[]`, referenced from `blueprints[].useCases[]` |
 | A data store that is not otherwise a component | `component` of `type: "data"`, or a blueprint `dataStore` if it needs store-specific fields | as above |
+| A data asset held by a component (credentials, tokens, API keys, model weights, documents), usually listed in the notes, not drawn | blueprint `asset` with `type: "data"`, `name`, `description` and `zone`, plus a `contains` relationship from the component that holds it (or `associates` from an actor) | `blueprints[].assets[]`, `blueprints[].relationships[]` |
 
-Do not invent elements that are not in the diagram or the Markdown. If the diagram implies something (for example an arrow with no label), record it with a `description` that says what is assumed, or add a blueprint `assumptions[]` entry with `validity: "unverified"`.
+Do not invent elements that are not in the diagram or the Markdown.
+
+**Ambiguity.** Diagrams are often ambiguous. Do not stop at each ambiguity. Make the most plausible reading, record it as a blueprint `assumptions[]` entry with `validity: "unverified"` (and `relatedAssets` naming the elements involved), and list it in the report as an open question. Common cases:
+- **Same label, different shapes.** Two shapes with the same label are separate elements, unless the notes say they are one. Give each a refId that says what it does (for example `component:input-guard-llm` and `component:input-guard-embedding`).
+- **A grouping with the same name as a box inside it.** Treat the grouping as that component's boundary (a `contains` relationship), not as a zone.
+- **Unlabelled or unnumbered arrows.** Model them as flows with a `description` saying what is assumed. Give `sequence` only to arrows the diagram numbers; arrows sharing a number get the same `sequence`.
+- **Roles with no matching archetype.** Choose the closest persona `archetype` (for example `developer` for an AI engineer) and put the exact role in `roles`.
 
 ## Step 2: Assign refIds
 
@@ -67,9 +74,9 @@ Do not invent elements that are not in the diagram or the Markdown. If the diagr
 
 ## Step 4: Fill the blueprint
 
-One blueprint per system: `refId`, `name`, `description`, and `modelTypes` (`["logical"]` for an architecture diagram, `["data-flow"]` for a DFD).
+One blueprint per system: `refId`, `name`, `description`, and `modelTypes` (`["logical"]` for an architecture diagram, `["data-flow"]` for a DFD, both when it is both).
 
-**Zones and boundaries.** Make one zone for each trust region. Make one boundary for each pair of zones that a flow crosses, and only where a flow crosses. Leave `crossingRequirements` out unless the source states the controls; do not invent them.
+**Zones and boundaries.** Make one zone for each grouping the diagram draws: `type: "trust"` for trust regions (organisation, cloud provider, SaaS), and the closest other type (`functional`, `network`, `deployment`, …) for groupings inside one. When a grouping sits inside another, set the inner zone's `parent`. Make one boundary for each pair of zones that a flow crosses, and only where a flow crosses, naming the **outermost** zones that differ: a flow from a sub-zone of the organisation to a cloud provider crosses the organisation ↔ cloud boundary. Leave `crossingRequirements` out unless the source states the controls; do not invent them.
 
 **Actors.** Use an inline `party` with `roles` (for example `[{ "role": "developer" }]`) and exactly one of `persona`, `person`, `organization` or `system`. For a human role, use a `persona` with `archetype` and `scope`. For an agent, use `system` with `kind: "agent"`, `ref` and `permissions`.
 
@@ -85,7 +92,7 @@ One blueprint per system: `refId`, `name`, `description`, and `modelTypes` (`["l
 | `realizes` | A component → the actor it becomes when active | `component:local-code-asst-agent` realizes `actor:local-code-asst-agent` |
 | `dependsOn` | Runtime or build dependency (prefer `flows` for runtime calls) | |
 
-Put each component in exactly one zone, either directly or through its parent. [relationship-rationale.md](../../../../subgroups/use-cases-and-threat-models/use_cases/code_assistant/relationship-rationale.md) records the working group's reasoning.
+Put each component in exactly one zone, either directly or through its parent. In short: `aggregates` when the parts would still exist without the whole, `composes` when they would not, `contains` for nesting without that lifecycle claim, and `flows` (not `dependsOn`) for what calls what at runtime.
 
 **Use cases.** Declare the content in `definitions.useCases[]`: `refId`, `name`, `description`, `preconditions`, `postconditions`, `exceptions`, `successCriteria`, `notes`, and `actors` when known. Then have the blueprint list the flows each use case traverses:
 
@@ -93,9 +100,11 @@ Put each component in exactly one zone, either directly or through its parent. [
 "useCases": [ { "ref": "usecase:code-assistant-1a", "flows": ["flow:developer-to-ide", "..."] } ]
 ```
 
-When the system has deployment variants (for example local vs SaaS), make one use case per variant and an umbrella use case whose flows are the union. The threat-model workflow generates one TM-BOM per variant.
+Split use cases where the flows differ: by deployment variant when the variants have different flows (for example local vs SaaS), or by activity when the diagram has separate activities (for example ingestion vs query). A variant that changes no flow (for example "SaaS or on-prem" for the same component) is not a separate use case; record it as an assumption. When there are several use cases, add an umbrella use case whose flows are their union. The threat-model workflow generates one TM-BOM per specific use case.
 
-Optionally, add `visualizations[]` to the blueprint pointing at the source diagram: `{ "name": "...", "type": { "type": "data-flow" }, "url": "<relative path or URL>" }`.
+Optionally, add `visualizations[]` to the blueprint pointing at the source diagram: `{ "name": "...", "type": { "type": "data-flow" }, "url": "<path relative to the BOM file, or a URL>" }`.
+
+**Classify for the threat sweep.** Give every component (and every blueprint asset that is itself a system part, such as an API) one or more classification tags in its `tags` array. The threat-model workflow uses them to choose which threat catalogues to sweep for that element. The tags and their meanings are in [reference/threat-model-policy.json](../reference/threat-model-policy.json) under `classification`: `web-app`, `api`, `ai-model`, `ai-data`, `ai-pipeline`, `agent`, `tool-server`, and `none` for an element in no sweep. Classify by what the element *does*, from the diagram and notes. Examples: a retriever is `ai-pipeline`, a vector database is `ai-data`, a guardrail is `ai-pipeline`, a hosted LLM is `ai-model`, and a web front end that calls it is `web-app`. If you are unsure, record the choice as an assumption.
 
 ## Step 5: Validate and fix
 
@@ -105,13 +114,13 @@ Run the validator and fix every error before showing the result:
 python .bob/skills/cyclonedx/scripts/validate_bom.py <system-bom>.json
 ```
 
-The validator checks the schema, refId uniqueness and that every reference resolves. It needs the `jsonschema` package; if that is missing, run with `--no-schema` and tell the user that schema validation did not run. For a field you are unsure about, look it up with `python .bob/skills/cyclonedx/scripts/schema_tool.py outline blueprint:flow` (or any `module:object`) rather than reading the 1 MB bundled schema.
+The validator checks the schema, refId uniqueness and that every reference resolves. It does not check that each component is in exactly one zone, or that boundaries match the flows that cross zones; check those yourself. It needs the `jsonschema` package; if that is missing, run with `--no-schema` and tell the user that schema validation did not run. For a field you are unsure about, look it up with `python .bob/skills/cyclonedx/scripts/schema_tool.py outline blueprint:flow` (or any `module:object`) rather than reading the 1 MB bundled schema.
 
 ## Step 6: Report
 
 Tell the user:
 1. The file you wrote, its `serialNumber` and `version`.
-2. Counts: components, actors, zones, boundaries, flows, relationships, use cases.
-3. The inventory table from Step 1, with anything inferred or assumed marked.
-4. Open questions where the diagram was ambiguous (unlabelled arrows, elements with no zone, flows not assigned to a use case).
+2. Counts: components, blueprint assets, actors, zones, boundaries, flows, relationships, use cases.
+3. The inventory table from Step 1, with anything inferred or assumed marked, and each component's classification tags.
+4. Open questions: every assumption you recorded, as a question the user can answer (unlabelled arrows, elements with no zone, flows not assigned to a use case, uncertain classifications).
 5. The validator result.

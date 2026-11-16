@@ -839,8 +839,24 @@
             "value": "AI-AST-05 HARM TO ASSETS - Damage to or loss of information assets"
           },
           {
-            "name": "lfai:owasp-llm-top-10",
-            "value": "LLM03:2025 Supply Chain"
+            "name": "lfai:catalogue-item",
+            "value": "owasp-top10-web:A03:2025"
+          },
+          {
+            "name": "lfai:capec-rationale",
+            "value": "CAPEC-185: the developer is deceived into downloading and installing the look-alike plugin."
+          },
+          {
+            "name": "lfai:capec-rationale",
+            "value": "CAPEC-698: the malicious code arrives as an extension installed into the trusted IDE."
+          },
+          {
+            "name": "lfai:cwe-rationale",
+            "value": "CWE-494: the IDE installs the plugin without checking its publisher signature or integrity."
+          },
+          {
+            "name": "lfai:cwe-rationale",
+            "value": "CWE-829: plugin code from an external marketplace runs inside the IDE with access to the codebase."
           }
         ]
       }

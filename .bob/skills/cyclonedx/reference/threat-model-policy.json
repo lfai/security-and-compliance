@@ -1,0 +1,61 @@
+{
+  "$comment": "Threat-model policy read by validate_bom.py and the threat-model workflow. It names whole catalogues only, never items in them, so the sweep is not steered. Catalogue keys refer to reference/catalogues/catalogues.json.",
+  "classification": {
+    "$comment": "Tags the diagram-to-system-bom workflow puts in a component's (or blueprint asset's) `tags` to say which sweeps apply. A component may have several. Components without any of these tags fall back to `fallbackByType`, and the validator warns so the fallback is visible.",
+    "tags": {
+      "web-app": "A web or server-side application with a user-facing interface.",
+      "api": "A component whose main surface is an API (REST, GraphQL, gRPC, MCP gateway).",
+      "ai-model": "A machine-learning model, hosted or local.",
+      "ai-data": "Data an AI system learns from or retrieves: training or fine-tuning data, embeddings, vector stores, RAG corpora, context stores.",
+      "ai-pipeline": "Software that assembles AI inputs or outputs: retrievers, RAG pipelines, guardrails, prompt assembly, agentic frameworks.",
+      "agent": "Software that acts autonomously: plans, calls tools, takes actions.",
+      "tool-server": "A tool or MCP server an AI system calls.",
+      "none": "Explicitly in no sweep (for example a desktop IDE); STRIDE still applies."
+    },
+    "fallbackByType": {
+      "application": ["web-app"],
+      "service": ["api"],
+      "machine-learning-model": ["ai-model"]
+    }
+  },
+  "sweeps": [
+    { "tag": "web-app", "sweep": ["owasp-top10-web"], "consult": ["cwe"] },
+    { "tag": "api", "sweep": ["owasp-api-top10"], "consult": ["cwe"] },
+    { "tag": "ai-model", "sweep": ["owasp-llm-top10"], "consult": ["mitre-atlas"] },
+    { "tag": "ai-data", "sweep": ["owasp-llm-top10"], "consult": ["mitre-atlas"] },
+    { "tag": "ai-pipeline", "sweep": ["owasp-llm-top10"], "consult": ["mitre-atlas"] },
+    {
+      "tag": "agent", "sweep": [], "consult": ["mitre-atlas"],
+      "pending": "The working group has not chosen an agentic AI threat catalogue. Until it does, the validator warns for every agent, and the sweep relies on STRIDE and MAESTRO categories."
+    },
+    {
+      "tag": "tool-server", "sweep": [], "consult": ["mitre-attack-enterprise"],
+      "pending": "The working group has not chosen an MCP or tool threat catalogue. Until it does, the validator warns for every tool server."
+    }
+  ],
+  "sweepNotes": [
+    "`sweep` catalogues are swept item by item: every item gets a threat that cites it (lfai:catalogue-item) or a not-applicable annotation.",
+    "`consult` catalogues are too large to sweep item by item. Use them to classify threats (techniques, weaknesses) and cite the items that apply.",
+    "Every element and flow also gets STRIDE.",
+    "Attack behaviour is classified with CAPEC (reference_files/mitre_capec.csv); human actors and threat sources use NIST SP 800-30 (reference_files/nist_800_30_*.csv)."
+  ],
+  "properties": {
+    "lfai:nist-800-30:threat-source": "A NIST SP 800-30 threat source: '<id> <category> - <subcategory>', for example 'TS-ADV-01 Adversarial - Individual - Outsider'.",
+    "lfai:nist-800-30:threat-event": "A NIST SP 800-30 threat event: '<id> <category> - <subcategory>'.",
+    "lfai:nist-800-30:adverse-impact": "A NIST SP 800-30 adverse impact: '<id> <category> - <subcategory>'.",
+    "lfai:catalogue-item": "A sweep catalogue item this threat realizes: '<catalogue key>:<item id>', for example 'owasp-top10-web:A01:2025'. Repeat for each item.",
+    "lfai:technique": "A MITRE ATT&CK or ATLAS technique this threat uses, by ID, when it is not given on an attack path step.",
+    "lfai:capec-rationale": "One line: why a cited CAPEC applies. Value '<CAPEC-ID>: <reason>'.",
+    "lfai:cwe-rationale": "One line: why a cited CWE applies. Value '<CWE-ID>: <reason>'.",
+    "lfai:unverified-id": "An identifier that could not be checked against a reference file. Value is the ID.",
+    "lfai:control-tier": "1 (direct mitigation) or 2 (supporting, risk-reducing).",
+    "lfai:threat-model:system-bom": "Set by slice_use_case.py: the BOM-Link of the system BOM.",
+    "lfai:threat-model:use-case": "Set by slice_use_case.py: the use case refId this TM-BOM models."
+  },
+  "notApplicable": {
+    "$comment": "Record a sweep decision that a catalogue item does not apply to one or more elements as an annotation whose subjects are those elements. One item per annotation.",
+    "annotationPrefix": "not-applicable",
+    "format": "not-applicable <catalogue key>:<item id>: <reason>",
+    "example": "not-applicable owasp-top10-web:A07:2025: the component has no login of its own; users authenticate at the Authentication Service"
+  }
+}

@@ -375,6 +375,10 @@ def main(argv=None):
                    help="another BOM this document links to (repeatable); checks its BOM-Links")
     p.add_argument("--schema", default=DEFAULT_SCHEMA, help="bundled CycloneDX 2.0 schema")
     p.add_argument("--no-schema", action="store_true", help="skip JSON Schema validation (structure checks only)")
+    p.add_argument("--strict", action="store_true",
+                   help="treat threat-model coverage and catalogue-sweep gaps as errors, not warnings")
+    p.add_argument("--report-json", metavar="FILE",
+                   help="write the threat-model coverage report as JSON (for the workflow's final report)")
     args = p.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -398,6 +402,17 @@ def main(argv=None):
     linked = [(path, load_json(path)) for path in args.linked]
     stats = check(doc, schema, report, system, args.system, linked)
 
+    sys.path.insert(0, HERE)
+    import tm_checks
+    refs = tm_checks.References()
+    tm_checks.check_properties(doc, refs, report)
+    tm_checks.check_ids(doc, refs, report)
+    coverage = tm_checks.check_coverage(doc, refs, report, strict=args.strict)
+    if args.report_json and coverage is not None:
+        with open(args.report_json, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(coverage, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+
     print(f"{args.bom}")
     if not schema_ran:
         state = "SKIPPED (--no-schema): enums, required fields and formats were not checked"
@@ -411,6 +426,13 @@ def main(argv=None):
         print(f"  linked system BOM: {args.system}")
     for path in args.linked:
         print(f"  linked BOM: {path}")
+    if coverage is not None:
+        swept = sum(r["decided"] for r in coverage["sweep"])
+        total = sum(r["items"] for r in coverage["sweep"])
+        print(f"  threat model: {coverage['threats']} threats; "
+              f"{coverage['elements'] - len(coverage['uncovered'])}/{coverage['elements']} elements covered; "
+              f"{coverage['controls'] - len(coverage['unmappedControls'])}/{coverage['controls']} controls mapped; "
+              f"catalogue sweep {swept}/{total} item decisions")
     for e in report.errors:
         print(f"  ERROR   {e}")
     for w in report.warnings:

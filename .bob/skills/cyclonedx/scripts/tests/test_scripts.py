@@ -251,6 +251,132 @@ def test_bad_timestamp_format(tmp_path):
     assert code == 1 and "timestamp" in out
 
 
+# ------------------------------------------------------- threat-model checks
+
+def tm_with(tmp_path, mutate):
+    tm = load(TM)
+    mutate(tm)
+    return run("validate_bom.py", save(tmp_path / "tm.json", tm), "--system", SYSTEM)
+
+
+def first_threat(tm):
+    return tm["threats"]["threats"][0]
+
+
+def test_unknown_capec_is_an_error(tmp_path):
+    code, out = tm_with(tmp_path, lambda tm: tm["threats"]["attackPatterns"][0].update(capecId=99999))
+    assert code == 1 and "CAPEC-99999 is not in" in out
+
+
+def test_unknown_and_deprecated_cwe_are_errors(tmp_path):
+    def mutate(tm):
+        tm["definitions"]["weaknesses"][0]["identifiers"][0]["value"] = "CWE-999999"
+        tm["definitions"]["weaknesses"][1]["identifiers"][0]["value"] = "CWE-613"
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1
+    assert "CWE-999999 is not in the CWE catalogue" in out
+    assert "CWE-613 is deprecated" in out
+
+
+def test_unknown_technique_is_an_error(tmp_path):
+    def mutate(tm):
+        tm["threats"]["attackPaths"][0]["steps"][1]["technique"]["id"] = "T9999"
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "technique T9999" in out
+
+
+def test_unknown_nist_and_aicm_are_errors(tmp_path):
+    def mutate(tm):
+        tm["definitions"]["standards"][0]["requirements"][0]["identifier"] = "ZZ-99"
+        tm["definitions"]["standards"][1]["requirements"][0]["identifier"] = "AIS-99"
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "ZZ-99" in out and "AIS-99" in out
+
+
+def test_unknown_nist_800_30_is_an_error(tmp_path):
+    def mutate(tm):
+        first_threat(tm)["properties"][0]["value"] = "TS-ZZZ-01 Nothing"
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "TS-ZZZ-01" in out
+
+
+def test_unregistered_lfai_property_is_an_error(tmp_path):
+    def mutate(tm):
+        first_threat(tm)["properties"].append({"name": "lfai:made-up", "value": "x"})
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "lfai:made-up" in out
+
+
+def test_bad_catalogue_citation_is_an_error(tmp_path):
+    def mutate(tm):
+        first_threat(tm)["properties"].append({"name": "lfai:catalogue-item", "value": "owasp-top10-web:A99:2025"})
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "A99:2025" in out
+
+
+def test_coverage_and_sweep_are_warnings_then_errors_with_strict(tmp_path):
+    code, out = run("validate_bom.py", TM, "--system", SYSTEM)
+    assert code == 0
+    assert "WARNING coverage:" in out and "WARNING sweep:" in out
+    code, out = run("validate_bom.py", TM, "--system", SYSTEM, "--strict")
+    assert code == 1 and "ERROR   coverage:" in out
+
+
+def test_not_applicable_annotation_counts_as_a_decision(tmp_path):
+    def mutate(tm):
+        tm["annotations"] = [{
+            "subjects": ["component:local-ide"],
+            "annotator": {"component": {"type": "application", "name": "test"}},
+            "timestamp": "2026-01-01T00:00:00Z",
+            "text": "not-applicable owasp-top10-web:A07:2025: the IDE has no login of its own",
+        }]
+    tm_path = tmp_path / "tm.json"
+    tm = load(TM)
+    mutate(tm)
+    save(tm_path, tm)
+    report = tmp_path / "coverage.json"
+    code, out = run("validate_bom.py", tm_path, "--system", SYSTEM, "--report-json", report)
+    assert code == 0, out
+    rows = {(r["element"], r["catalogue"]): r for r in load(report)["sweep"]}
+    # The example's threat already cites A03 for the IDE; the annotation adds A07.
+    assert rows[("component:local-ide", "owasp-top10-web")]["decided"] == 2
+    assert "A07:2025" not in out.split("component:local-ide (owasp-top10-web)")[1].split("\n")[0]
+
+
+def test_malformed_not_applicable_is_an_error(tmp_path):
+    def mutate(tm):
+        tm["annotations"] = [{
+            "subjects": ["component:local-ide"],
+            "annotator": {"component": {"type": "application", "name": "test"}},
+            "timestamp": "2026-01-01T00:00:00Z",
+            "text": "not-applicable because it is fine",
+        }]
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 1 and "not-applicable text must be" in out
+
+
+def test_tags_override_type_fallback(tmp_path):
+    def mutate(tm):
+        for c in tm["definitions"]["components"]:
+            if c["refId"] == "component:local-ide":
+                c["tags"] = ["none"]
+    tm = load(TM)
+    mutate(tm)
+    system = load(SYSTEM)
+    mutate(system)
+    sys_path = save(tmp_path / "system.json", system)
+    code, out = run("validate_bom.py", save(tmp_path / "tm.json", tm), "--system", sys_path)
+    assert "component:local-ide (owasp-top10-web)" not in out
+
+
+def test_policy_names_whole_catalogues_only():
+    policy = load(os.path.join(SKILL, "reference", "threat-model-policy.json"))
+    index = load(os.path.join(SKILL, "reference", "catalogues", "catalogues.json"))["catalogues"]
+    for rule in policy["sweeps"]:
+        for key in rule.get("sweep", []) + rule.get("consult", []):
+            assert key in index, f"{rule['tag']}: '{key}' is not a catalogue in catalogues.json"
+
+
 # ---------------------------------------------------------------- schema tool
 
 def test_outline_shows_wrapped_enums():
