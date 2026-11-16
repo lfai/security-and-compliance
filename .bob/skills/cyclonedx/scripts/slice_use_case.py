@@ -227,11 +227,20 @@ def build_slice(system, use_case_ref):
     while close_over_actors() | close_over_parents():
         pass
 
-    # Blueprint assets that represent a sliced component or party, or that a flow targets.
+    # Blueprint assets that represent a sliced component or party, or that a sliced
+    # component or actor holds (`contains`, `composes`, `aggregates`, `associates`).
+    # Data assets such as credentials, API keys and model weights are modelled this
+    # way, and threats need them as `affects` targets.
     assets_all = by_refid(bp.get("assets", []))
     for aref, asset in assets_all.items():
         if asset.get("componentRef") in members or asset.get("partyRef") in members:
             members.add(aref)
+    holds = ("contains", "composes", "aggregates", "associates")
+    for rel in rels:
+        if rel.get("ref") in members and rel.get("ref") not in zones_all:
+            for t in rel_targets(rel, holds):
+                if t in assets_all:
+                    members.add(t)
     # Zones that sliced actors, assets and data stores sit in.
     for table in (actors_all, assets_all, stores_all):
         for r, obj in table.items():
@@ -440,9 +449,15 @@ def cmd_slice(system, use_case_ref, out_path, system_path, update=False):
     if out_path:
         with open(out_path, "w", encoding="utf-8", newline="\n") as f:
             f.write(text)
-        counts = {k: len(blueprint.get(k, [])) for k in ("zones", "boundaries", "actors", "flows", "relationships")}
+        counts = {k: len(blueprint.get(k, [])) for k in ("assets", "zones", "boundaries", "actors", "flows", "relationships")}
         print(f"Wrote {out_path}: {len(comps)} components, " + ", ".join(f"{v} {k}" for k, v in counts.items()),
               file=sys.stderr)
+        sys_bp = next((b for b in system.get("blueprints", []) if b.get("refId") == blueprint["refId"]), {})
+        kept = {a.get("refId") for a in blueprint.get("assets", [])}
+        dropped = [a.get("refId") for a in sys_bp.get("assets", []) if a.get("refId") not in kept]
+        if dropped:
+            print(f"Not in this slice ({len(dropped)} blueprint assets not held by a sliced element): "
+                  + ", ".join(dropped), file=sys.stderr)
         if previous is None:
             print("Empty threats/controls/risks sections are placeholders; remove any you do not fill "
                   "(empty arrays are valid but add noise).", file=sys.stderr)

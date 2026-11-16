@@ -171,6 +171,23 @@ def test_slice_includes_asset_component(tmp_path, system):
     assert "component:rag-local" in {c["refId"] for c in tm["definitions"]["components"]}
 
 
+def test_slice_keeps_assets_held_by_sliced_components(tmp_path, system):
+    # Data assets (keys, tokens, weights) hang off components by a relationship,
+    # not by componentRef. Found by the chatbot blind test: all were dropped.
+    blueprint(system)["assets"] = [
+        {"refId": "asset:plugin-token", "type": "data", "name": "Plugin token"},
+        {"refId": "asset:local-model-weights", "type": "data", "name": "Local model weights"},
+    ]
+    blueprint(system)["relationships"] += [
+        {"ref": "component:code-asst-plugin", "contains": ["asset:plugin-token"]},
+        {"ref": "component:code-assistant-model-local", "contains": ["asset:local-model-weights"]},
+    ]
+    tm = slice_ok(tmp_path, system)
+    kept = {a["refId"] for a in blueprint(tm).get("assets", [])}
+    assert "asset:plugin-token" in kept          # plugin is in the 1b slice
+    assert "asset:local-model-weights" not in kept  # local model is 1a only
+
+
 def test_relationships_have_one_kind(tmp_path, system):
     tm = slice_ok(tmp_path, system)
     kinds = {"aggregates", "associates", "composes", "contains", "dependsOn",
