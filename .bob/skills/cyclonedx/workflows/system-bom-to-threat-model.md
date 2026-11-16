@@ -57,8 +57,8 @@ Identify threats in three passes: a **structural** pass, a **catalogue sweep**, 
 | `web-app` | OWASP Top 10 (web applications) | CWE |
 | `api` | OWASP API Security Top 10 | CWE |
 | `ai-model`, `ai-data`, `ai-pipeline` | OWASP Top 10 for LLM Applications | MITRE ATLAS |
-| `agent` | *not yet chosen by the working group* | MITRE ATLAS |
-| `tool-server` | *not yet chosen by the working group* | MITRE ATT&CK |
+| `agent` | OWASP Top 10 for Agentic Applications | MITRE ATLAS |
+| `tool-server` | OWASP MCP Top 10 (beta edition) | MITRE ATT&CK |
 
 The policy file is the source of truth if this table and it ever differ. The item lists, with pinned editions, are in [reference/catalogues/](../reference/catalogues/); read the CSV for each catalogue you sweep.
 
@@ -77,7 +77,7 @@ For **every element and every item** of each sweep catalogue that applies to it,
 ]
 ```
 
-If an element's tag has no chosen catalogue (agents and tool servers, for now), rely on 3a and 3c for it, and list it in the report. If the system BOM gives an element no tag, the validator falls back to classifying it by component type and warns you; check the fallback is right, and say in the report which elements were classified that way.
+If a tag ever has no sweep catalogue, rely on 3a and 3c for those elements, and list them in the report. If the system BOM gives an element no tag, the validator falls back to classifying it by component type and warns you; check the fallback is right, and say in the report which elements were classified that way.
 
 **3c. Beyond the catalogues.** Catalogues miss what is specific to this system. Trace each use case end to end and ask what an attacker, an insider, a failing component or a careless user could do at each step that neither pass found. Include:
 - what happens when a security component (guard, filter, authorization service) fails or times out;

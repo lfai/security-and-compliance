@@ -28,6 +28,15 @@
       "licence": "© The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation. ATT&CK® is a registered trademark of The MITRE Corporation.",
       "fetched": "2026-11-16"
     },
+    "owasp-agentic-top10": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "edition": "2026",
+      "items": 10,
+      "file": "owasp-agentic-top10.csv",
+      "source": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "licence": "CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied.",
+      "fetched": "2026-11-16"
+    },
     "owasp-api-top10": {
       "name": "OWASP API Security Top 10",
       "edition": "2023",
@@ -44,6 +53,15 @@
       "file": "owasp-llm-top10.csv",
       "source": "https://genai.owasp.org/llm-top-10/",
       "licence": "CC-BY-SA-4.0 (OWASP Foundation). IDs and titles only are copied.",
+      "fetched": "2026-11-16"
+    },
+    "owasp-mcp-top10": {
+      "name": "OWASP MCP Top 10",
+      "edition": "2025 (beta, v0.1)",
+      "items": 10,
+      "file": "owasp-mcp-top10.csv",
+      "source": "https://owasp.org/www-project-mcp-top-10/",
+      "licence": "CC-BY-SA-4.0 per the project's LICENSE.md (the project page says CC BY-NC-SA 4.0; this mismatch is unresolved). IDs and titles only are copied.",
       "fetched": "2026-11-16"
     },
     "owasp-top10-web": {

@@ -13,24 +13,81 @@
       "none": "Explicitly in no sweep (for example a desktop IDE); STRIDE still applies."
     },
     "fallbackByType": {
-      "application": ["web-app"],
-      "service": ["api"],
-      "machine-learning-model": ["ai-model"]
+      "application": [
+        "web-app"
+      ],
+      "service": [
+        "api"
+      ],
+      "machine-learning-model": [
+        "ai-model"
+      ]
     }
   },
   "sweeps": [
-    { "tag": "web-app", "sweep": ["owasp-top10-web"], "consult": ["cwe"] },
-    { "tag": "api", "sweep": ["owasp-api-top10"], "consult": ["cwe"] },
-    { "tag": "ai-model", "sweep": ["owasp-llm-top10"], "consult": ["mitre-atlas"] },
-    { "tag": "ai-data", "sweep": ["owasp-llm-top10"], "consult": ["mitre-atlas"] },
-    { "tag": "ai-pipeline", "sweep": ["owasp-llm-top10"], "consult": ["mitre-atlas"] },
     {
-      "tag": "agent", "sweep": [], "consult": ["mitre-atlas"],
-      "pending": "The working group has not chosen an agentic AI threat catalogue. Until it does, the validator warns for every agent, and the sweep relies on STRIDE and MAESTRO categories."
+      "tag": "web-app",
+      "sweep": [
+        "owasp-top10-web"
+      ],
+      "consult": [
+        "cwe"
+      ]
     },
     {
-      "tag": "tool-server", "sweep": [], "consult": ["mitre-attack-enterprise"],
-      "pending": "The working group has not chosen an MCP or tool threat catalogue. Until it does, the validator warns for every tool server."
+      "tag": "api",
+      "sweep": [
+        "owasp-api-top10"
+      ],
+      "consult": [
+        "cwe"
+      ]
+    },
+    {
+      "tag": "ai-model",
+      "sweep": [
+        "owasp-llm-top10"
+      ],
+      "consult": [
+        "mitre-atlas"
+      ]
+    },
+    {
+      "tag": "ai-data",
+      "sweep": [
+        "owasp-llm-top10"
+      ],
+      "consult": [
+        "mitre-atlas"
+      ]
+    },
+    {
+      "tag": "ai-pipeline",
+      "sweep": [
+        "owasp-llm-top10"
+      ],
+      "consult": [
+        "mitre-atlas"
+      ]
+    },
+    {
+      "tag": "agent",
+      "sweep": [
+        "owasp-agentic-top10"
+      ],
+      "consult": [
+        "mitre-atlas"
+      ]
+    },
+    {
+      "tag": "tool-server",
+      "sweep": [
+        "owasp-mcp-top10"
+      ],
+      "consult": [
+        "mitre-attack-enterprise"
+      ],
+      "note": "The OWASP MCP Top 10 is a beta edition (v0.1). Adversa's MCP Security Top 25 is useful further reading but is not swept: it states no licence, so it is not copied into the repository."
     }
   ],
   "sweepNotes": [
@@ -57,5 +114,10 @@
     "annotationPrefix": "not-applicable",
     "format": "not-applicable <catalogue key>:<item id>: <reason>",
     "example": "not-applicable owasp-top10-web:A07:2025: the component has no login of its own; users authenticate at the Authentication Service"
+  },
+  "catalogueDecisions": {
+    "$comment": "Recorded on 2026-11-16 for the working group; revisit when editions change.",
+    "agent": "OWASP Top 10 for Agentic Applications 2026 (peer-reviewed). The earlier OWASP 'Agentic AI - Threats and Mitigations' guide (T1-T17) is its predecessor and is not swept, to avoid double counting. The OWASP Agentic Skills Top 10 (AST10, incubator) applies only to agent skill packages and is not swept unless a system has a skills layer.",
+    "tool-server": "OWASP MCP Top 10 2025 (beta). Its licence is CC BY-SA 4.0 in LICENSE.md but CC BY-NC-SA 4.0 on the project page; to be raised with the project leads."
   }
 }

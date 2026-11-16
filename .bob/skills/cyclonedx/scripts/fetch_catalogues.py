@@ -12,8 +12,8 @@ Usage (from the repository root, needs network access):
   python .bob/skills/cyclonedx/scripts/fetch_catalogues.py --only cwe
 
 Editions are pinned below. To move to a new edition, change the pin, rerun,
-and review the diff. Standard library only, except PyYAML for ATLAS
-(pip install pyyaml); if it is missing, ATLAS is skipped with a message.
+and review the diff. Standard library only, except PyYAML for ATLAS and pypdf for the agentic Top 10
+(pip install pyyaml pypdf); if one is missing, that catalogue is skipped with a message.
 """
 
 import argparse
@@ -133,7 +133,48 @@ def mitre_cwe():
     return rows
 
 
+def owasp_agentic():
+    """OWASP Top 10 for Agentic Applications 2026. Published only as a PDF, so needs pypdf."""
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        print("  pypdf is not installed; skipping the agentic Top 10 (pip install pypdf)", file=sys.stderr)
+        return None
+    import logging
+    logging.getLogger("pypdf").setLevel(logging.ERROR)
+    page = get("https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/")
+    m = re.search(r'href="(https://genai\.owasp\.org/download/\d+/[^"]*)"', page)
+    if not m:
+        sys.exit("Could not find the agentic Top 10 PDF download link on its resource page.")
+    reader = PdfReader(io.BytesIO(get(html.unescape(m.group(1)), binary=True)))
+    text = "\n".join((p.extract_text() or "") for p in reader.pages[:6])  # table of contents
+    found = {}
+    for ident, title in re.findall(r"\b(ASI\d{2}): ([^\n]+?) \d+\s*\n", text):
+        found.setdefault(ident, title.strip())
+    return [{"id": f"{k}:2026", "title": v,
+             "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"}
+            for k, v in sorted(found.items())]
+
+
+def owasp_mcp():
+    """OWASP MCP Top 10 (2025). The project lists itself as beta; it is pinned like the others."""
+    text = get("https://raw.githubusercontent.com/OWASP/www-project-mcp-top-10/main/tab_top10.md")
+    rows = []
+    for num, title, path in re.findall(r"^## MCP0?(\d+):2025\s*[–-]\s*\[([^\]]+)\]\(([^)]+)\)", text, re.M):
+        rows.append({"id": f"MCP{int(num):02d}:2025", "title": title.strip(),
+                     "url": f"https://owasp.org/www-project-mcp-top-10/{path}"})
+    return rows
+
+
 CATALOGUES = {
+    "owasp-agentic-top10": {"name": "OWASP Top 10 for Agentic Applications", "edition": "2026",
+                            "fetch": owasp_agentic, "expect": 10, "licence": OWASP_LICENCE,
+                            "source": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"},
+    "owasp-mcp-top10": {"name": "OWASP MCP Top 10", "edition": "2025 (beta, v0.1)", "fetch": owasp_mcp,
+                        "expect": 10,
+                        "licence": "CC-BY-SA-4.0 per the project's LICENSE.md (the project page says CC BY-NC-SA 4.0; "
+                                   "this mismatch is unresolved). IDs and titles only are copied.",
+                        "source": "https://owasp.org/www-project-mcp-top-10/"},
     "owasp-top10-web": {"name": "OWASP Top 10 (web applications)", "edition": "2025", "fetch": owasp_web,
                         "expect": 10, "licence": OWASP_LICENCE, "source": "https://owasp.org/Top10/2025/"},
     "owasp-api-top10": {"name": "OWASP API Security Top 10", "edition": "2023", "fetch": owasp_api,

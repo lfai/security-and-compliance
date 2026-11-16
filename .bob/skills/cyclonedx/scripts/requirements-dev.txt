@@ -1,3 +1,5 @@
-# Test runner for scripts/tests (MIT).
+# Test runner for scripts/tests (MIT), PyYAML (MIT) and pypdf (BSD-3-Clause) for fetch_catalogues.py.
 -r requirements.txt
 pytest>=8,<10
+pypdf>=4,<8
+pyyaml>=6,<7
