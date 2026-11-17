@@ -16,15 +16,33 @@ You need:
 - **IBM Bob** or **Claude Code**, opened on the repository root;
 - **Python 3.9 or later**.
 
-Install the Python packages the skill's scripts use. A virtual environment keeps them separate from the rest of your system:
+Install the Python packages the skill's scripts use. A virtual environment keeps them separate from the rest of your system. Run these from the repository root.
+
+**macOS / Linux:**
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r .bob/skills/cyclonedx/scripts/requirements.txt
+```
+
+**Windows (PowerShell):**
 
 ```
 python -m venv .venv
-# Windows (PowerShell):  .venv\Scripts\Activate.ps1
-# Windows (Git Bash):    source .venv/Scripts/activate
-# macOS / Linux:         source .venv/bin/activate
+.venv\Scripts\Activate.ps1
 pip install -r .bob/skills/cyclonedx/scripts/requirements.txt
 ```
+
+**Windows (Git Bash):**
+
+```
+python -m venv .venv
+source .venv/Scripts/activate
+pip install -r .bob/skills/cyclonedx/scripts/requirements.txt
+```
+
+On macOS and Linux, use `python3` to create the environment: many systems have no `python` command. Once the environment is activated, `python` works on every platform, so the commands in the rest of this guide use `python`. Activate it again in each new terminal. On Debian or Ubuntu, if creating the environment fails with an `ensurepip` error, install the venv package first (`sudo apt install python3-venv`).
 
 `.venv` is not tracked by git; do not commit it.
 
@@ -123,7 +141,8 @@ Compare it with the worked example for Sub Use Case 1b, [examples/tm-bom.code-as
 | `differs from the system BOM at …` | A copied element in the TM-BOM was edited. Change the system BOM instead, then re-slice with `--update`. |
 | `sweep: no catalogue chosen yet for 'tool-server'` | Expected: the MCP catalogue is pending a licence decision (see [the skills README](../README.md)). Tool servers are still covered by STRIDE and the use-case review. |
 | `classified by component type because the system BOM gives no classification tag` | Add `tags` to those components in the system BOM (see step 1), then re-slice with `--update`. |
-| `python` is not found, or is a different version | Use `python3`, or the full path to the Python in your virtual environment. |
+| `python: command not found` | Activate the virtual environment (section 1). Before it is activated, use `python3` on macOS and Linux. |
+| `No module named venv`, or an `ensurepip` error, when creating the environment | On Debian or Ubuntu, run `sudo apt install python3-venv`, then create the environment again. |
 
 ## 8. Keep your results
 

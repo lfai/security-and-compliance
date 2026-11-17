@@ -19,7 +19,7 @@ A skill name must match its directory name and be lowercase kebab-case. Bob skip
 
 ## Requirements
 
-The `cyclonedx` scripts need Python 3.9 or later. Schema validation also needs `jsonschema` and `rfc3339-validator` (both MIT):
+The `cyclonedx` scripts need Python 3.9 or later. Schema validation also needs `jsonschema` and `rfc3339-validator` (both MIT). Install them into a virtual environment, as [GETTING-STARTED.md](cyclonedx/GETTING-STARTED.md#1-set-up-once) shows for macOS, Linux and Windows. Installing into the system Python is refused on many Linux distributions.
 
 ```
 pip install -r .bob/skills/cyclonedx/scripts/requirements.txt
