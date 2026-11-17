@@ -6,7 +6,7 @@ This guide takes you from a system diagram to a validated threat model, using ei
  diagram + notes ──▶ system BOM ──▶ one threat-model BOM per use case
    (you)          (step 1, AI)      (step 2, AI)        │
                        ▲                                │
-                       └──────── linked by BOM-Link ─────┘
+                       └─────── linked by BOM-Link ─────┘
 ```
 
 ## 1. Set up (once)
