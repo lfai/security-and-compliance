@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="cyclonedx skill: visualise_bom.py">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+<title>CycloneDX BOM map</title>
+<!-- Template for scripts/visualise_bom.py. The script replaces the data marker below with the map data. -->
+<style>
+:root {
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #f0f2f5; --text: #1b1f24; --muted: #5b6470;
+  --border: #d9dde3; --accent: #2457c5; --accent-text: #ffffff; --focus: #2457c5;
+  --err: #b3261e; --err-bg: #fbe9e7; --warn: #8a5a00; --warn-bg: #fff4d6; --info: #3c5a85; --info-bg: #e8eef8;
+  --ok: #1f7a3f; --edge: #8a94a3; --edge-strong: #4a5462;
+  --c-system: #2f6fd6; --c-arch: #0f8a83; --c-people: #7a4fc9; --c-threat: #c4372b;
+  --c-control: #2c8a3e; --c-risk: #b86e00; --c-other: #6b7480;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111418; --surface: #191d23; --surface-2: #222730; --text: #e6e9ee; --muted: #9aa3af;
+    --border: #323946; --accent: #7aa2ff; --accent-text: #0d1117; --focus: #7aa2ff;
+    --err: #ff8a80; --err-bg: #3a1d1b; --warn: #ffcc66; --warn-bg: #352a12; --info: #9dbcf0; --info-bg: #1c2638;
+    --ok: #6fd18c; --edge: #6b7584; --edge-strong: #aab3c0;
+    --c-system: #6f9eff; --c-arch: #3cc7bd; --c-people: #b192f0; --c-threat: #ff7a6e;
+    --c-control: #66cc7a; --c-risk: #f0a640; --c-other: #9aa3af;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111418; --surface: #191d23; --surface-2: #222730; --text: #e6e9ee; --muted: #9aa3af;
+  --border: #323946; --accent: #7aa2ff; --accent-text: #0d1117; --focus: #7aa2ff;
+  --err: #ff8a80; --err-bg: #3a1d1b; --warn: #ffcc66; --warn-bg: #352a12; --info: #9dbcf0; --info-bg: #1c2638;
+  --ok: #6fd18c; --edge: #6b7584; --edge-strong: #aab3c0;
+  --c-system: #6f9eff; --c-arch: #3cc7bd; --c-people: #b192f0; --c-threat: #ff7a6e;
+  --c-control: #66cc7a; --c-risk: #f0a640; --c-other: #9aa3af;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+code, .mono { font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace; font-size: 12.5px; }
+a { color: var(--accent); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px 0; position: sticky; top: 0; z-index: 5; }
+.top { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+h1 { font-size: 17px; margin: 0; }
+.sub { color: var(--muted); font-size: 13px; }
+.spacer { flex: 1; }
+.theme { border: 1px solid var(--border); background: var(--surface-2); border-radius: 6px; padding: 2px 8px; cursor: pointer; font-size: 12px; }
+nav { display: flex; gap: 4px; margin-top: 8px; }
+nav a { padding: 8px 14px; text-decoration: none; color: var(--muted); border-bottom: 2px solid transparent; font-weight: 500; }
+nav a[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
+main { padding: 20px; max-width: 1600px; margin: 0 auto; }
+section.view[hidden] { display: none; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 18px; }
+h2 { font-size: 15px; margin: 0 0 4px; }
+h3 { font-size: 13.5px; margin: 18px 0 6px; }
+.lead { color: var(--muted); margin: 0 0 12px; max-width: 80ch; }
+.split { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 18px; align-items: start; }
+.side { position: sticky; top: 112px; max-height: calc(100vh - 130px); display: flex; flex-direction: column; padding: 12px; }
+.side .filters { display: grid; gap: 8px; margin-bottom: 8px; }
+input[type="search"], select { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text); }
+label.check { display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; }
+.count { color: var(--muted); font-size: 12px; margin: 2px 0 6px; }
+.list { overflow-y: auto; flex: 1; margin: 0 -6px; padding: 0 6px; }
+.list .group { font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 10px 0 4px; }
+.item { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 6px 8px; border-radius: 6px; cursor: pointer; border-left: 3px solid transparent; }
+.item:hover { background: var(--surface-2); }
+.item[aria-current="true"] { background: var(--surface-2); border-left-color: var(--accent); }
+.item .id { display: block; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 12.5px; overflow-wrap: anywhere; }
+.item .nm { display: block; color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--border); border-radius: 999px; padding: 0 8px; font-size: 12px; background: var(--surface-2); white-space: nowrap; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+button.chip { cursor: pointer; }
+.badge { display: inline-block; border-radius: 4px; padding: 0 6px; font-size: 11.5px; font-weight: 600; }
+.b-error { color: var(--err); background: var(--err-bg); }
+.b-warn { color: var(--warn); background: var(--warn-bg); }
+.b-info { color: var(--info); background: var(--info-bg); }
+.b-ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, transparent); }
+.title { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.title .rid { font-size: 18px; font-weight: 600; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; overflow-wrap: anywhere; }
+.meta { color: var(--muted); font-size: 13px; margin-top: 4px; overflow-wrap: anywhere; }
+.desc { margin: 10px 0 0; max-width: 90ch; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; }
+.tablewrap { overflow-x: auto; }
+.linkbtn { border: 0; background: none; padding: 0; color: var(--accent); cursor: pointer; text-align: left; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 12.5px; overflow-wrap: anywhere; }
+.linkbtn:hover { text-decoration: underline; }
+td.nowrap, td.nowrap .linkbtn { white-space: nowrap; overflow-wrap: normal; }
+.refgroup { margin: 8px 0 12px; }
+.refgroup > .hd { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-weight: 600; font-size: 13px; }
+.refgroup ul { margin: 4px 0 0; padding-left: 18px; }
+.refgroup li { margin: 2px 0; }
+.refgroup li .nm { color: var(--muted); }
+.callout { border-radius: 8px; padding: 8px 12px; margin: 10px 0 0; font-size: 13.5px; }
+.empty { color: var(--muted); font-style: italic; }
+details.raw summary { cursor: pointer; color: var(--muted); margin-top: 14px; }
+details.raw pre { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; overflow: auto; max-height: 420px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.graph { overflow-x: auto; margin: 6px 0 4px; }
+.graph svg { display: block; min-width: 680px; width: 100%; height: auto; }
+.graph svg text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: var(--text); }
+.graph svg .mono { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+.graph svg .muted { fill: var(--muted); }
+.graph svg .node { cursor: pointer; }
+.graph svg .node rect.box { fill: var(--surface); stroke: var(--border); }
+.graph svg .node:hover rect.box, .graph svg .node:focus rect.box { stroke: var(--accent); }
+.graph svg .node.sel rect.box { stroke: var(--accent); stroke-width: 2; }
+.graph svg path.edge { fill: none; stroke: var(--edge); stroke-width: 1.3; }
+.graph svg path.edge.copy { stroke-dasharray: 5 4; stroke: var(--edge-strong); }
+.graph svg path.edge.bad { stroke: var(--err); }
+.graph svg path.edge.warn { stroke: var(--warn); stroke-dasharray: 5 4; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.matrix td.n { text-align: right; font-variant-numeric: tabular-nums; cursor: pointer; min-width: 38px; }
+.matrix td.n:empty { cursor: default; }
+.matrix td.n:focus-visible { outline-offset: -2px; }
+.matrix th.col { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-weight: 500; padding: 8px 4px; }
+.matrix th.row { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-weight: 500; white-space: nowrap; color: var(--text); }
+.matrix td.on { outline: 2px solid var(--accent); outline-offset: -2px; }
+.row-flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.row-flex select { width: auto; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 13.5px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; overflow-wrap: anywhere; }
+#err { display: none; }
+@media (max-width: 860px) {
+  .split { grid-template-columns: 1fr; }
+  .side { position: static; max-height: 420px; }
+  main { padding: 16px; }
+  header { padding: 10px 16px 0; position: static; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>CycloneDX BOM map</h1>
+    <span class="sub" id="subtitle"></span>
+    <span class="spacer"></span>
+    <button class="theme" id="theme" type="button" title="Switch colour theme">Theme: auto</button>
+  </div>
+  <nav id="tabs" aria-label="Views">
+    <a href="#docs" data-view="docs">Documents</a>
+    <a href="#elements" data-view="elements">Elements</a>
+    <a href="#schema" data-view="schema">Schema</a>
+  </nav>
+</header>
+<main>
+  <div id="err" class="callout b-error" role="alert"></div>
+
+  <section class="view" id="view-docs" hidden>
+    <div class="card">
+      <h2>Documents and the links between them</h2>
+      <p class="lead">Each threat-model BOM carries a copy of the system BOM elements its use case uses, under the same refIds, and links back to the system BOM. The system BOM links forward to each threat-model BOM.</p>
+      <div class="graph" id="docgraph"></div>
+      <div class="tablewrap"><table id="doctable"></table></div>
+    </div>
+    <div class="card">
+      <h2>Problems</h2>
+      <p class="lead">Broken references, links to documents that are not loaded, and slice copies that differ from the system BOM. <code>validate_bom.py</code> runs the full checks.</p>
+      <div id="problems"></div>
+    </div>
+    <div class="card">
+      <h2>Which element types reference which</h2>
+      <p class="lead">Each cell counts references from an element of the row's type to an element of the column's type. Select a cell to list them.</p>
+      <div class="row-flex"><label for="mxdoc">Document</label><select id="mxdoc"></select></div>
+      <div class="tablewrap"><table class="matrix" id="matrix"></table></div>
+      <div id="mxcell"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-elements" hidden>
+    <div class="split">
+      <div class="card side">
+        <div class="filters">
+          <input type="search" id="elq" placeholder="Search refId, name or path" aria-label="Search elements">
+          <select id="eldoc" aria-label="Filter by document"></select>
+          <select id="eltype" aria-label="Filter by element type"></select>
+          <label class="check"><input type="checkbox" id="elanon"> Include referrers without a refId</label>
+        </div>
+        <div class="count" id="elcount"></div>
+        <div class="list" id="ellist" role="list"></div>
+      </div>
+      <div id="eldetail"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-schema" hidden>
+    <div class="split">
+      <div class="card side">
+        <div class="filters">
+          <input type="search" id="scq" placeholder="Search objects and fields" aria-label="Search schema objects">
+          <select id="scfilter" aria-label="Filter schema objects">
+            <option value="ref">Declare a refId or hold references</option>
+            <option value="refid">Declare a refId</option>
+            <option value="seen">Seen in the loaded BOMs</option>
+            <option value="all">All objects</option>
+          </select>
+        </div>
+        <div class="count" id="sccount"></div>
+        <div class="list" id="sclist" role="list"></div>
+      </div>
+      <div id="scdetail"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+const D = /*__DATA__*/null;
+
+window.addEventListener("error", (ev) => {
+  const box = document.getElementById("err");
+  box.style.display = "block";
+  box.textContent = "This page hit an error: " + ev.message;
+});
+
+// ------------------------------------------------------------------ helpers
+const SVGNS = "http://www.w3.org/2000/svg";
+const $ = (id) => document.getElementById(id);
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  setAttrs(el, attrs);
+  append(el, kids);
+  return el;
+}
+function sv(tag, attrs, ...kids) {
+  const el = document.createElementNS(SVGNS, tag);
+  setAttrs(el, attrs);
+  append(el, kids);
+  return el;
+}
+function setAttrs(el, attrs) {
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k === "text") el.textContent = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "style" && typeof v === "object") Object.assign(el.style, v);
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+}
+function append(el, kids) {
+  for (const kid of kids.flat(Infinity)) {
+    if (kid === null || kid === undefined || kid === false) continue;
+    el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  }
+}
+function clear(el) {
+  el.replaceChildren();
+  return el;
+}
+function trunc(s, n) { s = String(s || ""); return s.length > n ? s.slice(0, n - 1) + "…" : s; }
+function plural(n, one, many) { return n + " " + (n === 1 ? one : (many || one + "s")); }
+
+const CAT = {
+  component: "system", inventories: "system", definition: "system",
+  blueprint: "arch", data: "arch",
+  usecase: "people", party: "people",
+  threat: "threat", weakness: "threat", vulnerability: "threat",
+  control: "control", standard: "control", requirement: "control",
+  risk: "risk",
+};
+const CAT_LABEL = { system: "Components", arch: "Architecture", people: "Use cases and parties",
+  threat: "Threats and weaknesses", control: "Controls and standards", risk: "Risks", other: "Other" };
+function catOf(type) { return CAT[String(type).split(":")[0]] || "other"; }
+function catColour(type) { return "var(--c-" + catOf(type) + ")"; }
+function typeChip(type, onclick) {
+  const tag = onclick ? "button" : "span";
+  return h(tag, { class: "chip", type: onclick ? "button" : null, onclick, title: onclick ? "Show " + type + " in the schema" : null },
+    h("span", { class: "dot", style: { background: catColour(type) } }), h("span", { class: "mono", text: type }));
+}
+function sevBadge(sev) {
+  return h("span", { class: "badge b-" + sev, text: { error: "error", warn: "warning", info: "note" }[sev] || sev });
+}
+
+// ------------------------------------------------------------------ indices
+const MODE = D.mode;
+const DOCS = D.docs || [];
+const ELS = D.elements || [];
+const REFS = D.refs || [];
+const EL = new Map(ELS.map((e) => [e.k, e]));
+const OUT = new Map(), IN = new Map(), VIA = new Map();
+for (const r of REFS) {
+  push(OUT, r.s, r);
+  if (r.t) push(IN, r.t, r);
+  if (r.v && r.v !== r.s) push(VIA, r.v, r);
+}
+const COPY_OF = new Map(), COPIES = new Map(), DRIFT = new Map();
+for (const c of D.copies || []) {
+  if (!c.a || !c.b) continue;
+  COPY_OF.set(c.a, c.b);
+  push(COPIES, c.b, c.a);
+  if (c.drift) DRIFT.set(c.a, c.drift);
+}
+const PROB = new Map();
+for (const p of D.problems || []) if (p.el) push(PROB, p.el, p);
+function push(map, key, val) { if (!map.has(key)) map.set(key, []); map.get(key).push(val); }
+
+function docLabel(i) {
+  const d = DOCS[i];
+  if (!d) return "?";
+  if (d.role === "system") return "system";
+  return d.useCase ? d.useCase.replace(/^usecase:/, "") : "tm-" + i;
+}
+function docChip(i) {
+  const d = DOCS[i];
+  return h("span", { class: "chip", title: d ? d.path : "" },
+    h("span", { class: "dot", style: { background: d && d.role === "system" ? "var(--c-system)" : "var(--c-threat)" } }),
+    docLabel(i));
+}
+function elTitle(e) { return e.id || "(no refId) " + e.p; }
+function family(key) {
+  const root = COPY_OF.get(key) || key;
+  return [root, ...(COPIES.get(root) || [])];
+}
+
+// ------------------------------------------------------------------ routing
+let VIEW = null;
+function route() {
+  const hash = decodeURIComponent(location.hash.slice(1));
+  let view = MODE === "schema" ? "schema" : "docs", arg = null;
+  if (hash.startsWith("e=")) { view = "elements"; arg = hash.slice(2); }
+  else if (hash.startsWith("s=")) { view = "schema"; arg = hash.slice(2); }
+  else if (["docs", "elements", "schema"].includes(hash)) view = hash;
+  if (MODE === "schema") view = "schema";
+  show(view);
+  if (view === "elements") selectElement(arg);
+  if (view === "schema") selectSchema(arg);
+}
+function show(view) {
+  for (const a of document.querySelectorAll("#tabs a")) {
+    if (a.dataset.view === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  }
+  for (const s of document.querySelectorAll("section.view")) s.hidden = s.id !== "view-" + view;
+  if (VIEW !== view) window.scrollTo(0, 0);
+  VIEW = view;
+}
+function goElement(key) { location.hash = "e=" + encodeURIComponent(key); }
+function goSchema(key) { location.hash = "s=" + encodeURIComponent(key); }
+
+// ------------------------------------------------------------------ graph drawing
+// Three columns of nodes and the edges between them. Node: {id, title, sub, type, onclick, sel, badge}.
+function drawColumns(container, cols, edges, opts) {
+  opts = opts || {};
+  const W = 980, NH = 44, GAP = 10, PAD = 26;
+  const xs = [0, 340, 680], NW = 300;
+  const heads = opts.heads || [];
+  const pos = new Map();
+  let height = 0;
+  cols.forEach((col, ci) => {
+    const total = col.length * NH + Math.max(0, col.length - 1) * GAP;
+    col.forEach((n, ri) => pos.set(n.id, { x: xs[ci], y: PAD + ri * (NH + GAP), ci }));
+    height = Math.max(height, PAD + total);
+  });
+  // Centre short columns against the tallest.
+  cols.forEach((col) => {
+    const total = col.length * NH + Math.max(0, col.length - 1) * GAP;
+    const off = (height - PAD - total) / 2;
+    col.forEach((n) => { pos.get(n.id).y += off; });
+  });
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${height + 10}`, role: "img", "aria-label": opts.label || "Reference graph" });
+  svg.append(sv("defs", {},
+    sv("marker", { id: "arr", viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse" },
+      sv("path", { d: "M0,0 L10,5 L0,10 z", fill: "var(--edge)" }))));
+  heads.forEach((t, ci) => { if (t) svg.append(sv("text", { x: xs[ci], y: 14, class: "muted", "font-size": "12" }, t)); });
+  const eg = sv("g", {});
+  svg.append(eg);
+  for (const e of edges) {
+    const a = pos.get(e.from), b = pos.get(e.to);
+    if (!a || !b) continue;
+    let d;
+    if (a.ci === b.ci) {
+      const x = a.x + NW, y1 = a.y + NH / 2, y2 = b.y + NH / 2, bend = 34;
+      d = `M${x},${y1} C${x + bend},${y1} ${x + bend},${y2} ${x},${y2}`;
+    } else {
+      const fwd = a.ci < b.ci;
+      const x1 = fwd ? a.x + NW : a.x, x2 = fwd ? b.x : b.x + NW;
+      const y1 = a.y + NH / 2, y2 = b.y + NH / 2, mid = (x1 + x2) / 2;
+      d = `M${x1},${y1} C${mid},${y1} ${mid},${y2} ${x2},${y2}`;
+    }
+    eg.append(sv("path", { d, class: "edge " + (e.style || ""), "marker-end": e.style === "copy" ? null : "url(#arr)" },
+      e.title ? sv("title", {}, e.title) : null));
+  }
+  for (const col of cols) for (const n of col) {
+    const p = pos.get(n.id);
+    const g = sv("g", { class: "node" + (n.sel ? " sel" : ""), transform: `translate(${p.x},${p.y})`, tabindex: n.onclick ? "0" : null, role: n.onclick ? "link" : null,
+      "aria-label": n.title + (n.sub ? ", " + n.sub : "") });
+    g.append(sv("rect", { class: "box", width: NW, height: NH, rx: 7 }));
+    g.append(sv("rect", { width: 5, height: NH - 2, x: 1, y: 1, rx: 3, fill: n.type ? catColour(n.type) : "var(--edge)" }));
+    g.append(sv("text", { x: 14, y: 18, "font-size": "12.5", class: n.mono === false ? "" : "mono" }, trunc(n.title, 40)));
+    if (n.sub) g.append(sv("text", { x: 14, y: 35, "font-size": "11.5", class: "muted" }, trunc(n.sub, 48)));
+    if (n.badge) {
+      const bw = 8 + 7 * String(n.badge).length;
+      g.append(sv("rect", { x: NW - bw - 8, y: 8, width: bw, height: 18, rx: 9, fill: "var(--surface-2)", stroke: "var(--border)" }));
+      g.append(sv("text", { x: NW - bw / 2 - 8, y: 21, "font-size": "11.5", "text-anchor": "middle" }, n.badge));
+    }
+    g.append(sv("title", {}, n.title + (n.sub ? "\n" + n.sub : "")));
+    if (n.onclick) {
+      g.addEventListener("click", n.onclick);
+      g.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); n.onclick(); } });
+    }
+    svg.append(g);
+  }
+  clear(container).append(svg);
+}
+
+// ------------------------------------------------------------------ documents view
+function renderDocs() {
+  renderDocGraph();
+  renderDocTable();
+  renderProblems();
+  const sel = $("mxdoc");
+  sel.append(h("option", { value: "all", text: "All documents" }));
+  DOCS.forEach((d) => sel.append(h("option", { value: String(d.i), text: d.name })));
+  sel.addEventListener("change", renderMatrix);
+  renderMatrix();
+}
+
+function linkCounts(from, to) {
+  let elementLinks = 0, docLink = false;
+  for (const r of REFS) {
+    if (r.kind !== "bomlink" || r.td !== to || EL.get(r.s).d !== from) continue;
+    if (r.t) elementLinks++; else docLink = true;
+  }
+  return { elementLinks, docLink };
+}
+
+function renderDocGraph() {
+  const systems = DOCS.filter((d) => d.role === "system" || DOCS.some((o) => o.system === d.i));
+  const tms = DOCS.filter((d) => !systems.includes(d));
+  const W = 980, NW = 380, PAD = 12;
+  const nh = (d) => (d.system !== undefined ? 124 : 68);
+  const colHeight = (list) => list.reduce((a, d) => a + nh(d), 0) + Math.max(0, list.length - 1) * 24;
+  const H = PAD * 2 + Math.max(colHeight(systems), colHeight(tms), 68);
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Documents and BOM-Links" });
+  svg.append(sv("defs", {},
+    sv("marker", { id: "darr", viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse" },
+      sv("path", { d: "M0,0 L10,5 L0,10 z", fill: "var(--edge-strong)" }))));
+  const pos = new Map();
+  const place = (list, x) => {
+    let y = PAD + (H - PAD * 2 - colHeight(list)) / 2;
+    for (const d of list) { pos.set(d.i, { x, y, h: nh(d) }); y += nh(d) + 24; }
+  };
+  place(systems, 10);
+  place(tms, W - NW - 10);
+  const edges = sv("g", {});
+  svg.append(edges);
+  const notes = new Map();
+  for (const tm of tms) {
+    if (tm.system === undefined || !pos.has(tm.system)) continue;
+    const a = pos.get(tm.system), b = pos.get(tm.i);
+    const x1 = a.x + NW, x2 = b.x, mid = (x1 + x2) / 2;
+    const ya = a.y + a.h / 2, yb = b.y + 34;
+    const back = linkCounts(tm.i, tm.system), fwd = linkCounts(tm.system, tm.i);
+    const copies = (D.copies || []).filter((c) => c.a && EL.get(c.a).d === tm.i);
+    const drift = copies.filter((c) => c.drift).length;
+    edges.append(sv("path", { d: `M${x2},${yb - 6} C${mid},${yb - 6} ${mid},${ya - 6} ${x1},${ya - 6}`, class: "edge", "marker-end": "url(#darr)",
+      style: "stroke: var(--edge-strong)" }, sv("title", {}, "BOM-Links from the threat-model BOM back to the system BOM")));
+    edges.append(sv("path", { d: `M${x1},${ya + 6} C${mid},${ya + 6} ${mid},${yb + 6} ${x2},${yb + 6}`,
+      class: "edge" + (fwd.docLink ? "" : " warn"), "marker-end": fwd.docLink ? "url(#darr)" : null, style: fwd.docLink ? "stroke: var(--edge-strong)" : null },
+      sv("title", {}, fwd.docLink ? "threat-model external reference in the system BOM" : "the system BOM has no threat-model external reference to this BOM")));
+    notes.set(tm.i, [
+      [`← derived from: ${back.docLink ? "BOM-Link" : "no BOM-Link"} + ${plural(back.elementLinks, "element back-link")}`, back.docLink ? "" : "fill: var(--err)"],
+      [`slice: ${plural(copies.length, "copied element")}` + (drift ? `, ${drift} differ` : ", all match"), drift ? "fill: var(--err)" : ""],
+      [fwd.docLink ? "→ the system BOM links to this threat model" : "→ the system BOM does not link to this threat model", fwd.docLink ? "" : "fill: var(--warn)"],
+    ]);
+  }
+  for (const d of DOCS) {
+    const p = pos.get(d.i);
+    const g = sv("g", { class: "node", transform: `translate(${p.x},${p.y})`, tabindex: "0", role: "link", "aria-label": "Show elements of " + d.name });
+    const go = () => { $("eldoc").value = String(d.i); location.hash = "elements"; renderElementList(); };
+    g.addEventListener("click", go);
+    g.addEventListener("keydown", (ev) => { if (ev.key === "Enter") go(); });
+    g.append(sv("rect", { class: "box", width: NW, height: p.h, rx: 8 }));
+    g.append(sv("rect", { width: 6, height: p.h - 2, x: 1, y: 1, rx: 3, fill: d.role === "system" ? "var(--c-system)" : "var(--c-threat)" }));
+    g.append(sv("text", { x: 16, y: 21, "font-size": "13", "font-weight": "600" }, trunc(d.name, 50)));
+    g.append(sv("text", { x: 16, y: 39, "font-size": "12", class: "muted" },
+      (d.role === "system" ? "system BOM" : "threat-model BOM") + (d.useCase ? " · " + d.useCase : "")));
+    g.append(sv("text", { x: 16, y: 56, "font-size": "11.5", class: "muted mono" },
+      d.serial ? `urn:cdx:${d.serial.slice(0, 8)}…/${d.version}` : "no serialNumber"));
+    (notes.get(d.i) || []).forEach(([text, style], n) => {
+      g.append(sv("text", { x: 16, y: 78 + n * 16, "font-size": "12", style: style || null }, text));
+    });
+    g.append(sv("title", {}, d.path));
+    svg.append(g);
+  }
+  clear($("docgraph")).append(svg);
+}
+
+function renderDocTable() {
+  const t = clear($("doctable"));
+  t.append(h("tr", {}, ["Document", "Role", "Elements", "References", "BOM-Links", "Copies of system elements", "Problems"].map((x) => h("th", { text: x }))));
+  for (const d of DOCS) {
+    const els = ELS.filter((e) => e.d === d.i && e.id).length;
+    const refs = REFS.filter((r) => EL.get(r.s).d === d.i);
+    const probs = (D.problems || []).filter((p) => p.doc === d.i);
+    const sevs = ["error", "warn", "info"].map((s) => [s, probs.filter((p) => p.sev === s).length]).filter((x) => x[1]);
+    const copies = (D.copies || []).filter((c) => c.a && EL.get(c.a).d === d.i).length;
+    t.append(h("tr", {},
+      h("td", {}, h("div", { text: d.name }), h("div", { class: "meta mono", text: d.path })),
+      h("td", { text: d.role === "system" ? "system" : "threat model" + (d.useCase ? " (" + d.useCase + ")" : "") }),
+      h("td", { text: els }),
+      h("td", { text: refs.filter((r) => r.kind === "local").length }),
+      h("td", { text: refs.filter((r) => r.kind === "bomlink").length }),
+      h("td", { text: d.role === "system" ? "–" : copies }),
+      h("td", {}, sevs.length ? sevs.map(([s, n]) => [sevBadge(s), " " + n + " "]) : h("span", { class: "badge b-ok", text: "none" }))));
+  }
+}
+
+function renderProblems() {
+  const box = clear($("problems"));
+  const probs = (D.problems || []).slice().sort((a, b) => ["error", "warn", "info"].indexOf(a.sev) - ["error", "warn", "info"].indexOf(b.sev));
+  if (!probs.length) { box.append(h("p", { class: "empty", text: "No problems found in the references, links or slice copies." })); return; }
+  const t = h("table", {}, h("tr", {}, ["", "Document", "Problem", "Element"].map((x) => h("th", { text: x }))));
+  for (const p of probs.slice(0, 500)) {
+    const e = p.el && EL.get(p.el);
+    t.append(h("tr", {}, h("td", {}, sevBadge(p.sev)), h("td", {}, docChip(p.doc)), h("td", { text: p.text }),
+      h("td", {}, e ? h("button", { class: "linkbtn", type: "button", text: elTitle(e), onclick: () => goElement(e.k) }) : "")));
+  }
+  box.append(h("div", { class: "tablewrap" }, t));
+  if (probs.length > 500) box.append(h("p", { class: "meta", text: `Showing 500 of ${probs.length}.` }));
+}
+
+let MX_SEL = null;
+function renderMatrix() {
+  const which = $("mxdoc").value;
+  const counts = new Map(), rows = new Set(), cols = new Set();
+  for (const r of REFS) {
+    if (!r.t) continue;
+    const s = EL.get(r.s), t = EL.get(r.t);
+    if (which !== "all" && String(s.d) !== which) continue;
+    const key = s.t + "\u0000" + t.t;
+    if (!counts.has(key)) counts.set(key, []);
+    counts.get(key).push(r);
+    rows.add(s.t); cols.add(t.t);
+  }
+  const order = (a, b) => (Object.keys(CAT_LABEL).indexOf(catOf(a)) - Object.keys(CAT_LABEL).indexOf(catOf(b))) || a.localeCompare(b);
+  const R = [...rows].sort(order), C = [...cols].sort(order);
+  const max = Math.max(1, ...[...counts.values()].map((x) => x.length));
+  const t = clear($("matrix"));
+  t.append(h("tr", {}, h("th", { text: "from \\ to" }), C.map((c) => h("th", { class: "col", text: c, title: c }))));
+  for (const r of R) {
+    const tr = h("tr", {}, h("th", { class: "row" }, h("span", { class: "dot", style: { display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: catColour(r), marginRight: "6px" } }), r));
+    for (const c of C) {
+      const list = counts.get(r + "\u0000" + c);
+      const td = h("td", { class: "n" + (MX_SEL === r + "\u0000" + c ? " on" : "") });
+      if (list) {
+        td.textContent = list.length;
+        td.tabIndex = 0;
+        td.title = `${list.length} reference(s) from ${r} to ${c}`;
+        td.style.background = `color-mix(in srgb, var(--accent) ${Math.round(8 + 50 * Math.sqrt(list.length / max))}%, transparent)`;
+        const pick = () => { MX_SEL = r + "\u0000" + c; renderMatrix(); };
+        td.addEventListener("click", pick);
+        td.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); pick(); } });
+      }
+      tr.append(td);
+    }
+    t.append(tr);
+  }
+  const box = clear($("mxcell"));
+  const list = MX_SEL && counts.get(MX_SEL);
+  if (!list) { box.append(h("p", { class: "meta", text: "No cell selected." })); return; }
+  const [r, c] = MX_SEL.split("\u0000");
+  box.append(h("h3", {}, `${list.length} reference(s) from `, h("code", { text: r }), " to ", h("code", { text: c })));
+  const byField = groupBy(list, (x) => x.f);
+  for (const [field, rs] of byField) {
+    const ul = h("ul", {});
+    for (const x of rs.slice(0, 60)) {
+      const s = EL.get(x.s), tt = EL.get(x.t);
+      ul.append(h("li", {}, h("button", { class: "linkbtn", type: "button", text: elTitle(s), onclick: () => goElement(s.k) }),
+        " → ", h("button", { class: "linkbtn", type: "button", text: elTitle(tt), onclick: () => goElement(tt.k) }),
+        " ", s.d !== tt.d ? h("span", { class: "meta" }, "(BOM-Link to ", docLabel(tt.d), ")") : null,
+        which === "all" ? [" ", docChip(s.d)] : null));
+    }
+    box.append(h("div", { class: "refgroup" }, h("div", { class: "hd" }, h("code", { text: field }), h("span", { class: "meta", text: plural(rs.length, "reference") })), ul,
+      rs.length > 60 ? h("p", { class: "meta", text: `and ${rs.length - 60} more` }) : null));
+  }
+}
+function groupBy(list, fn) {
+  const m = new Map();
+  for (const x of list) { const k = fn(x); if (!m.has(k)) m.set(k, []); m.get(k).push(x); }
+  return m;
+}
+
+// ------------------------------------------------------------------ elements view
+let EL_SEL = null;
+function initElements() {
+  const ds = $("eldoc");
+  ds.append(h("option", { value: "all", text: "All documents" }));
+  DOCS.forEach((d) => ds.append(h("option", { value: String(d.i), text: d.name })));
+  const ts = $("eltype");
+  ts.append(h("option", { value: "all", text: "All element types" }));
+  for (const t of Object.keys(D.types || {}).sort()) ts.append(h("option", { value: t, text: t }));
+  for (const id of ["elq", "eldoc", "eltype", "elanon"]) $(id).addEventListener("input", renderElementList);
+}
+function elementOrder(a, b) {
+  return (a.d - b.d) || (Object.keys(CAT_LABEL).indexOf(catOf(a.t)) - Object.keys(CAT_LABEL).indexOf(catOf(b.t))) ||
+    a.t.localeCompare(b.t) || (!!b.id - !!a.id) || elTitle(a).localeCompare(elTitle(b));
+}
+const SORTED = ELS.slice().sort(elementOrder);
+function renderElementList() {
+  const q = $("elq").value.trim().toLowerCase(), doc = $("eldoc").value, type = $("eltype").value, anon = $("elanon").checked;
+  const list = clear($("ellist"));
+  let n = 0, lastGroup = null;
+  for (const e of SORTED) {
+    if (!anon && !e.id) continue;
+    if (doc !== "all" && String(e.d) !== doc) continue;
+    if (type !== "all" && e.t !== type) continue;
+    if (q && !((e.id || "") + " " + e.n + " " + e.p).toLowerCase().includes(q)) continue;
+    n++;
+    const group = docLabel(e.d) + " · " + e.t;
+    if (group !== lastGroup) { list.append(h("div", { class: "group", text: group })); lastGroup = group; }
+    if (n > 1500) continue;
+    const probs = PROB.get(e.k);
+    list.append(h("button", { class: "item", type: "button", role: "listitem", "aria-current": e.k === EL_SEL ? "true" : null, "data-k": e.k, onclick: () => goElement(e.k) },
+      h("span", { class: "id" }, elTitle(e), probs ? [" ", sevBadge(probs[0].sev)] : null),
+      e.n ? h("span", { class: "nm", text: e.n }) : null));
+  }
+  $("elcount").textContent = plural(n, "element") + (n > 1500 ? " (showing 1,500; refine the search)" : "");
+}
+
+function selectElement(key) {
+  const e = key && EL.get(key);
+  if (!e) {
+    EL_SEL = null;
+    renderElementList();
+    clear($("eldetail")).append(h("div", { class: "card" }, h("h2", { text: "Select an element" }),
+      h("p", { class: "lead", text: "Pick an element on the left to see where it is declared, what it references, what references it in every loaded BOM, and how its copies in threat-model BOMs compare with the system BOM." })));
+    return;
+  }
+  if (!e.id) $("elanon").checked = true;
+  EL_SEL = key;
+  renderElementList();
+  const cur = document.querySelector(`#ellist [data-k="${CSS.escape(key)}"]`);
+  if (cur) cur.scrollIntoView({ block: "nearest" });
+  const box = clear($("eldetail"));
+  const fam = family(key);
+  const card = h("div", { class: "card" });
+  box.append(card);
+  card.append(h("div", { class: "title" }, h("span", { class: "rid", text: elTitle(e) }), typeChip(e.t, () => goSchema(e.t)), docChip(e.d)));
+  card.append(h("div", { class: "meta" }, "Declared at ", h("code", { text: e.p }), " in ", DOCS[e.d].name));
+  if (e.n && e.n !== e.x) card.append(h("p", { class: "desc", text: e.n }));
+  if (e.x) card.append(h("p", { class: "desc meta", text: e.x }));
+  for (const p of PROB.get(key) || []) card.append(h("div", { class: "callout b-" + p.sev, text: p.text }));
+
+  // Across BOMs.
+  if (fam.length > 1 || COPY_OF.has(key)) {
+    const t = h("table", {}, h("tr", {}, ["Document", "Declared at", "Copy", "Referenced by"].map((x) => h("th", { text: x }))));
+    for (const k of fam) {
+      const m = EL.get(k);
+      const status = COPY_OF.has(k)
+        ? (DRIFT.has(k) ? h("span", { class: "badge b-error", text: "differs", title: DRIFT.get(k) }) : h("span", { class: "badge b-ok", text: "matches system BOM" }))
+        : h("span", { class: "meta", text: "original" });
+      t.append(h("tr", {}, h("td", {}, docChip(m.d)),
+        h("td", {}, k === key ? h("code", { text: m.p }) : h("button", { class: "linkbtn", type: "button", text: m.p, onclick: () => goElement(k) })),
+        h("td", {}, status), h("td", { text: plural((IN.get(k) || []).length, "reference") })));
+    }
+    card.append(h("h3", { text: "Across BOMs" }),
+      h("p", { class: "meta", text: "The system BOM declares this element. Each threat-model BOM whose use case uses it carries a copy with the same refId, and the threats, controls and risks in that BOM reference the copy." }),
+      h("div", { class: "tablewrap" }, t));
+  }
+
+  // Graph.
+  // References into the element and its copies, except each copy's own back-link to the original.
+  const famSet = new Set(fam);
+  const incoming = [];
+  for (const k of fam) for (const r of IN.get(k) || []) if (!famSet.has(r.s)) incoming.push(r);
+  const outgoing = OUT.get(key) || [];
+  card.append(h("h3", { text: "Reference graph" }));
+  const g = h("div", { class: "graph" });
+  card.append(g);
+  drawElementGraph(g, e, fam, incoming, outgoing);
+  card.append(h("div", { class: "legend" },
+    Object.entries(CAT_LABEL).map(([c, l]) => h("span", {}, h("span", { class: "dot", style: { width: "10px", height: "10px", borderRadius: "3px", display: "inline-block", background: "var(--c-" + c + ")" } }), l)),
+    h("span", {}, "dashed line: a copy of the same element, which BOM-Links back to the original")));
+
+  // Outgoing.
+  card.append(h("h3", { text: `References from this element (${outgoing.length})` }));
+  if (!outgoing.length) card.append(h("p", { class: "empty", text: "It references nothing." }));
+  for (const [field, rs] of groupBy(outgoing, (r) => r.f)) {
+    const ul = h("ul", {});
+    for (const r of rs) ul.append(h("li", {}, refTarget(r)));
+    card.append(h("div", { class: "refgroup" }, h("div", { class: "hd" }, h("code", { text: field }), h("span", { class: "meta mono", text: r0(rs).sf })), ul));
+  }
+  const via = VIA.get(key) || [];
+  if (via.length) {
+    card.append(h("h3", { text: `Relationships held for other elements (${via.length})` }),
+      h("p", { class: "meta", text: "This element holds relationship entries whose subject is another element. Each is listed under its subject." }));
+  }
+
+  // Incoming, by document.
+  card.append(h("h3", { text: `Referenced by (${incoming.length})` }));
+  if (!incoming.length) card.append(h("p", { class: "empty", text: "Nothing references it." }));
+  for (const [d, rs] of groupBy(incoming, (r) => EL.get(r.s).d)) {
+    card.append(h("div", { class: "meta", style: { marginTop: "10px" } }, "In ", docChip(Number(d)), " ", plural(rs.length, "reference"),
+      COPY_OF.has(fam.find((k) => EL.get(k).d === Number(d)) || "") ? " (to its copy)" : ""));
+    for (const list of groupBy(rs, (r) => EL.get(r.s).t + " · " + r.f).values()) {
+      const ul = h("ul", {});
+      for (const r of list.slice(0, 80)) {
+        const s = EL.get(r.s);
+        ul.append(h("li", {}, h("button", { class: "linkbtn", type: "button", text: elTitle(s), onclick: () => goElement(s.k) }),
+          s.n ? h("span", { class: "nm", text: " " + trunc(s.n, 90) }) : null,
+          r.kind === "bomlink" ? h("span", { class: "meta", text: " (BOM-Link)" }) : null));
+      }
+      card.append(h("div", { class: "refgroup" }, h("div", { class: "hd" }, typeChip(EL.get(list[0].s).t), h("code", { text: list[0].f }), h("span", { class: "meta", text: plural(list.length, "reference") })), ul,
+        list.length > 80 ? h("p", { class: "meta", text: `and ${list.length - 80} more` }) : null));
+    }
+  }
+  card.append(h("details", { class: "raw" }, h("summary", { text: "JSON as declared" }), h("pre", { class: "mono", text: e.j })));
+}
+function r0(list) { return list[0]; }
+
+function refTarget(r) {
+  const t = r.t && EL.get(r.t);
+  const status = {
+    dangling: ["error", "no element with this refId"], misplaced: ["error", "BOM-Link where only a refId is allowed"],
+    malformed: ["error", "malformed BOM-Link"], "bad-fragment": ["error", "fragment not found in the linked BOM"],
+    "old-version": ["warn", "links to an older version"], "not-loaded": ["info", "linked BOM not loaded"],
+  }[r.st];
+  return [
+    t ? h("button", { class: "linkbtn", type: "button", text: elTitle(t), onclick: () => goElement(t.k) }) : h("code", { text: r.val }),
+    t ? [" ", typeChip(t.t)] : null,
+    t && t.d !== EL.get(r.s).d ? [" in ", docChip(t.d)] : null,
+    r.st === "doc" ? [" ", h("span", { class: "meta" }, "the whole document ", docChip(r.td))] : null,
+    r.role === "subject" ? h("span", { class: "meta", text: " (relationship subject)" }) : null,
+    status ? [" ", h("span", { class: "badge b-" + status[0], text: status[1] })] : null,
+  ];
+}
+
+function drawElementGraph(container, e, fam, incoming, outgoing) {
+  const LIMIT = 16;
+  // Left: incoming grouped by source document, type and field.
+  const left = [], edges = [];
+  const groups = [...groupBy(incoming, (r) => EL.get(r.s).d + "|" + EL.get(r.s).t + "|" + r.f + "|" + r.t)];
+  groups.sort((a, b) => b[1].length - a[1].length);
+  for (const [gk, rs] of groups.slice(0, LIMIT)) {
+    const s = EL.get(rs[0].s);
+    const id = "in:" + gk;
+    left.push(rs.length === 1
+      ? { id, title: elTitle(s), sub: `${s.t} · ${rs[0].f} · ${docLabel(s.d)}`, type: s.t, onclick: () => goElement(s.k) }
+      : { id, title: `${rs.length} × ${s.t}`, sub: `${rs[0].f} · ${docLabel(s.d)}`, type: s.t, mono: true, badge: rs.length });
+    edges.push({ from: id, to: "c:" + rs[0].t, style: rs[0].kind === "bomlink" ? "copy" : "", title: rs[0].f });
+  }
+  if (groups.length > LIMIT) left.push({ id: "in:more", title: `${groups.length - LIMIT} more groups`, sub: "listed below", mono: false });
+  // Centre: the element and its copies.
+  const centre = fam.map((k) => {
+    const m = EL.get(k);
+    return { id: "c:" + k, title: elTitle(m), sub: `${docLabel(m.d)} · ${COPY_OF.has(k) ? (DRIFT.has(k) ? "copy, differs" : "copy") : (fam.length > 1 ? "original" : m.t)}`,
+      type: m.t, sel: k === e.k, onclick: k === e.k ? null : () => goElement(k) };
+  });
+  const root = fam[0];
+  for (const k of fam.slice(1)) edges.push({ from: "c:" + root, to: "c:" + k, style: "copy", title: "copy, with a BOM-Link back to the original" });
+  // Right: outgoing targets.
+  const right = [];
+  const famSet = new Set(fam);
+  const outs = [...groupBy(outgoing.filter((r) => r.st !== "doc" && !famSet.has(r.t)), (r) => r.f + "|" + (r.t || r.val))];
+  for (const [gk, rs] of outs.slice(0, LIMIT)) {
+    const r = rs[0], t = r.t && EL.get(r.t);
+    const id = "out:" + gk;
+    right.push(t
+      ? { id, title: elTitle(t), sub: `${r.f}` + (t.d !== e.d ? ` · ${docLabel(t.d)}` : ""), type: t.t, onclick: () => goElement(t.k) }
+      : { id, title: r.val, sub: `${r.f} · unresolved`, type: null });
+    edges.push({ from: "c:" + e.k, to: id, style: t ? (r.kind === "bomlink" ? "copy" : "") : "bad", title: r.f });
+  }
+  if (outs.length > LIMIT) right.push({ id: "out:more", title: `${outs.length - LIMIT} more`, sub: "listed below", mono: false });
+  if (!left.length && !right.length && centre.length === 1) {
+    container.append(h("p", { class: "empty", text: "No references to or from this element." }));
+    return;
+  }
+  drawColumns(container, [left, centre, right], edges, { heads: ["Referenced by", fam.length > 1 ? "This element in each BOM" : "This element", "References"], label: "References to and from " + elTitle(e) });
+}
+
+// ------------------------------------------------------------------ schema view
+const SC = D.schema;
+const SOBJ = SC.objects;
+const OBS_IN = new Map(); // target type -> [{sf, n}]
+for (const [sf, targets] of Object.entries(SC.observed || {})) {
+  for (const [t, n] of Object.entries(targets)) push(OBS_IN, t, { sf, n });
+}
+const SEEN_TYPES = new Set(Object.keys(D.types || {}));
+for (const [sf, targets] of Object.entries(SC.observed || {})) { SEEN_TYPES.add(sf.split(".")[0]); for (const t of Object.keys(targets)) SEEN_TYPES.add(t); }
+let SC_SEL = null;
+const ACCEPTS = { local: "refId in this document", bomlink: "BOM-Link only", either: "refId or BOM-Link" };
+
+function initSchema() {
+  $("scq").addEventListener("input", renderSchemaList);
+  $("scfilter").addEventListener("input", renderSchemaList);
+}
+function renderSchemaList() {
+  const q = $("scq").value.trim().toLowerCase(), f = $("scfilter").value;
+  const list = clear($("sclist"));
+  let n = 0;
+  for (const m of SC.modules) {
+    const objs = Object.values(SOBJ).filter((o) => o.m === m).sort((a, b) => a.o.localeCompare(b.o));
+    let header = false;
+    for (const o of objs) {
+      if (f === "ref" && !o.refId && !o.fields.length && o.k !== "root:bom") continue;
+      if (f === "refid" && !o.refId) continue;
+      if (f === "seen" && !SEEN_TYPES.has(o.k)) continue;
+      if (q && !(o.k + " " + o.title + " " + o.fields.map((x) => x.f).join(" ")).toLowerCase().includes(q)) continue;
+      if (!header) { list.append(h("div", { class: "group", text: m === "root" ? "document root" : m })); header = true; }
+      n++;
+      list.append(h("button", { class: "item", type: "button", role: "listitem", "aria-current": o.k === SC_SEL ? "true" : null, "data-k": o.k, onclick: () => goSchema(o.k) },
+        h("span", { class: "id" }, h("span", { class: "dot", style: { display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: catColour(o.k), marginRight: "6px" } }), o.k),
+        h("span", { class: "nm", text: [o.refId ? "declares refId" : null, o.fields.length ? plural(o.fields.length, "reference field") : null, o.title].filter(Boolean).join(" · ") })));
+    }
+  }
+  $("sccount").textContent = plural(n, "object");
+}
+
+function selectSchema(key) {
+  const o = key && SOBJ[key];
+  SC_SEL = o ? key : null;
+  renderSchemaList();
+  const box = clear($("scdetail"));
+  if (!o) { box.append(schemaOverview()); return; }
+  const cur = document.querySelector(`#sclist [data-k="${CSS.escape(key)}"]`);
+  if (cur) cur.scrollIntoView({ block: "nearest" });
+  const card = h("div", { class: "card" });
+  box.append(card);
+  card.append(h("div", { class: "title" }, h("span", { class: "rid", text: o.k }), o.refId ? h("span", { class: "badge b-ok", text: "declares a refId" }) : h("span", { class: "badge b-info", text: "no refId" })));
+  if (o.title) card.append(h("div", { class: "meta", text: o.title }));
+  if (o.desc) card.append(h("p", { class: "desc", text: o.desc }));
+  const dl = h("dl", { class: "kv", style: { marginTop: "12px" } });
+  dl.append(h("dt", { text: "Where in a BOM" }), h("dd", {}, o.at.length ? o.at.map((p, n) => [n ? ", " : "", h("code", { text: p })]) : h("span", { class: "meta", text: o.k === "root:bom" ? "the document itself" : "not reachable from the document root (used by another object's field)" })));
+  dl.append(h("dt", { text: "Schema module" }), h("dd", {}, h("code", { text: `cyclonedx-${o.m}-2.0` }), " · ", h("code", { text: `schema_tool.py outline ${o.k}` })));
+  if (o.contains.length) {
+    dl.append(h("dt", { text: "Contains" }), h("dd", {}, o.contains.map((c, n) => [n ? ", " : "", h("code", { text: c.f }), " (", c.t.map((t, i) => [i ? ", " : "", SOBJ[t] ? h("button", { class: "linkbtn", type: "button", text: t, onclick: () => goSchema(t) }) : t]), ")"])));
+  }
+  card.append(dl);
+
+  const incoming = OBS_IN.get(key) || [];
+  const fieldsSeen = o.fields.map((f) => ({ f, seen: SC.observed[o.k + "." + f.f] || {} }));
+  card.append(h("h3", { text: "Reference graph" }), h("p", { class: "meta", text: `Fields are from the schema. Target types are what those fields pointed at in ${SC.observedFrom.join(", ")}.` }));
+  const g = h("div", { class: "graph" });
+  card.append(g);
+  drawSchemaGraph(g, o, incoming, fieldsSeen);
+
+  card.append(h("h3", { text: `Reference fields (${o.fields.length})` }));
+  if (!o.fields.length) card.append(h("p", { class: "empty", text: "This object has no fields that reference other elements." }));
+  else {
+    const t = h("table", {}, h("tr", {}, ["Field", "Accepts", "Seen pointing at", "Schema description"].map((x) => h("th", { text: x }))));
+    for (const { f, seen } of fieldsSeen) {
+      const tgts = Object.entries(seen);
+      t.append(h("tr", {}, h("td", {}, h("code", { text: f.f })), h("td", { text: ACCEPTS[f.accepts] }),
+        h("td", {}, tgts.length ? tgts.map(([tt, n]) => [typeChip(tt, SOBJ[tt] ? () => goSchema(tt) : null), ` ${n} `]) : h("span", { class: "meta", text: "not seen" })),
+        h("td", { class: "meta", text: f.desc })));
+    }
+    card.append(h("div", { class: "tablewrap" }, t));
+  }
+  if (o.refId) {
+    card.append(h("h3", { text: `Referenced from (${incoming.length} field${incoming.length === 1 ? "" : "s"})` }));
+    if (!incoming.length) card.append(h("p", { class: "empty", text: "No field pointed at this type in the loaded BOMs. Any reference field that accepts a refId may." }));
+    else {
+      const ul = h("ul", {});
+      for (const x of incoming.sort((a, b) => b.n - a.n)) {
+        const [obj] = x.sf.split(".");
+        ul.append(h("li", {}, SOBJ[obj] ? h("button", { class: "linkbtn", type: "button", text: x.sf, onclick: () => goSchema(obj) }) : h("code", { text: x.sf }), h("span", { class: "meta", text: ` ${plural(x.n, "reference")}` })));
+      }
+      card.append(h("div", { class: "refgroup" }, ul));
+    }
+  }
+}
+
+function drawSchemaGraph(container, o, incoming, fieldsSeen) {
+  const left = [], right = [], edges = [];
+  const centre = [{ id: "c", title: o.k, sub: o.refId ? "declares a refId" : "no refId", type: o.k, sel: true }];
+  for (const x of incoming.slice().sort((a, b) => b.n - a.n).slice(0, 16)) {
+    const [obj, ...rest] = x.sf.split(".");
+    const id = "in:" + x.sf;
+    left.push({ id, title: obj, sub: rest.join(".") + " · " + plural(x.n, "reference"), type: obj, onclick: SOBJ[obj] ? () => goSchema(obj) : null });
+    edges.push({ from: id, to: "c", title: x.sf });
+  }
+  const targets = new Map();
+  for (const { f, seen } of fieldsSeen) for (const [t, n] of Object.entries(seen)) {
+    if (!targets.has(t)) targets.set(t, []);
+    targets.get(t).push(f.f + " ×" + n);
+  }
+  for (const [t, fs] of [...targets].slice(0, 16)) {
+    right.push({ id: "out:" + t, title: t, sub: fs.join(", "), type: t, onclick: SOBJ[t] ? () => goSchema(t) : null });
+    edges.push({ from: "c", to: "out:" + t });
+  }
+  const unseen = fieldsSeen.filter((x) => !Object.keys(x.seen).length).map((x) => x.f.f);
+  if (unseen.length) right.push({ id: "out:unseen", title: plural(unseen.length, "field") + " not seen", sub: unseen.join(", "), mono: false });
+  if (!left.length && !right.length) { container.append(h("p", { class: "empty", text: "No references to or from this object." })); return; }
+  drawColumns(container, [left, centre, right], edges, { heads: ["Referenced by (seen)", "Object", "References (seen)"], label: "Schema references for " + o.k });
+}
+
+function schemaOverview() {
+  const card = h("div", { class: "card" });
+  card.append(h("h2", { text: "Declared elements and where they are referenced" }),
+    h("p", { class: "lead", text: "In CycloneDX 2.0 an object that declares a refId can be referenced from other objects. A reference field takes one of three kinds of value:" }));
+  const t = h("table", {}, h("tr", {}, ["Schema definition", "Accepts", "Description"].map((x) => h("th", { text: x }))));
+  for (const [name, k] of Object.entries(SC.refKinds)) t.append(h("tr", {}, h("td", {}, h("code", { text: name })), h("td", { text: ACCEPTS[k.accepts] }), h("td", { class: "meta", text: k.desc })));
+  card.append(h("div", { class: "tablewrap" }, t));
+  card.append(h("h3", { text: "Objects that declare a refId" }),
+    h("p", { class: "meta", text: `Where each sits in a BOM, and the fields seen referencing it in ${SC.observedFrom.join(", ")}. Select one for its fields.` }));
+  const t2 = h("table", {}, h("tr", {}, ["Object", "Where in a BOM", "Referenced from (seen)"].map((x) => h("th", { text: x }))));
+  const objs = Object.values(SOBJ).filter((o) => o.refId).sort((a, b) => ((OBS_IN.get(b.k) || []).length - (OBS_IN.get(a.k) || []).length) || a.k.localeCompare(b.k));
+  for (const o of objs) {
+    const inc = (OBS_IN.get(o.k) || []).sort((a, b) => b.n - a.n);
+    t2.append(h("tr", {}, h("td", { class: "nowrap" }, h("button", { class: "linkbtn", type: "button", text: o.k, onclick: () => goSchema(o.k) })),
+      h("td", {}, o.at.slice(0, 2).map((p, n) => [n ? ", " : "", h("code", { text: p })])),
+      h("td", {}, inc.length ? inc.slice(0, 8).map((x, n) => [n ? ", " : "", h("code", { text: x.sf })]) : h("span", { class: "meta", text: "not seen" }), inc.length > 8 ? ` and ${inc.length - 8} more` : "")));
+  }
+  card.append(h("div", { class: "tablewrap" }, t2));
+  return card;
+}
+
+// ------------------------------------------------------------------ theme and start
+(function theme() {
+  const btn = $("theme"), modes = ["auto", "light", "dark"];
+  let mode = "auto";
+  try { mode = localStorage.getItem("bom-map-theme") || "auto"; } catch (e) { /* storage unavailable */ }
+  const apply = () => {
+    if (mode === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", mode);
+    btn.textContent = "Theme: " + mode;
+  };
+  btn.addEventListener("click", () => {
+    mode = modes[(modes.indexOf(mode) + 1) % modes.length];
+    try { localStorage.setItem("bom-map-theme", mode); } catch (e) { /* storage unavailable */ }
+    apply();
+  });
+  apply();
+})();
+
+$("subtitle").textContent = MODE === "schema"
+  ? "Schema map, with reference targets seen in " + SC.observedFrom.join(", ")
+  : DOCS.map((d) => d.name).join(" · ");
+if (MODE === "schema") {
+  for (const a of document.querySelectorAll('#tabs a[data-view="docs"], #tabs a[data-view="elements"]')) a.remove();
+} else {
+  renderDocs();
+  initElements();
+}
+initSchema();
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>

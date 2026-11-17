@@ -265,6 +265,27 @@ def _first_difference(a, b, path=""):
     return None if a == b else (path.lstrip("."), a, b)
 
 
+def slice_difference(obj, sys_obj, section, sys_serial):
+    """First difference between a sliced copy and the system BOM element it copies, or None.
+
+    Ignores what slice_use_case.py is allowed to change: its back-links, the
+    reference lists it trims to the slice, and the use-case fields it drops.
+    Returns (path, value_here, value_in_system) like _first_difference.
+    """
+    here_obj, there_obj = _comparable(obj, sys_serial), _comparable(sys_obj, sys_serial)
+    # Reference lists the slicer trims to the slice: allowed to be an ordered subset.
+    for key in TRIMMED_LISTS:
+        a, b = here_obj.get(key), there_obj.get(key)
+        if isinstance(a, list) and isinstance(b, list) and [x for x in b if x in a] == a:
+            here_obj[key] = there_obj[key] = None
+    # Lists the slicer removes from a sliced use case: allowed to be absent here.
+    if section == "definitions.useCases":
+        for key in DROPPED_FROM_USE_CASES:
+            if key not in here_obj:
+                there_obj.pop(key, None)
+    return _first_difference(here_obj, there_obj)
+
+
 # ------------------------------------------------------------------ main ---
 
 def check(doc, schema, report, system=None, system_path=None, linked=()):
@@ -365,18 +386,7 @@ def check(doc, schema, report, system=None, system_path=None, linked=()):
                 continue
             if rid in slice_containers:
                 continue  # the slice blueprint itself; its members are compared one by one
-            here_obj, there_obj = _comparable(obj, sys_serial), _comparable(sys_obj, sys_serial)
-            # Reference lists the slicer trims to the slice: allowed to be an ordered subset.
-            for key in TRIMMED_LISTS:
-                a, b = here_obj.get(key), there_obj.get(key)
-                if isinstance(a, list) and isinstance(b, list) and [x for x in b if x in a] == a:
-                    here_obj[key] = there_obj[key] = None
-            # Lists the slicer removes from a sliced use case: allowed to be absent here.
-            if section == "definitions.useCases":
-                for key in DROPPED_FROM_USE_CASES:
-                    if key not in here_obj:
-                        there_obj.pop(key, None)
-            diff = _first_difference(here_obj, there_obj)
+            diff = slice_difference(obj, sys_obj, section, sys_serial)
             if diff is not None:
                 where, here, there = diff
                 report.error(f"{section}: '{rid}' differs from the system BOM at {where or '(object)'}: "

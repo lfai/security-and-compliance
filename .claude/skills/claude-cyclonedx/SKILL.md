@@ -1,6 +1,6 @@
 ---
 name: claude-cyclonedx
-description: Use when the user wants to create, convert, validate or explain an OWASP CycloneDX BOM, and in particular to turn a system diagram (image or Mermaid) and supporting Markdown into a CycloneDX 2.0 system BOM, or to generate threat-model BOMs (one TM-BOM per use case) from a system BOM for LF AI & Data threat modelling. Also covers CycloneDX 1.7 SBOM and AI/ML-BOM questions.
+description: Use when the user wants to create, convert, validate, explain or visualise an OWASP CycloneDX BOM (including mapping where elements are declared and referenced across a system BOM and its threat-model BOMs), and in particular to turn a system diagram (image or Mermaid) and supporting Markdown into a CycloneDX 2.0 system BOM, or to generate threat-model BOMs (one TM-BOM per use case) from a system BOM for LF AI & Data threat modelling. Also covers CycloneDX 1.7 SBOM and AI/ML-BOM questions.
 ---
 
 # CycloneDX 2.0 BOMs and threat models
@@ -26,6 +26,7 @@ People setting this up for the first time should read `.bob/skills/cyclonedx/GET
 | Generate a threat model (TM-BOMs) from a system BOM | `.bob/skills/cyclonedx/workflows/system-bom-to-threat-model.md` |
 | Validate a CycloneDX 2.0 BOM, or check its links | run `python .bob/skills/cyclonedx/scripts/validate_bom.py <bom>.json [--system <system>.json]` and explain the result |
 | Ask what a 2.0 field or object means | run `python .bob/skills/cyclonedx/scripts/schema_tool.py outline <module>[:<object>]` |
+| See where elements are declared and referenced, within a BOM and across a system BOM and its TM-BOMs | run `python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <system>.json [<tm>.json …] -o <scratch>/bom-map.html` (or `schema -o <scratch>/schema-map.html` for the schema alone) and give the user the file path to open |
 | Work with CycloneDX 1.7 | `.bob/skills/cyclonedx/reference/v1.7-quick-reference.md` |
 
 Read the workflow file in full before starting, and follow its steps in order. Paths in the workflows are relative to the repository root, and so are the paths in this file.

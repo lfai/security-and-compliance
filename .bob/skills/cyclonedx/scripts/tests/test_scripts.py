@@ -590,3 +590,87 @@ def test_every_module_outlines():
 def test_reference_docs_are_current():
     code, out = run("schema_tool.py", "write-references", "--check")
     assert code == 0, out
+
+
+# ---------------------------------------------------------------- visualiser
+
+def visualise_data(tmp_path, *boms, cmd="bom"):
+    out = tmp_path / "map.html"
+    args = [cmd, *boms] if cmd == "bom" else [cmd, "--observe", *boms]
+    code, text = run("visualise_bom.py", *args, "-o", out)
+    assert code == 0, text
+    page = out.read_text(encoding="utf-8")
+    start = page.index("const D = ") + len("const D = ")
+    data, _ = json.JSONDecoder().raw_decode(page[start:])
+    return data, page
+
+
+def test_visualiser_matches_validator_references(system):
+    sys.path.insert(0, SCRIPTS)
+    import validate_bom
+    import visualise_bom
+    schema = load(validate_bom.DEFAULT_SCHEMA)
+    for doc in (system, load(TM)):
+        expected = validate_bom.find_refs(doc, schema)[0]
+        refs, _ = visualise_bom.walk_bom(doc, visualise_bom.Schema(schema))
+        assert [(p, v, k) for p, v, k, _ctx in refs] == expected
+
+
+def test_visualiser_links_slice_copies_to_the_system_bom(tmp_path):
+    data, _ = visualise_data(tmp_path, SYSTEM, TM)
+    assert [d["role"] for d in data["docs"]] == ["system", "threat-model"]
+    assert data["docs"][1]["system"] == 0
+    by_key = {e["k"]: e for e in data["elements"]}
+    copies = {by_key[c["a"]]["id"]: c for c in data["copies"]}
+    copy = copies["component:code-asst-plugin"]
+    assert by_key[copy["a"]]["d"] == 1 and by_key[copy["b"]]["d"] == 0 and copy["drift"] is None
+    # A threat in the TM-BOM references the copy, and the copy BOM-Links back to the original.
+    threat_refs = [r for r in data["refs"] if r["t"] == copy["a"] and by_key[r["s"]]["t"] == "threat:threat"]
+    assert threat_refs
+    back = [r for r in data["refs"] if r["s"] == copy["a"] and r["kind"] == "bomlink"]
+    assert back and back[0]["t"] == copy["b"]
+    assert not [p for p in data["problems"] if p["sev"] == "error"]
+
+
+def test_visualiser_reports_drift_and_dangling_refs(tmp_path):
+    tm = load(TM)
+    component(tm, "component:code-asst-plugin")["name"] = "Edited in the TM-BOM"
+    tm["threats"]["threats"][0]["affects"].append("component:missing")
+    data, _ = visualise_data(tmp_path, SYSTEM, save(tmp_path / "tm.json", tm))
+    texts = [p["text"] for p in data["problems"] if p["sev"] == "error"]
+    assert any("'component:code-asst-plugin' differs" in t for t in texts)
+    assert any("'component:missing' does not match any refId" in t for t in texts)
+
+
+def test_visualiser_relationship_targets_belong_to_their_subject(tmp_path):
+    data, _ = visualise_data(tmp_path, SYSTEM)
+    by_key = {e["k"]: e for e in data["elements"]}
+    rel = [r for r in data["refs"] if r["sf"].startswith("blueprint:relationship.") and r.get("role") != "subject"]
+    assert rel
+    assert all(by_key[r["s"]]["id"] and "v" in r for r in rel)
+
+
+def test_visualiser_escapes_bom_text(tmp_path):
+    doc = load(SYSTEM)
+    component(doc, "component:code-asst-plugin")["description"] = "</script><img src=x onerror=alert(1)><!--"
+    data, page = visualise_data(tmp_path, save(tmp_path / "sys.json", doc))
+    assert "</script><img" not in page and "<!--" not in page.split("const D = ", 1)[1]
+    plugin = next(e for e in data["elements"] if e["id"] == "component:code-asst-plugin")
+    assert plugin["x"].startswith("</script><img")
+
+
+def test_visualiser_schema_map(tmp_path):
+    data, _ = visualise_data(tmp_path, SYSTEM, TM, cmd="schema")
+    flow = data["schema"]["objects"]["blueprint:flow"]
+    assert flow["refId"] and flow["at"][0] == "blueprints[].flows[]"
+    assert {f["f"] for f in flow["fields"]} == {"source", "destination"}
+    assert data["schema"]["observed"]["blueprint:flow.source"]
+    assert data["schema"]["objects"]["component:component"]["at"][0] == "definitions.components[]"
+
+
+def test_visualiser_refuses_to_overwrite_other_files(tmp_path):
+    other = tmp_path / "notes.html"
+    other.write_text("<p>mine</p>", encoding="utf-8")
+    code, out = run("visualise_bom.py", "bom", SYSTEM, "-o", other)
+    assert code != 0 and "not written by this tool" in out
+    assert other.read_text(encoding="utf-8") == "<p>mine</p>"

@@ -122,6 +122,22 @@ threat model: 29 threats; 30/30 elements covered; 28/28 controls mapped; catalog
 
 **The validator cannot judge quality.** It proves a decision was recorded, not that it is right. Read the threats and, above all, the "not applicable" reasons: each should give a reason specific to that element.
 
+### See how the BOMs link together
+
+To see where each element is declared and what references it, within a BOM and across the system BOM and its TM-BOMs, write a map and open it in a browser:
+
+```
+python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <path>/system-bom.json <path>/<name>.tm-bom.<use-case>.json [...] -o bom-map.html
+```
+
+The page works offline and has three tabs:
+
+- **Documents:** each BOM, the BOM-Links between them, problems (broken references, slice copies that differ from the system BOM), and a table of which element types reference which.
+- **Elements:** select any element to see where it is declared, what it references, and what references it. For a system element this includes its copies in each TM-BOM and the threats, controls and risks that reference those copies.
+- **Schema:** each schema object, where it sits in a BOM, whether it declares a `refId`, and its reference fields with the element types they were seen pointing at.
+
+`visualise_bom.py schema -o schema-map.html` writes the Schema tab alone. Keep the map out of the repository, or delete it after use: it is generated, and a large set of BOMs gives a page of a few MB.
+
 ## 6. Try it on the example first
 
 To see the whole flow without your own diagram, ask the assistant to threat-model the example:

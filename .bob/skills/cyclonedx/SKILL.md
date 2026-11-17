@@ -1,6 +1,6 @@
 ---
 name: cyclonedx
-description: Use when the user wants to create, convert, validate or explain an OWASP CycloneDX BOM, and in particular to turn a system diagram (image or Mermaid) and supporting Markdown into a CycloneDX 2.0 system BOM, or to generate threat-model BOMs (one TM-BOM per use case) from a system BOM for LF AI & Data threat modelling. Also covers CycloneDX 1.7 SBOM and AI/ML-BOM questions.
+description: Use when the user wants to create, convert, validate, explain or visualise an OWASP CycloneDX BOM (including mapping where elements are declared and referenced across a system BOM and its threat-model BOMs), and in particular to turn a system diagram (image or Mermaid) and supporting Markdown into a CycloneDX 2.0 system BOM, or to generate threat-model BOMs (one TM-BOM per use case) from a system BOM for LF AI & Data threat modelling. Also covers CycloneDX 1.7 SBOM and AI/ML-BOM questions.
 ---
 
 # CycloneDX 2.0 BOMs and threat models
@@ -26,6 +26,7 @@ People setting this up for the first time should read `.bob/skills/cyclonedx/GET
 | Generate a threat model (TM-BOMs) from a system BOM | [workflows/system-bom-to-threat-model.md](workflows/system-bom-to-threat-model.md) |
 | Validate a CycloneDX 2.0 BOM, or check its links | run `python .bob/skills/cyclonedx/scripts/validate_bom.py <bom>.json [--system <system>.json]` and explain the result |
 | Ask what a 2.0 field or object means | run `python .bob/skills/cyclonedx/scripts/schema_tool.py outline <module>[:<object>]` |
+| See where elements are declared and referenced, within a BOM and across a system BOM and its TM-BOMs | run `python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <system>.json [<tm>.json …] -o <scratch>/bom-map.html` (or `schema -o <scratch>/schema-map.html` for the schema alone) and give the user the file path to open |
 | Work with CycloneDX 1.7 | [reference/v1.7-quick-reference.md](reference/v1.7-quick-reference.md) |
 
 Read the workflow file with `read_file` before starting. Each workflow is the procedure to follow, step by step.
@@ -60,6 +61,7 @@ Read the workflow file with `read_file` before starting. Each workflow is the pr
 | `scripts/tm_checks.py`, `scripts/tm_rules.py` | Threat-model checks: identifiers against the reference files, registered `lfai:` properties, coverage, the catalogue sweep, contradictions, reasons and reviews. |
 | `scripts/slice_use_case.py` | Lists use cases, cuts the system slice for one use case into a TM-BOM skeleton (or updates an existing TM-BOM), adds serial numbers and back-links. |
 | `scripts/schema_tool.py` | Module-by-module navigation and extraction of the bundled schema; regenerates the schema references. |
+| `scripts/visualise_bom.py`, `scripts/visualise_bom.html` | Writes an interactive, offline HTML map of one or more BOMs: the documents and BOM-Links between them, every element with where it is declared and what references it (including through slice copies in TM-BOMs), and the schema's reference fields. The `.html` file is its page template. |
 | `scripts/fetch_catalogues.py` | Refreshes the threat catalogues in `reference/catalogues/` from their publishers. |
 | `scripts/tests/` | The test suite for the scripts. |
 | `reference/threat-model-policy.json` | Which catalogues are swept for which kind of element, the allowed `lfai:` properties, and the recorded catalogue decisions. |

@@ -4,7 +4,7 @@ Skills for AI coding assistants used by the working group. Each skill is a direc
 
 | Skill | What it does |
 |---|---|
-| [`cyclonedx`](cyclonedx/SKILL.md) | CycloneDX 2.0 (and 1.7) BOM expert. Turns a system diagram and supporting Markdown into a **system BOM**, generates one **threat-model BOM per use case** from a system BOM, and validates BOMs and the links between them. |
+| [`cyclonedx`](cyclonedx/SKILL.md) | CycloneDX 2.0 (and 1.7) BOM expert. Turns a system diagram and supporting Markdown into a **system BOM**, generates one **threat-model BOM per use case** from a system BOM, validates BOMs and the links between them, and maps where elements are declared and referenced as an interactive HTML page. |
 | [`purl`](purl/SKILL.md) | Package URL (ECMA-427) authoring and normalization, used for component identity in BOMs. |
 
 ## Using them
@@ -27,7 +27,8 @@ pip install -r .bob/skills/cyclonedx/scripts/requirements.txt
 
 ## Maintaining the CycloneDX skill
 
-- **Tests:** `pip install -r .bob/skills/cyclonedx/scripts/requirements-dev.txt`, then `python -m pytest .bob/skills/cyclonedx/scripts/tests -q`. They cover the examples, the slicer (reference closure, `--update`), the validator's error cases, and that the generated references are current.
+- **Tests:** `pip install -r .bob/skills/cyclonedx/scripts/requirements-dev.txt`, then `python -m pytest .bob/skills/cyclonedx/scripts/tests -q`. They cover the examples, the slicer (reference closure, `--update`), the validator's error cases, the visualiser (it must find the same references as the validator), and that the generated references are current.
+- **Visualiser:** `visualise_bom.py` reuses the validator's reference rules and slice comparison, and fills the page template `visualise_bom.html`. The template loads nothing from the network; keep it that way, and keep BOM text out of `innerHTML`.
 - **Schema updates:** replace `cyclonedx/schema/2.0/cyclonedx-2.0-bundled.schema.json` with the new bundle from the CycloneDX specification repository, then run `python .bob/skills/cyclonedx/scripts/schema_tool.py write-references` and the tests.
 - **Threat catalogues:** `cyclonedx/reference/catalogues/` holds ID, title and link for each catalogue the threat-model workflow uses: OWASP Top 10 (web, 2025), OWASP API Security Top 10 (2023), OWASP Top 10 for LLM Applications (2025), OWASP Top 10 for Agentic Applications (2026), MITRE ATLAS, MITRE ATT&CK Enterprise and CWE. Editions and fetch dates are in `catalogues.json`. Only IDs, titles and links are copied: the OWASP lists are CC BY-SA 4.0, ATLAS is Apache-2.0, and ATT&CK and CWE are used under MITRE's terms, whose notices are kept in each file. To refresh them, run `python .bob/skills/cyclonedx/scripts/fetch_catalogues.py` (needs network access) and review the diff.
 - **Threat-model policy:** `cyclonedx/reference/threat-model-policy.json` says which catalogues are swept for which kind of element, and which `lfai:` property names are allowed. It names whole catalogues only. The reasons for the catalogue choices are recorded in its `catalogueDecisions`.
