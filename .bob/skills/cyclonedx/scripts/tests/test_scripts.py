@@ -560,6 +560,21 @@ def test_slicer_writes_stdout_for_dash(tmp_path):
     assert not (tmp_path / "-").exists()
 
 
+def test_threat_language_in_descriptions_warns(tmp_path, system):
+    component(system, "component:local-ide")["description"] = "The IDE, an attack surface for malicious extensions."
+    blueprint(system)["actors"][0]["party"]["persona"]["description"] = "A developer susceptible to phishing."
+    code, out = run("validate_bom.py", save(tmp_path / "system.json", system))
+    assert code == 0, out  # a warning, not an error
+    assert "component:local-ide).description: uses threat language" in out
+    assert "party.persona.description: uses threat language" in out
+
+
+def test_examples_describe_elements_neutrally():
+    for path in (SYSTEM, TM):
+        code, out = run("validate_bom.py", path)
+        assert "uses threat language" not in out, out
+
+
 def test_mcp_catalogue_is_pending_not_included():
     policy = load(os.path.join(SKILL, "reference", "threat-model-policy.json"))
     index = load(os.path.join(SKILL, "reference", "catalogues", "catalogues.json"))["catalogues"]

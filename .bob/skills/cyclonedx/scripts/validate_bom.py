@@ -288,6 +288,32 @@ def slice_difference(obj, sys_obj, section, sys_serial):
 
 # ------------------------------------------------------------------ main ---
 
+# Words that mark a description as describing a threat rather than the element itself.
+THREAT_WORDS = re.compile(
+    r"\b(attack surface|attacker|malicious|compromised?|exfiltrat\w*|susceptible|blast radius|"
+    r"high-value target|risks? (include|such as|around|related to|if)|introduces? (\w+ )?risks?|"
+    r"poses? risks?|prompt injection|poison\w*|hijack\w*|trojan\w*|backdoor\w*)\b", re.I)
+
+
+def check_neutral_descriptions(doc, report):
+    """System elements should be described as they are; threats belong in the threat model."""
+    places = [("definitions.components", (doc.get("definitions") or {}).get("components") or [])]
+    for bi, bp in enumerate(doc.get("blueprints") or []):
+        places += [(f"blueprints[{bi}].{key}", bp.get(key) or []) for key in ("actors", "zones", "boundaries", "assets")]
+    for where, items in places:
+        for i, item in enumerate(items):
+            texts = [("description", item.get("description"))]
+            persona = (item.get("party") or {}).get("persona") if isinstance(item.get("party"), dict) else None
+            if persona:
+                texts.append(("party.persona.description", persona.get("description")))
+            for field, text in texts:
+                m = THREAT_WORDS.search(text or "")
+                if m:
+                    report.warn(f"{where}[{i}] ({item.get('refId', '?')}).{field}: uses threat language "
+                                f"('{m.group(0)}'); describe what the element is and does, and put the threat "
+                                "in the threat model")
+
+
 def check(doc, schema, report, system=None, system_path=None, linked=()):
     refs, ids = find_refs(doc, schema)
     targets = {}  # serial uuid -> (path, version, refIds)
@@ -334,6 +360,7 @@ def check(doc, schema, report, system=None, system_path=None, linked=()):
             if len(present) != 1:
                 report.error(f"blueprints[{bi}].relationships[{ri}]: needs exactly one relationship kind, has "
                              + (", ".join(present) or "none"))
+    check_neutral_descriptions(doc, report)
 
     local, links, unchecked = 0, 0, {}
     for path, value, kind in refs:
