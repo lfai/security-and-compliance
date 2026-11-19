@@ -18,7 +18,7 @@ Membership is taken from the `relationships` and `flows` of each sub use case, w
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
 | Developer                             | [`actor:developer`](#cyclonedx-20--actors-encoding)                                                                                                                                                | [Actor](#actors-partiesroles)                                | Internal       |
 | IDE                                   | [`component:local-ide`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | Internal       |
-| Code Assistant Plugin                 | [`component:code-asst-plugin`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Data](#data)                                                | Internal       |
+| Code Assistant Plugin                 | [`component:code-asst-plugin`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Application](#application)                                  | Internal       |
 | Code Assistant Agent (static)         | [`component:code-asst-agent`](#cyclonedx-20--components-encoding)                                                                                                                                  | [Application](#application)                                  | Internal       |
 | Local Codebase Clone                  | [`component:data-local-codebase`](#cyclonedx-20--components-encoding)                                                                                                                              | [Data](#data)                                                | Internal       |
 | Authentication Service                | [`component:authn-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | Internal       |
@@ -38,7 +38,7 @@ Membership is taken from the `relationships` and `flows` of each sub use case, w
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
 | Developer                             | [`actor:developer`](#cyclonedx-20--actors-encoding)                                                                                                                                                | [Actor](#actors-partiesroles)                                | Internal       |
 | IDE                                   | [`component:local-ide`](#cyclonedx-20--components-encoding)                                                                                                                                        | [Application](#application)                                  | Internal       |
-| Code Assistant Plugin                 | [`component:code-asst-plugin`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Data](#data)                                                | Internal       |
+| Code Assistant Plugin                 | [`component:code-asst-plugin`](#cyclonedx-20--components-encoding)                                                                                                                                 | [Application](#application)                                  | Internal       |
 | Code Assistant Agent (static)         | [`component:code-asst-agent`](#cyclonedx-20--components-encoding)                                                                                                                                  | [Application](#application)                                  | Internal       |
 | Local Codebase Clone                  | [`component:data-local-codebase`](#cyclonedx-20--components-encoding)                                                                                                                              | [Data](#data)                                                | Internal       |
 | Authentication Service                | [`component:authn-service`](#cyclonedx-20--components-encoding)                                                                                                                                    | [Application](#application)                                  | Internal       |
@@ -1085,11 +1085,6 @@ Used to describe the control zones of an organization relative to the use cases.
 
 Data at rest or data in motion.
 
-- **Code Assistant Plugin** (`component:code-asst-plugin`)
-  A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions — introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.
-
-  Example: Malicious fake ESLint extension, trojanized Prettier plugin
-
 - **Local Codebase Clone** (`component:data-local-codebase`)
   A developer's local copy of a repository — treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised.
 
@@ -1106,6 +1101,11 @@ Data at rest or data in motion.
   Example: Pinecone, Weaviate
 
 #### Application
+
+- **Code Assistant Plugin** (`component:code-asst-plugin`)
+  A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions — introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.
+
+  Example: Malicious fake ESLint extension, trojanized Prettier plugin
 
 - **Integrated Development Environment (IDE)** (`component:local-ide`)
   The software environment where code is written and tested — an attack surface due to risks like malicious extensions, insecure settings, or credential exposure.
@@ -1214,7 +1214,7 @@ Data at rest or data in motion.
       "name": "Integrated Development Environment (IDE)"
     },
     {
-      "type": "data",
+      "type": "application",
       "refId": "component:code-asst-plugin",
       "name": "Code Assistant Plugin"
     },
@@ -1519,7 +1519,7 @@ The BOM assembles all of the above into a single document. Components and use ca
         "name": "Integrated Development Environment (IDE)"
       },
       {
-        "type": "data",
+        "type": "application",
         "refId": "component:code-asst-plugin",
         "name": "Code Assistant Plugin"
       },

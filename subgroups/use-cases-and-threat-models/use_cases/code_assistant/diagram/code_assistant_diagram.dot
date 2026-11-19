@@ -8,7 +8,7 @@ digraph code_assistant_threat_model {
 		"actor-developer" [label=Developer fillcolor="#c8e6c9" margin="0.15,0.1" shape=oval style=filled]
 		"local-ide" [label=IDE fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
 		"code-asst-plugin" [label="Code Assistant
-Plugin" fillcolor="#ffe0b2" margin="0.15,0.1" shape=cylinder style=filled]
+Plugin" fillcolor="#ffffff" margin="0.15,0.1" shape=box style="filled,rounded"]
 		"data-local-codebase" [label="Local Codebase
 Clone" fillcolor="#ffe0b2" margin="0.15,0.1" shape=cylinder style=filled]
 		"authn-service" [label="Authentication

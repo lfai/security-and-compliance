@@ -41,7 +41,7 @@ NODES = [
     # Internal
     ("actor-developer",           "Developer",                           "device",                "internal"),
     ("local-ide",                 "IDE",                                 "application",           "internal"),
-    ("code-asst-plugin",          "Code Assistant\nPlugin",              "data",                  "internal"),
+    ("code-asst-plugin",          "Code Assistant\nPlugin",              "application",           "internal"),
     ("data-local-codebase",       "Local Codebase\nClone",               "data",                  "internal"),
     ("authn-service",             "Authentication\nService",             "application",           "internal"),
     ("authz-service",             "Authorization\nService",              "application",           "internal"),

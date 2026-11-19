@@ -12,7 +12,7 @@
         "description": "The software environment where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure."
       },
       {
-        "type": "data",
+        "type": "application",
         "refId": "component:code-asst-plugin",
         "name": "Code Assistant Plugin",
         "description": "A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs."
