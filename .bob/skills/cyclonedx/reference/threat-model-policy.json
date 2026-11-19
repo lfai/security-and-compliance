@@ -93,8 +93,10 @@
     "A component and the actor it realizes (an agent) are one element: sweep and annotate the component; decisions on either count for both.",
     "Items in lifecycleScope for the use case's lifecycle are not swept.",
     "Where items of two swept catalogues overlap, cite both on the same threat rather than writing two threats.",
+    "A citation decides the whole item: read the item's full scope in the catalogue's own text and decide each part it names, deliberate and accidental, not only the first example found.",
     "`consult` catalogues are too large to sweep item by item. Use them to classify threats (techniques, weaknesses) and cite the items that apply.",
-    "Every element and flow also gets STRIDE.",
+    "Every element and flow also gets STRIDE, and every data store is also treated as a target in its own right (direct tampering, destruction, theft).",
+    "Step 3c also asks, for every threat with an internal actor, what a malicious insider could do on purpose; for every agent, whether it can change its own controls; and, for AI models and their output, harms outside STRIDE (licence and IP, output quality, privacy, safety, fairness).",
     "Attack behaviour is classified with CAPEC (reference_files/mitre_capec.csv) where CAPEC has a pattern; it has none for most AI-specific threats (prompt injection, poisoning, hallucination), so use ATLAS techniques for those and leave attackPatterns empty. Human actors and threat sources use NIST SP 800-30 (reference_files/nist_800_30_*.csv)."
   ],
   "properties": {

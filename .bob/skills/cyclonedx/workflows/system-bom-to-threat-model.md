@@ -48,6 +48,7 @@ Identify threats in three passes: a **structural** pass, a **catalogue sweep**, 
 **3a. Structural pass (STRIDE).** Apply all six STRIDE categories to:
 - every flow in `blueprints[0].flows`, giving most attention to flows whose source and destination are in different zones (they cross a `boundary`);
 - every component, actor and blueprint asset in the slice;
+- every data store (a `data` component, a context or vector store, a codebase, a model's weights) **as a target in its own right**, not only as something an agent reads: tampering with it directly (a planted backdoor, ransomware encryption), destroying or locking it, and copying it (model weights and prompts can be stolen, not only exhausted);
 - every boundary: what changes in trust across it, and what someone on the less trusted side can reach.
 
 Boundaries in the system BOM may be trust boundaries (`type: "trust"`) or only functional, process or deployment boundaries. Annotate a `trustBoundary` (Step 4) only for boundaries the system BOM types `trust`, or ones you have evidence are trust boundaries; give the evidence in its `description`. If the system BOM draws no trust boundary, do not invent trust levels: apply STRIDE to the crossings anyway, record the missing trust boundaries as an open question in the report, and leave `trustBoundaries` empty. A flow between zones crosses a boundary only at the outermost zones that differ, as the system-BOM workflow defines it.
@@ -67,6 +68,8 @@ Boundaries in the system BOM may be trust boundaries (`type: "trust"`) or only f
 **Lifecycle scope.** A use case may carry a property `lfai:lifecycle` of `training` or `inference` (set in the system BOM). The policy's `lifecycleScope` lists catalogue items that cannot apply in a stage, with the reason; they are not swept there and need no annotation. The coverage report lists them, so the scoping stays visible.
 
 **Overlapping items.** Some items of two swept catalogues cover the same ground. Write one threat and cite both items on it; do not write two threats for the same thing.
+
+**Cover the whole item.** Many catalogue items name several distinct threats. Before you cite an item, or mark it not applicable, read its whole scope in the catalogue's own text (the CSV has the link), and decide each part. For example, OWASP LLM10 (Unbounded Consumption) covers deliberate denial of service and cost attacks and model extraction, as well as accidental exhaustion; LLM04 covers training-data poisoning as well as poisoning a retrieval store. When one threat covers only part of an item, write threats for the other parts, or give the reason they do not apply in the threat's `description` or a not-applicable annotation for the element. A citation means the whole item was decided, not that one example of it was found.
 
 The policy file is the source of truth if this table and it ever differ. The item lists, with pinned editions, are in [reference/catalogues/](../reference/catalogues/); read the CSV for each catalogue you sweep.
 
@@ -90,6 +93,9 @@ If a tag ever has no sweep catalogue, rely on 3a and 3c for those elements, and 
 **3c. Beyond the catalogues.** Catalogues miss what is specific to this system. Trace each use case end to end and ask what an attacker, an insider, a failing component or a careless user could do at each step that neither pass found. Include:
 - what happens when a security component (guard, filter, authorization service) fails or times out;
 - data that keeps its sensitivity, or loses its access controls, as it moves between components;
+- **the malicious insider.** For every threat whose actor is someone with internal access (a developer, an operator, an administrator, an employee of a supplier), also ask what that person could do *on purpose*: misuse the system to get something it should refuse (for example code that disables authentication), plant content for others to ingest, run an unapproved tool or server, or deny afterwards what they did. A careless-user threat does not cover the deliberate one; write it as its own threat with a `party` whose `persona.archetype` is `insider-threat`, unless the deliberate version has the same path, controls and impact, in which case say so in the careless threat's `description`;
+- **an agent working against its own controls.** For every `agent` element, ask whether it can change its own configuration, permissions, guardrails, tool list or memory, or the plugin or framework that constrains it (for example by editing files it can write to, such as an IDE extension or an agent configuration file). An agent that can rewrite what it is allowed to do has no effective limit;
+- **harms outside STRIDE.** STRIDE and the security catalogues do not prompt for every harm an AI system can cause. For every `ai-model` element, and for every flow that carries model output, decide each of: intellectual property and licence (output that reproduces copyrighted or restrictively licensed material), the quality of output (degraded or manipulated output, for example by filling the context window, as well as invented facts), privacy (personal data in prompts, context or output), safety and harmful content, and fairness. Record each as a threat or, if it cannot arise here, say why in the report. Such a threat may have no STRIDE category (see "Threats outside STRIDE" in Step 4);
 - the use case's `exceptions`, `preconditions` and blueprint `assumptions`: every one that describes something going wrong, or that might not hold, should lead to a threat or to a recorded reason why not. If the use case has none, say so in the report.
 
 Record the review of every blueprint assumption and every use case in the slice as an annotation whose `subjects` include it and whose `text` is `reviewed <refId>: <outcome>`, where the outcome names the threats it led to or says why it led to none (for example `reviewed assumption:patient-data: led to threat:phi-channel-interception`). The validator warns about any assumption or use case without one.
@@ -195,6 +201,7 @@ If the user wants links in both directions, run `python .bob/skills/cyclonedx/sc
 Report, for each TM-BOM, using the validator's output and `--report-json` file rather than counting by hand:
 - the file, its serialNumber, and the use case it covers;
 - the number of threats per STRIDE and MAESTRO category, and the threats with no STRIDE category;
+- the harms outside STRIDE (Step 3c) that you decided cannot arise, each with the reason;
 - coverage: the elements and flows with no threat, and the controls with no threat;
 - the catalogue sweep: items decided per element and catalogue, how many items were marked not applicable, elements with no chosen catalogue, and elements classified by component type;
 - risks left unrated, and any defaults you chose because you could not ask the user;
