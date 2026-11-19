@@ -13,7 +13,7 @@
         "type": "application",
         "refId": "component:local-ide",
         "name": "Integrated Development Environment (IDE)",
-        "description": "The software environment where the developer writes and tests code, and the single point of interaction with the assistant in both deployment variants. An attack surface through malicious extensions, insecure settings or credential exposure. Examples: VS Code, JetBrains IntelliJ IDEA.",
+        "description": "The software environment where the developer writes and tests code, and the host of the Code Assistant Plugin. It is the developer's single point of interaction with the assistant in both deployment variants. Examples: VS Code, JetBrains IntelliJ IDEA.",
         "tags": [
           "none"
         ]
@@ -22,7 +22,7 @@
         "type": "application",
         "refId": "component:code-asst-plugin",
         "name": "Code Assistant Plugin",
-        "description": "The model plugin: a first-class IDE extension that embeds agent capabilities into the editor so the developer does not switch to a separate application. It is installed from the Plugin Marketplace and hands the developer's requests to the agent. A compromised or malicious plugin could exfiltrate data, harvest credentials, insert backdoors or manipulate code and outputs.",
+        "description": "The AI-powered IDE plugin that hosts the Code Assistant Agent and connects the IDE to it: a first-class IDE extension that embeds agent capabilities into the editor, so the developer does not switch to a separate application. It is installed from the Plugin Marketplace and hands the developer's requests to the agent.",
         "tags": [
           "ai-pipeline"
         ]
@@ -31,7 +31,7 @@
         "type": "application",
         "refId": "component:code-asst-agent",
         "name": "Code Assistant Agent (static)",
-        "description": "The agent code shipped inside the Code Assistant Plugin, drawn in the diagram as 'Code Assistant Agent (Static Data)'. Before the plugin is installed and activated it is a static software component, so it carries supply chain risk: a compromised plugin package may carry a malicious agent payload.",
+        "description": "The agent code shipped inside the Code Assistant Plugin, drawn in the diagram as 'Code Assistant Agent (Static Data)'. It is modelled as a static software component before the plugin is installed and activated.",
         "tags": [
           "agent"
         ]
@@ -40,7 +40,7 @@
         "type": "data",
         "refId": "component:data-local-codebase",
         "name": "Local Codebase Clone",
-        "description": "The developer's local copy of a repository, opened through the IDE. A sensitive asset: it may contain proprietary code, secrets or configuration that could be exposed if the workstation is compromised. Example: a local monorepo checkout.",
+        "description": "The developer's local copy of a repository, opened through the IDE. It may contain proprietary code, secrets and configuration. Example: a local monorepo checkout.",
         "tags": [
           "ai-data"
         ],
@@ -56,7 +56,7 @@
         "type": "application",
         "refId": "component:authn-service",
         "name": "Authentication Service",
-        "description": "Verifies the identity of a user or system. In the diagram the developer authenticates against it, and the Third Party Service checks with it. Risks include credential theft, weak authentication mechanisms and session hijacking. Examples: Okta, Microsoft Entra ID, AWS Cognito.",
+        "description": "The service that verifies the identity of a user or system. In the diagram the developer authenticates against it, and the Third Party Service checks with it. Examples: Okta, Microsoft Entra ID, AWS Cognito.",
         "tags": [
           "web-app",
           "api"
@@ -66,7 +66,7 @@
         "type": "application",
         "refId": "component:authz-service",
         "name": "Authorization Service",
-        "description": "Decides what an authenticated user or system may access or do. In the diagram it authorises the developer, and the Third Party Service checks with it. Risks include excessive permissions, privilege escalation and misconfigured access controls. Examples: Open Policy Agent, AWS IAM, HashiCorp Boundary.",
+        "description": "The service that decides what an authenticated user or system may access or do. In the diagram it authorises the developer, and the Third Party Service checks with it. Examples: Open Policy Agent, AWS IAM, HashiCorp Boundary.",
         "tags": [
           "api"
         ]
@@ -75,7 +75,7 @@
         "type": "application",
         "refId": "component:mcp-server-third-party",
         "name": "Third Party MCP Server",
-        "description": "An organisation-operated MCP server on the local network that exposes an internal third-party service to the agents as callable tools, for example a locally installed Jira MCP server. It acts as a controlled egress point that is meant to enforce authentication, authorisation and audit logging before forwarding requests. Misconfiguration risks unauthorised data access, insecure API exposure and privilege escalation.",
+        "description": "An organisation-operated MCP server on the local network that exposes an internal third-party service to the agents as callable tools, for example a locally installed Jira MCP server. According to the notes, it is the controlled exit point to that service, and is meant to enforce authentication, authorisation and audit logging before it forwards requests.",
         "tags": [
           "tool-server"
         ]
@@ -93,7 +93,7 @@
         "type": "framework",
         "refId": "component:internal-agentic-framework",
         "name": "Agentic Framework (Internal)",
-        "description": "The orchestration layer that runs on the developer's workstation and coordinates multi-step, tool-using workflows for the local agent, managing execution between the model, retrieval and external services. In Sub Use Case 1a it hosts the local agent, model, RAG and context store; in Sub Use Case 1b it delegates execution to the Agentic SaaS platform. A high-impact point where prompt injection, tool misuse or unintended action chains have significant consequences. Examples: LangChain, CrewAI, an agents SDK.",
+        "description": "The orchestration layer that runs on the developer's workstation and coordinates multi-step, tool-using workflows for the local agent, managing execution between the model, retrieval and external services. In Sub Use Case 1a it hosts the local agent, model, RAG and context store; in Sub Use Case 1b it delegates execution to the Agentic SaaS platform. Examples: LangChain, CrewAI, an agents SDK.",
         "tags": [
           "ai-pipeline"
         ]
@@ -111,7 +111,7 @@
         "type": "machine-learning-model",
         "refId": "component:code-assistant-model-local",
         "name": "Code Assistant Model (Local)",
-        "description": "The language model that generates responses and code suggestions on the workstation, drawn as 'Code Assistant Model (e.g. 8b)'; when hardware permits, a locally quantized model serves inference entirely on the workstation. Relevant for prompt injection, data leakage, model manipulation and insecure output. Examples: Ollama with CodeLlama 13B, self-hosted Mistral 7B.",
+        "description": "The language model that generates responses and code suggestions on the workstation, drawn as 'Code Assistant Model (e.g. 8b)'; when hardware permits, a locally quantized model serves inference entirely on the workstation. Examples: Ollama with CodeLlama 13B, self-hosted Mistral 7B.",
         "tags": [
           "ai-model"
         ],
@@ -125,7 +125,7 @@
         "type": "application",
         "refId": "component:rag-local",
         "name": "Local RAG",
-        "description": "A locally hosted retrieval-augmented generation pipeline that fetches relevant content from the Local Context Store to augment the model's context. Risks include ingesting untrusted or manipulated content, exposing sensitive data through retrieval and injecting malicious inputs into model outputs. Examples: LangChain with Chroma, LlamaIndex with FAISS.",
+        "description": "A locally hosted retrieval-augmented generation pipeline that fetches relevant content from the Local Context Store to augment the model's context. Examples: LangChain with Chroma, LlamaIndex with FAISS.",
         "tags": [
           "ai-pipeline"
         ]
@@ -134,7 +134,7 @@
         "type": "data",
         "refId": "component:context-store-local",
         "name": "Local Context Store",
-        "description": "A locally hosted store of structured or unstructured content that the RAG pipeline retrieves from and that supplies context to the model. Risks include unauthorised access to stored content, poisoning of the corpus and leakage through model outputs. Examples: local Chroma DB, local FAISS index.",
+        "description": "A locally hosted store of structured or unstructured content that the RAG pipeline retrieves from and that supplies context to the model. Examples: local Chroma DB, local FAISS index.",
         "tags": [
           "ai-data"
         ],
@@ -150,7 +150,7 @@
         "type": "platform",
         "refId": "component:external-plugin-marketplace",
         "name": "Plugin Marketplace",
-        "description": "An externally operated platform where developers discover and install IDE plugins; the source of the Code Assistant Plugin. A supply chain risk: malicious or vulnerable plugins, insufficient vetting, and unauthorised data access or exfiltration. Examples: VS Code Marketplace, JetBrains Marketplace.",
+        "description": "An externally operated platform where developers discover and install IDE plugins; the source of the Code Assistant Plugin. Examples: VS Code Marketplace, JetBrains Marketplace.",
         "tags": [
           "web-app"
         ]
@@ -159,7 +159,7 @@
         "type": "platform",
         "refId": "component:agentic-saas",
         "name": "Agentic SaaS",
-        "description": "An externally operated platform that delivers agentic assistant capabilities as a managed service, reached through its MCP Gateway (for example Claude Code or Cursor). Introduces risks from third-party data handling, limited visibility into model behaviour and data flows, dependency on external availability and reduced control over security posture.",
+        "description": "An externally operated platform that delivers agentic assistant capabilities as a managed service, reached through its MCP Gateway (for example Claude Code or Cursor). The provider operates it under its own security and data-handling practices, and the organisation has limited visibility into how it runs.",
         "tags": [
           "none"
         ]
@@ -168,7 +168,7 @@
         "type": "application",
         "refId": "component:mcp-gateway",
         "name": "MCP Gateway",
-        "description": "The ingress service (proxy, API gateway or firewall) that receives connections from the workstation and routes them to the MCP Server on the Agentic SaaS platform. A perimeter control: misconfiguration or compromise can expose the backend to unauthorised access or traffic manipulation. Examples: AWS API Gateway, an Nginx reverse proxy, Cloudflare Tunnel.",
+        "description": "The ingress service (proxy, API gateway or firewall) that receives connections from the workstation and routes them to the MCP Server on the Agentic SaaS platform. It is the single entry point to the Agentic SaaS platform. Examples: AWS API Gateway, an Nginx reverse proxy, Cloudflare Tunnel.",
         "tags": [
           "api"
         ]
@@ -177,7 +177,7 @@
         "type": "application",
         "refId": "component:mcp-agentic-saas",
         "name": "MCP Server (Agentic SaaS)",
-        "description": "The MCP server hosted on the Agentic SaaS platform that exposes the assistant's capabilities and orchestrates the remote agent, model and retrieval components drawn inside it. A high-value target because of its central role: unauthorised access, data interception and abuse of its orchestration capabilities.",
+        "description": "The MCP server hosted on the Agentic SaaS platform that exposes the assistant's capabilities and orchestrates the remote agent, model and retrieval components drawn inside it.",
         "tags": [
           "tool-server",
           "ai-pipeline"
@@ -205,7 +205,7 @@
         "type": "machine-learning-model",
         "refId": "component:code-assistant-model-remote",
         "name": "Code Assistant Model (Remote)",
-        "description": "The larger or specialised hosted language model that generates responses and code suggestions on the Agentic SaaS platform, drawn as 'Code Assistant Model (e.g. 30b)'. Relevant for prompt injection, data leakage, model manipulation and insecure output. Examples: a hosted Claude, GPT or Llama model.",
+        "description": "The larger or specialised hosted language model that generates responses and code suggestions on the Agentic SaaS platform, drawn as 'Code Assistant Model (e.g. 30b)'. Examples: a hosted Claude, GPT or Llama model.",
         "tags": [
           "ai-model"
         ],
@@ -219,7 +219,7 @@
         "type": "application",
         "refId": "component:rag-remote",
         "name": "Remote RAG",
-        "description": "A remotely hosted retrieval-augmented generation pipeline on the Agentic SaaS platform that fetches content from the Remote Context Store to augment the model's context. Risks include ingesting untrusted or manipulated content, exposing sensitive data through retrieval and injecting malicious inputs into model outputs. Examples: hosted LangChain with Pinecone, Haystack with Weaviate.",
+        "description": "A remotely hosted retrieval-augmented generation pipeline on the Agentic SaaS platform that fetches content from the Remote Context Store to augment the model's context. Examples: hosted LangChain with Pinecone, Haystack with Weaviate.",
         "tags": [
           "ai-pipeline"
         ]
@@ -228,7 +228,7 @@
         "type": "data",
         "refId": "component:context-store-remote",
         "name": "Remote Context Store",
-        "description": "A remotely hosted store of structured or unstructured content that the remote RAG pipeline retrieves from and that supplies context to the remote model. Risks include unauthorised access to stored content, poisoning of the corpus and leakage through model outputs. Examples: Pinecone, Weaviate.",
+        "description": "A remotely hosted store of structured or unstructured content that the remote RAG pipeline retrieves from and that supplies context to the remote model. Examples: Pinecone, Weaviate.",
         "tags": [
           "ai-data"
         ],
@@ -244,7 +244,7 @@
         "type": "application",
         "refId": "component:mcp-cloud",
         "name": "MCP Server (Cloud Service)",
-        "description": "An externally operated MCP server through which the assistant reaches an external service over MCP. The specific service is intentionally not scoped. Introduces supply chain risks: vulnerable or malicious dependencies, excessive permissions and exfiltration of data passed through the integration. Examples: GitHub, Slack or database MCP servers.",
+        "description": "An externally operated MCP server through which the assistant reaches an external service over MCP. The specific service is intentionally not scoped. Examples: GitHub, Slack or database MCP servers.",
         "tags": [
           "tool-server"
         ]
@@ -569,7 +569,7 @@
           "refId": "zone:internal",
           "name": "Internal",
           "type": "trust",
-          "description": "Locally networked resources under the organisation's own security controls: the developer, the Authentication and Authorization services, locally reachable MCP servers and the services behind them, and the developer's workstation. More trusted, but still exposed to misconfiguration, lateral movement and insider threats."
+          "description": "Locally networked resources under the organisation's own security controls: the developer, the Authentication and Authorization services, locally reachable MCP servers and the services behind them, and the developer's workstation."
         },
         {
           "refId": "zone:workstation",
@@ -625,14 +625,14 @@
           "refId": "asset:codebase-secrets",
           "type": "data",
           "name": "Secrets and configuration in the codebase",
-          "description": "Proprietary code, secrets and configuration held in the Local Codebase Clone, exposed if the workstation is compromised or if code and context are sent to external services.",
+          "description": "Proprietary code, secrets and configuration held in the Local Codebase Clone.",
           "zone": "zone:workstation"
         },
         {
           "refId": "asset:developer-credentials",
           "type": "data",
           "name": "Developer credentials",
-          "description": "The credentials and session the developer uses with the Authentication and Authorization services; a target for phishing, credential theft and session hijacking.",
+          "description": "The credentials and session the developer uses with the Authentication and Authorization services.",
           "zone": "zone:internal"
         }
       ],
@@ -650,7 +650,7 @@
             "persona": {
               "archetype": "developer",
               "scope": "internal",
-              "description": "The human who writes, modifies and maintains code, for example a backend, DevOps or security engineer, or a contractor with repository access. A potential target (phishing, credential theft) and a potential source of risk (introducing vulnerabilities or misconfigurations)."
+              "description": "The human who writes, modifies and maintains code, for example a backend, DevOps or security engineer, or a contractor with repository access."
             }
           },
           "description": "Uses the code assistant through the IDE, and authenticates with and is authorised by the Authentication and Authorization services."
@@ -677,7 +677,7 @@
               ]
             }
           },
-          "description": "The local, dynamic Code Assistant Agent: once the plugin is activated in the IDE it acts with agency over the developer environment, from inline completions to multi-step code generation, refactoring and test scaffolding. Local: it and its framework run on the workstation. Dynamic: it calls tools, invokes MCP servers and orchestrates multi-step workflows. Its autonomous, multi-tool operation widens its blast radius (prompt injection, workflow hijacking, misuse of MCP-reachable services)."
+          "description": "The local, dynamic Code Assistant Agent: once the plugin is activated in the IDE it acts with agency over the developer environment, from inline completions to multi-step code generation, refactoring and test scaffolding. Local: it and its framework run on the workstation. Dynamic: it calls tools, invokes MCP servers and orchestrates multi-step workflows."
         },
         {
           "refId": "actor:remote-code-asst-agent",
@@ -699,7 +699,7 @@
               ]
             }
           },
-          "description": "The remote, dynamic Code Assistant Agent hosted on the Agentic SaaS platform, opaque to the developer beyond its API surface. It may have tools, skills and connectors not enumerated in this use case. Its external hosting brings data exfiltration, third-party data handling, prompt injection through remote context and limited developer visibility."
+          "description": "The remote, dynamic Code Assistant Agent hosted on the Agentic SaaS platform, opaque to the developer beyond its API surface. It may have tools, skills and connectors not enumerated in this use case."
         }
       ],
       "flows": [
