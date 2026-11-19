@@ -461,6 +461,23 @@ def test_review_annotations(tmp_path):
     assert code == 1 and "review text must be" in out
 
 
+def test_element_check_annotation_is_accepted(tmp_path):
+    """An element-check review (review.elementFormat) parses as a review of the element, not as an error."""
+    policy = load(os.path.join(SKILL, "reference", "threat-model-policy.json"))
+    fmt = policy["review"]["elementFormat"]
+    assert fmt.startswith(policy["review"]["annotationPrefix"] + " <refId>: <check>: ")
+    checks = [k for k in policy["elementChecks"] if not k.startswith("$")]
+    assert "data store" in checks and "own controls" in checks and "harms outside STRIDE" in checks
+
+    def mutate(tm):
+        tm.setdefault("annotations", []).append(na_annotation(
+            ["component:context-store-remote"],
+            "reviewed component:context-store-remote: data store: modification led to threat:malicious-marketplace-plugin"))
+    code, out = tm_with(tmp_path, mutate)
+    assert code == 0, out
+    assert "review text must be" not in out
+
+
 def test_slice_keeps_assumptions_linked_by_flow(tmp_path, system):
     flow = next(u for u in blueprint(system)["useCases"] if u["ref"] == UC_1B)["flows"][0]
     blueprint(system)["assumptions"] = [{"refId": "assumption:by-flow", "description": "x", "relatedAssets": [flow]}]
@@ -487,6 +504,8 @@ def test_policy_names_whole_catalogues_only():
         assert not item_id.search(json.dumps(rule)), f"sweep rule {rule['tag']} names a catalogue item"
     for note in policy["sweepNotes"]:
         assert not item_id.search(note), f"sweep note names a catalogue item: {note}"
+    for check, text in (policy.get("elementChecks") or {}).items():
+        assert not item_id.search(text), f"element check {check} names a catalogue item: {text}"
     assert "lifecycleScope" in policy["$comment"], "the exception must be stated in the policy comment"
 
 

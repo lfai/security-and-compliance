@@ -3,9 +3,9 @@
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
   "serialNumber": "urn:uuid:c809df95-7d85-45a1-9402-397cc6875076",
-  "version": 1,
+  "version": 2,
   "metadata": {
-    "timestamp": "2026-11-17T10:11:31Z",
+    "timestamp": "2026-11-19T18:58:23Z",
     "tools": {
       "components": [
         {
@@ -17,7 +17,7 @@
     "properties": [
       {
         "name": "lfai:threat-model:system-bom",
-        "value": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1"
+        "value": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2"
       },
       {
         "name": "lfai:threat-model:use-case",
@@ -28,7 +28,7 @@
   "externalReferences": [
     {
       "type": "bom",
-      "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1",
+      "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2",
       "comment": "System BOM this threat model was generated from. Elements in definitions and blueprints are a slice of it for the use case 'Code Assistant: Sub Use Case 1b (external SaaS agentic framework)' and keep its refIds."
     }
   ],
@@ -45,7 +45,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:local-ide",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:local-ide",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -61,7 +61,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:code-asst-plugin",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:code-asst-plugin",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -84,7 +84,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:data-local-codebase",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:data-local-codebase",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -101,7 +101,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:authn-service",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:authn-service",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -117,7 +117,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:authz-service",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:authz-service",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -133,7 +133,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:mcp-server-third-party",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:mcp-server-third-party",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -149,7 +149,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:third-party-service",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:third-party-service",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -165,7 +165,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:internal-agentic-framework",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:internal-agentic-framework",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -181,7 +181,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:local-code-asst-agent",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:local-code-asst-agent",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -197,7 +197,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:external-plugin-marketplace",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:external-plugin-marketplace",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -213,7 +213,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:agentic-saas",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:agentic-saas",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -229,7 +229,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:mcp-gateway",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:mcp-gateway",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -246,7 +246,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:mcp-agentic-saas",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:mcp-agentic-saas",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -262,7 +262,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:remote-code-asst-agent",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:remote-code-asst-agent",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -283,7 +283,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:code-assistant-model-remote",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:code-assistant-model-remote",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -299,7 +299,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:rag-remote",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:rag-remote",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -322,7 +322,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:context-store-remote",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:context-store-remote",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -338,7 +338,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:mcp-cloud",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:mcp-cloud",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -354,7 +354,7 @@
         "externalReferences": [
           {
             "type": "bom",
-            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/1#component:cloud-service",
+            "url": "urn:cdx:81690675-c66d-4dc8-afbe-4402c832febb/2#component:cloud-service",
             "comment": "This component as declared in the system BOM."
           }
         ]
@@ -452,64 +452,6 @@
             "value": "inference"
           }
         ]
-      }
-    ],
-    "parties": [
-      {
-        "refId": "party:external-attacker",
-        "roles": [
-          {
-            "role": "attacker"
-          }
-        ],
-        "persona": {
-          "label": "External attacker",
-          "archetype": "attacker",
-          "scope": "external",
-          "description": "An individual or group outside the organisation who targets developers and their tools to steal code and credentials or to reach the services the assistant can call."
-        }
-      },
-      {
-        "refId": "party:malicious-insider",
-        "roles": [
-          {
-            "role": "insider-threat"
-          }
-        ],
-        "persona": {
-          "label": "Malicious insider",
-          "archetype": "insider-threat",
-          "scope": "internal",
-          "description": "A person with legitimate access to the internal network or to a developer account who misuses it, for example to read data beyond their role."
-        }
-      },
-      {
-        "refId": "party:malicious-mcp-operator",
-        "roles": [
-          {
-            "role": "attacker"
-          }
-        ],
-        "persona": {
-          "label": "Malicious or compromised MCP server operator",
-          "archetype": "supplier",
-          "scope": "external",
-          "description": "The operator of an external MCP server, or an attacker who has taken it over, who changes the server's tools or responses."
-        }
-      },
-      {
-        "refId": "party:agentic-saas-provider",
-        "roles": [
-          {
-            "role": "provider"
-          }
-        ],
-        "persona": {
-          "label": "Agentic SaaS provider",
-          "archetype": "supplier",
-          "scope": "external",
-          "description": "The third party that operates the Agentic SaaS platform and so holds the code and context sent to it."
-        }
       }
     ],
     "weaknesses": [
@@ -778,18 +720,6 @@
         "description": "The token is stored on the workstation where other code can read it."
       },
       {
-        "refId": "weakness:cwe-538",
-        "kind": "flaw",
-        "name": "Insertion of Sensitive Information into Externally-Accessible File or Directory",
-        "identifiers": [
-          {
-            "scheme": "cwe",
-            "value": "CWE-538"
-          }
-        ],
-        "description": "The clone holds sensitive files in a location other code running as the developer can read."
-      },
-      {
         "refId": "weakness:cwe-636",
         "kind": "flaw",
         "name": "Not Failing Securely",
@@ -824,18 +754,6 @@
           }
         ],
         "description": "The organisation's code is placed in a sphere it does not control."
-      },
-      {
-        "refId": "weakness:cwe-693",
-        "kind": "flaw",
-        "name": "Protection Mechanism Failure",
-        "identifiers": [
-          {
-            "scheme": "cwe",
-            "value": "CWE-693"
-          }
-        ],
-        "description": "The store has no backup or rebuild procedure that would limit the loss."
       },
       {
         "refId": "weakness:cwe-732",
@@ -920,6 +838,18 @@
           }
         ],
         "description": "The change adds hidden functionality that bypasses authentication."
+      },
+      {
+        "refId": "weakness:cwe-922",
+        "kind": "flaw",
+        "name": "Insecure Storage of Sensitive Information",
+        "identifiers": [
+          {
+            "scheme": "cwe",
+            "value": "CWE-922"
+          }
+        ],
+        "description": "The clone and its secrets are stored where any process running as the developer can read them."
       },
       {
         "refId": "weakness:cwe-1059",
@@ -1139,6 +1069,11 @@
             "refId": "req:nist-800-53:cm-8",
             "identifier": "CM-8",
             "title": "System Component Inventory"
+          },
+          {
+            "refId": "req:nist-800-53:cp-10",
+            "identifier": "CP-10",
+            "title": "System Recovery and Reconstitution"
           },
           {
             "refId": "req:nist-800-53:cp-2",
@@ -1555,6 +1490,64 @@
             "url": "https://cloudsecurityalliance.org/artifacts/ai-controls-matrix"
           }
         ]
+      }
+    ],
+    "parties": [
+      {
+        "refId": "party:external-attacker",
+        "roles": [
+          {
+            "role": "attacker"
+          }
+        ],
+        "persona": {
+          "label": "External attacker",
+          "archetype": "attacker",
+          "scope": "external",
+          "description": "An individual or group outside the organisation who targets developers and their tools to steal code and credentials or to reach the services the assistant can call."
+        }
+      },
+      {
+        "refId": "party:malicious-insider",
+        "roles": [
+          {
+            "role": "insider-threat"
+          }
+        ],
+        "persona": {
+          "label": "Malicious insider",
+          "archetype": "insider-threat",
+          "scope": "internal",
+          "description": "A person with legitimate access to the internal network or to a developer account who misuses it, for example to read data beyond their role."
+        }
+      },
+      {
+        "refId": "party:malicious-mcp-operator",
+        "roles": [
+          {
+            "role": "attacker"
+          }
+        ],
+        "persona": {
+          "label": "Malicious or compromised MCP server operator",
+          "archetype": "supplier",
+          "scope": "external",
+          "description": "The operator of an external MCP server, or an attacker who has taken it over, who changes the server's tools or responses."
+        }
+      },
+      {
+        "refId": "party:agentic-saas-provider",
+        "roles": [
+          {
+            "role": "provider"
+          }
+        ],
+        "persona": {
+          "label": "Agentic SaaS provider",
+          "archetype": "supplier",
+          "scope": "external",
+          "description": "The third party that operates the Agentic SaaS platform and so holds the code and context sent to it."
+        }
       }
     ]
   },
@@ -2377,6 +2370,12 @@
         "capecId": 630,
         "name": "TypoSquatting",
         "description": "An adversary registers a domain name with at least one character different than a trusted domain."
+      },
+      {
+        "refId": "attack-pattern:capec-639",
+        "capecId": 639,
+        "name": "Probe System Files",
+        "description": "An adversary obtains unauthorized information due to improperly protected files."
       },
       {
         "refId": "attack-pattern:capec-698",
@@ -6212,7 +6211,7 @@
       {
         "refId": "threat:context-flooding-degrades-output",
         "name": "Oversized content pushes the task out of the model's context",
-        "description": "Developer asks for help with a task whose context includes a very large file, tool result or retrieved item, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. An attacker could place oversized content on purpose, but the path, controls and impact are the same as for the common accidental case, so one threat covers both. The same threat is modelled in the Sub Use Case 1a TM-BOM.",
+        "description": "Developer asks for help with a task whose context includes a very large file, tool result or retrieved item, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. An attacker could place oversized content on purpose, but the path, controls and impact are the same as for the common accidental case, so one threat covers both. Other parts of LLM09: on the agentic framework and the SaaS MCP server, invented facts and overreliance do not arise, because they pass the model's output through unchanged; those parts are decided on the models, in threat:insecure-generated-code. The same threat is modelled in the Sub Use Case 1a TM-BOM.",
         "source": "use case and assumption review",
         "origin": "accidental",
         "categories": [
@@ -6244,7 +6243,7 @@
           },
           {
             "name": "lfai:nist-800-30:threat-event",
-            "value": "TE-86 Non-Adversarial - Mishandling of critical and/or sensitive information by authorized users"
+            "value": "TE-97 Non-Adversarial - Resource depletion"
           },
           {
             "name": "lfai:nist-800-30:adverse-impact",
@@ -6430,8 +6429,11 @@
         ],
         "weaknesses": [
           {
-            "ref": "weakness:cwe-538"
+            "ref": "weakness:cwe-922"
           }
+        ],
+        "attackPatterns": [
+          "attack-pattern:capec-639"
         ],
         "killChainPhase": "actions-on-objectives",
         "affects": [
@@ -6465,15 +6467,98 @@
             "value": "T1041"
           },
           {
+            "name": "lfai:capec-rationale",
+            "value": "CAPEC-639: the malware searches the workstation's files for the repository and the secrets in it."
+          },
+          {
             "name": "lfai:cwe-rationale",
-            "value": "CWE-538: the clone holds sensitive files in a location other code running as the developer can read."
+            "value": "CWE-922: the clone and its secrets are stored where any process running as the developer can read them."
+          }
+        ]
+      },
+      {
+        "refId": "threat:ide-extension-or-settings-abuse",
+        "name": "Another IDE extension, or a repository's workspace settings, runs code in the IDE",
+        "description": "Developer installs another IDE extension, not the assistant, or opens a repository whose workspace settings run tasks or change the IDE's configuration, and the IDE runs that code with the developer's access. This results in code that nobody approved reading the codebase, the developer's tokens and the assistant's configuration, or changing them. The same threat is modelled in the Sub Use Case 1a TM-BOM.",
+        "source": "structural pass (STRIDE)",
+        "origin": "adversarial",
+        "categories": [
+          {
+            "taxonomy": "STRIDE",
+            "category": "tampering"
+          },
+          {
+            "taxonomy": "STRIDE",
+            "category": "elevation-of-privilege"
+          },
+          {
+            "taxonomy": "STRIDE",
+            "category": "information-disclosure"
+          },
+          {
+            "taxonomy": "MITRE-ATTACK",
+            "category": "execution"
+          }
+        ],
+        "weaknesses": [
+          {
+            "ref": "weakness:cwe-829"
+          },
+          {
+            "ref": "weakness:cwe-1188"
+          }
+        ],
+        "attackPatterns": [
+          "attack-pattern:capec-698"
+        ],
+        "killChainPhase": "installation",
+        "affects": [
+          "component:local-ide",
+          "component:data-local-codebase",
+          "flow:ide-to-codebase",
+          "component:code-asst-plugin",
+          "asset:codebase-secrets",
+          "asset:developer-credentials"
+        ],
+        "mitigations": [
+          "control:ide-extension-and-settings-policy",
+          "control:workstation-anti-malware"
+        ],
+        "properties": [
+          {
+            "name": "lfai:nist-800-30:threat-source",
+            "value": "TS-ADV-01 Adversarial - Individual - Outsider"
+          },
+          {
+            "name": "lfai:nist-800-30:threat-event",
+            "value": "TE-16 Deliver/insert/install malicious capabilities - Insert untargeted malware into downloadable software"
+          },
+          {
+            "name": "lfai:nist-800-30:adverse-impact",
+            "value": "AI-AST-05 HARM TO ASSETS - Damage to or loss of information assets"
+          },
+          {
+            "name": "lfai:technique",
+            "value": "T1176.002"
+          },
+          {
+            "name": "lfai:capec-rationale",
+            "value": "CAPEC-698: the attacker gets the developer to install an extension into the trusted IDE."
+          },
+          {
+            "name": "lfai:cwe-rationale",
+            "value": "CWE-829: the IDE runs extension and workspace code from outside the organisation's control."
+          },
+          {
+            "name": "lfai:cwe-rationale",
+            "value": "CWE-1188: workspace trust and task settings allow code to run without the developer's approval."
           }
         ]
       },
       {
         "refId": "threat:context-store-destroyed",
         "name": "A context store is deleted, corrupted or locked",
-        "description": "Developer's assistant depends on its context store, which malware or a failure on the workstation (1a), or a fault or attack at the provider (1b), deletes, corrupts or locks. This results in the assistant losing the project context it retrieves, so its answers become worse until the store is rebuilt. The same threat is modelled in the Sub Use Case 1a TM-BOM.",
+        "description": "Developer's assistant depends on its context store, which an attacker deletes, corrupts or encrypts for ransom, through malware on the workstation or access at the provider. This results in the assistant losing the project context it retrieves, so its answers become worse until the store is restored. An accidental failure of the store has the same path, controls and impact, so one threat covers both. The same threat is modelled in the Sub Use Case 1a TM-BOM.",
         "source": "structural pass (STRIDE)",
         "origin": "adversarial",
         "categories": [
@@ -6496,7 +6581,7 @@
         ],
         "weaknesses": [
           {
-            "ref": "weakness:cwe-693"
+            "ref": "weakness:cwe-1059"
           }
         ],
         "killChainPhase": "actions-on-objectives",
@@ -6506,7 +6591,7 @@
           "flow:1b:rag-remote-to-context-store-remote"
         ],
         "mitigations": [
-          "control:context-ingestion-validation",
+          "control:context-store-rebuild",
           "control:context-store-protection"
         ],
         "properties": [
@@ -6528,7 +6613,7 @@
           },
           {
             "name": "lfai:cwe-rationale",
-            "value": "CWE-693: the store has no backup or rebuild procedure that would limit the loss."
+            "value": "CWE-1059: no backup or rebuild procedure for the store is documented, so its recovery is not planned."
           }
         ]
       }
@@ -8103,7 +8188,7 @@
         ],
         "likelihood": {
           "level": "medium",
-          "rationale": "Code models can reproduce training code verbatim, and no licence check is stated; the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T27 and T28)."
+          "rationale": "Code models can reproduce training code verbatim, and no licence check is stated; the working group's threat sheet, use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, raises it in T27 and T28."
         },
         "riskAttributes": [
           "compliance"
@@ -8268,7 +8353,7 @@
         "accessLevel": "internal",
         "likelihood": {
           "level": "medium",
-          "rationale": "AI-assisted changes are routine, and no provenance record is stated; the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T18 and T19)."
+          "rationale": "AI-assisted changes are routine, and no provenance record is stated; the working group's threat sheet, use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, raises it in T18 and T19."
         },
         "riskAttributes": [
           "accountability",
@@ -8309,7 +8394,7 @@
         },
         "likelihood": {
           "level": "medium",
-          "rationale": "Coding agents can usually write anywhere the developer can, including their own settings; no file restriction is stated (the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T50)."
+          "rationale": "Coding agents can usually write anywhere the developer can, including their own settings; no file restriction is stated (the working group's threat sheet, use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T50)."
         },
         "riskAttributes": [
           "integrity",
@@ -8392,7 +8477,7 @@
         },
         "likelihood": {
           "level": "medium",
-          "rationale": "Abuse of AI service accounts for compute is common once a token is stolen; per-account limits are not stated (the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T31-T35)."
+          "rationale": "Abuse of AI service accounts for compute is common once a token is stolen; per-account limits are not stated (the working group's threat sheet, use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T31-T35)."
         },
         "riskAttributes": [
           "availability"
@@ -8412,8 +8497,8 @@
       {
         "refId": "threat-scenario:context-flooding-degrades-output",
         "name": "Oversized content pushes the task out of the model's context",
-        "description": "Developer asks for help with a task whose context includes a very large file, tool result or retrieved item, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. An attacker could place oversized content on purpose, but the path, controls and impact are the same as for the common accidental case, so one threat covers both.",
-        "event": "An oversized item fills the prompt sent over flow:1a:local-agent-to-model-local or flow:1b:remote-agent-to-model-remote.",
+        "description": "Developer asks for help with a task whose context includes a very large file, tool result or retrieved item, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. An attacker could place oversized content on purpose, but the path, controls and impact are the same as for the common accidental case, so one threat covers both. Other parts of LLM09: on the agentic framework and the SaaS MCP server, invented facts and overreliance do not arise, because they pass the model's output through unchanged; those parts are decided on the models, in threat:insecure-generated-code.",
+        "event": "An oversized item fills the prompt that the agent sends to the model.",
         "threats": [
           "threat:context-flooding-degrades-output"
         ],
@@ -8422,7 +8507,7 @@
         "accessLevel": "internal",
         "likelihood": {
           "level": "medium",
-          "rationale": "Large files and tool results are common in repositories, and no context limit is stated (the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, the unnumbered row after T33)."
+          "rationale": "Large files and tool results are common in repositories, and no context limit is stated (the working group's threat sheet, use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, the unnumbered row after T33)."
         },
         "riskAttributes": [
           "integrity",
@@ -8552,10 +8637,53 @@
         ]
       },
       {
+        "refId": "threat-scenario:ide-extension-or-settings-abuse",
+        "name": "Another IDE extension, or a repository's workspace settings, runs code in the IDE",
+        "description": "Developer installs another IDE extension, not the assistant, or opens a repository whose workspace settings run tasks or change the IDE's configuration, and the IDE runs that code with the developer's access. This results in code that nobody approved reading the codebase, the developer's tokens and the assistant's configuration, or changing them.",
+        "event": "The IDE loads the extension, or the workspace settings, when the developer opens the repository over flow:ide-to-codebase.",
+        "threats": [
+          "threat:ide-extension-or-settings-abuse"
+        ],
+        "actor": "party:external-attacker",
+        "motivation": [
+          "financial",
+          "espionage"
+        ],
+        "intent": "opportunistic",
+        "accessLevel": "external",
+        "attackVector": {
+          "type": "network",
+          "complexity": "low",
+          "privileges": "none",
+          "userInteraction": "required",
+          "scope": "changed"
+        },
+        "likelihood": {
+          "level": "medium",
+          "rationale": "Malicious IDE extensions and workspace settings that run tasks are a known route onto developer workstations; no extension or workspace-trust policy is stated."
+        },
+        "riskAttributes": [
+          "integrity",
+          "confidentiality"
+        ],
+        "affects": [
+          "component:local-ide",
+          "component:data-local-codebase",
+          "flow:ide-to-codebase",
+          "component:code-asst-plugin",
+          "asset:codebase-secrets",
+          "asset:developer-credentials"
+        ],
+        "damageScenarios": [
+          "damage-scenario:workstation-compromised",
+          "damage-scenario:proprietary-code-exposed"
+        ]
+      },
+      {
         "refId": "threat-scenario:context-store-destroyed",
         "name": "A context store is deleted, corrupted or locked",
-        "description": "Developer's assistant depends on its context store, which malware or a failure on the workstation (1a), or a fault or attack at the provider (1b), deletes, corrupts or locks. This results in the assistant losing the project context it retrieves, so its answers become worse until the store is rebuilt.",
-        "event": "The context store read over flow:1a:rag-local-to-context-store-local or flow:1b:rag-remote-to-context-store-remote is unavailable.",
+        "description": "Developer's assistant depends on its context store, which an attacker deletes, corrupts or encrypts for ransom, through malware on the workstation or access at the provider. This results in the assistant losing the project context it retrieves, so its answers become worse until the store is restored. An accidental failure of the store has the same path, controls and impact, so one threat covers both.",
+        "event": "The context store that the RAG pipeline reads is deleted or encrypted.",
         "threats": [
           "threat:context-store-destroyed"
         ],
@@ -8575,7 +8703,7 @@
         },
         "likelihood": {
           "level": "low",
-          "rationale": "The store can be rebuilt from its sources, which limits the impact; no backup is stated."
+          "rationale": "It needs malware on the workstation or access at the provider; neither source describes a store that others can reach directly."
         },
         "riskAttributes": [
           "availability",
@@ -9730,10 +9858,6 @@
         {
           "name": "lfai:mitigates",
           "value": "CWE-345"
-        },
-        {
-          "name": "lfai:mitigates",
-          "value": "CWE-693"
         }
       ]
     },
@@ -9772,6 +9896,10 @@
         },
         {
           "name": "lfai:mitigates",
+          "value": "CAPEC-639"
+        },
+        {
+          "name": "lfai:mitigates",
           "value": "CWE-200"
         },
         {
@@ -9780,11 +9908,11 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CWE-538"
+          "value": "CWE-668"
         },
         {
           "name": "lfai:mitigates",
-          "value": "CWE-668"
+          "value": "CWE-922"
         },
         {
           "name": "lfai:mitigates",
@@ -9834,7 +9962,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CWE-693"
+          "value": "CWE-1059"
         }
       ]
     },
@@ -10584,13 +10712,14 @@
     {
       "refId": "control:workstation-anti-malware",
       "name": "Run endpoint protection on developer workstations",
-      "description": "Endpoint protection on the workstation detects malware that reads tokens, context store files or plugin data.",
+      "description": "Endpoint protection on the workstation detects malware that reads or changes the local codebase, tokens, context store files or plugin data.",
       "category": "detective",
       "status": "recommended",
       "appliesTo": [
         "component:local-ide",
         "component:code-asst-plugin",
-        "asset:developer-credentials"
+        "asset:developer-credentials",
+        "component:data-local-codebase"
       ],
       "satisfies": [
         "req:nist-800-53:si-3",
@@ -10632,6 +10761,10 @@
         },
         {
           "name": "lfai:mitigates",
+          "value": "CAPEC-639"
+        },
+        {
+          "name": "lfai:mitigates",
           "value": "CAPEC-698"
         },
         {
@@ -10656,11 +10789,15 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CWE-538"
+          "value": "CWE-829"
         },
         {
           "name": "lfai:mitigates",
-          "value": "CWE-829"
+          "value": "CWE-922"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-1188"
         }
       ]
     },
@@ -10831,8 +10968,8 @@
         "component:local-ide"
       ],
       "satisfies": [
-        "req:nist-800-53:si-7-1",
         "req:nist-800-53:cp-9",
+        "req:nist-800-53:au-10",
         "req:csa-aicm:bcr-08"
       ],
       "properties": [
@@ -10851,6 +10988,75 @@
         {
           "name": "lfai:mitigates",
           "value": "CWE-345"
+        }
+      ]
+    },
+    {
+      "refId": "control:context-store-rebuild",
+      "name": "Back up context stores, or rebuild them from their sources",
+      "description": "Each context store can be rebuilt from the sources it was indexed from, or is backed up, and the rebuild is tested; a deleted, corrupted or locked store is restored instead of being trusted.",
+      "category": "recovery",
+      "status": "recommended",
+      "appliesTo": [
+        "component:context-store-remote",
+        "component:rag-remote"
+      ],
+      "satisfies": [
+        "req:nist-800-53:cp-9",
+        "req:nist-800-53:cp-10",
+        "req:csa-aicm:bcr-08"
+      ],
+      "properties": [
+        {
+          "name": "lfai:control-tier",
+          "value": "1"
+        },
+        {
+          "name": "lfai:aicm-parent",
+          "value": "req:csa-aicm:bcr-08 < req:nist-800-53:cp-9"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-1059"
+        }
+      ]
+    },
+    {
+      "refId": "control:ide-extension-and-settings-policy",
+      "name": "Manage which IDE extensions run, and lock IDE and workspace settings",
+      "description": "IDE policy allows only approved extensions, not only for the assistant, and locks the settings that run code or trust a workspace, so that an extension or a repository's workspace settings cannot run code or change the IDE without approval.",
+      "category": "preventive",
+      "status": "recommended",
+      "appliesTo": [
+        "component:local-ide",
+        "component:code-asst-plugin"
+      ],
+      "satisfies": [
+        "req:nist-800-53:cm-7-5",
+        "req:nist-800-53:cm-6",
+        "req:nist-800-53:cm-11",
+        "req:csa-aicm:uem-02"
+      ],
+      "properties": [
+        {
+          "name": "lfai:control-tier",
+          "value": "1"
+        },
+        {
+          "name": "lfai:aicm-parent",
+          "value": "req:csa-aicm:uem-02 < req:nist-800-53:cm-11"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CAPEC-698"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-829"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-1188"
         }
       ]
     },
@@ -11289,6 +11495,7 @@
           "threat:shadow-mcp-servers",
           "threat:remote-model-provider-change",
           "threat:insider-malicious-mcp-server",
+          "threat:ide-extension-or-settings-abuse",
           "threat-scenario:malicious-look-alike-plugin",
           "threat-scenario:compromised-plugin-update",
           "threat-scenario:plugin-delivery-tampering",
@@ -11296,7 +11503,8 @@
           "threat-scenario:cloud-mcp-tool-poisoning",
           "threat-scenario:shadow-mcp-servers",
           "threat-scenario:remote-model-provider-change",
-          "threat-scenario:insider-malicious-mcp-server"
+          "threat-scenario:insider-malicious-mcp-server",
+          "threat-scenario:ide-extension-or-settings-abuse"
         ],
         "relatedDamageScenarios": [
           "damage-scenario:credentials-compromised",
@@ -11334,7 +11542,8 @@
               "control:dependency-pinning-and-sbom",
               "control:remote-model-change-monitoring",
               "control:generated-code-scanning",
-              "control:agent-action-audit-logging"
+              "control:agent-action-audit-logging",
+              "control:ide-extension-and-settings-policy"
             ],
             "status": "recommended"
           }
@@ -11733,7 +11942,7 @@
               "control:agent-budgets-and-rate-limits",
               "control:saas-outage-fallback",
               "control:short-lived-bound-tokens",
-              "control:context-ingestion-validation",
+              "control:context-store-rebuild",
               "control:context-store-protection"
             ],
             "status": "recommended"
@@ -12741,6 +12950,32 @@
       },
       "timestamp": "2026-11-17T00:00:00Z",
       "text": "reviewed usecase:code-assistant-1b: the system BOM declares no exceptions for this use case, so its preconditions and postconditions were reviewed: the marketplace installation led to threat:malicious-look-alike-plugin, gateway reachability to threat:saas-outage, SaaS data handling to threat:saas-data-retention, and the logging postcondition to threat:agent-actions-not-audited; the exceptions in definition.md (SaaS unavailable, malicious plugin, data exfiltration via SaaS, prompt injection via the remote context store) led to threat:saas-outage, threat:malicious-look-alike-plugin, threat:saas-data-retention and threat:remote-context-poisoning"
+    },
+    {
+      "subjects": [
+        "asset:codebase-secrets"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed asset:codebase-secrets: data store: modification led to threat:codebase-direct-tampering; loss of availability: no separate threat, because the secrets live in the codebase and are restored with it (threat:codebase-direct-tampering); copying outside the system's flows led to threat:codebase-copied-from-workstation and threat:secrets-leak-through-assistant"
+    },
+    {
+      "subjects": [
+        "asset:developer-credentials"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed asset:developer-credentials: data store: modification led to threat:idp-insecure-configuration; loss of availability led to threat:auth-service-denial; copying outside the system's flows led to threat:session-token-theft and threat:developer-credential-phishing"
     },
     {
       "subjects": [

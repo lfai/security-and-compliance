@@ -105,7 +105,9 @@ Record the outcome of the element checks in this step and in 3a the same way, so
 - `own controls` for each `agent` element;
 - `harms outside STRIDE` for each `ai-model` element, with an outcome for each of the five harms.
 
-For example: `reviewed component:model: harms outside STRIDE: licence led to threat:output-copies-licensed-code; quality led to threat:...; privacy led to threat:...; safety: the model only returns code to a developer who reviews it; fairness: the model makes no decision about people`.
+For example, for a model that drafts clinical notes from patient records: `reviewed component:note-model: harms outside STRIDE: privacy led to threat:phi-retained-by-model-hosting; quality led to threat:...; safety led to threat:...; fairness led to threat:...; licence: the model reproduces no third-party text, because it summarises the patient's own record`. Decide each harm from this system's own elements and flows; do not copy the outcome from another system's TM-BOM.
+
+The validator checks that these annotations have the `reviewed <refId>: <outcome>` form, but not that every element has one, or that the check name is valid. Check that yourself before you report.
 
 Threats from 3c cite no catalogue item, which is expected.
 

@@ -3,9 +3,9 @@
   "specFormat": "CycloneDX",
   "specVersion": "2.0",
   "serialNumber": "urn:uuid:81690675-c66d-4dc8-afbe-4402c832febb",
-  "version": 1,
+  "version": 2,
   "metadata": {
-    "timestamp": "2026-11-17T09:56:14Z"
+    "timestamp": "2026-11-19T18:58:22Z"
   },
   "definitions": {
     "components": [

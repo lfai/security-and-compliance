@@ -162,7 +162,7 @@
     "example": "reviewed assumption:patient-data: led to threat:phi-channel-interception and threat:phi-retained-by-model-hosting"
   },
   "elementChecks": {
-    "$comment": "Checks the threat-model workflow (steps 3a and 3c) makes on single elements, in addition to the catalogue sweep. Each is recorded as a review annotation in review.elementFormat, so that a check that found nothing is visible in the TM-BOM.",
+    "$comment": "Checks the threat-model workflow (steps 3a and 3c) makes on single elements, in addition to the catalogue sweep. Each is recorded as a review annotation in review.elementFormat, so that a check that found nothing is visible in the TM-BOM. No script reads this key: the validator checks only that review annotations have the review.format form, not that every element has one or that the check name is one of these. Keep catalogue item IDs out of these texts, as in sweepNotes.",
     "data store": "Step 3a. Every data component, machine-learning-model component, blueprint dataStore and data asset, as a target in its own right: direct modification, loss of availability, and copying by someone with no route through the system's own flows.",
     "own controls": "Step 3c. Every element tagged agent: whether it can change anything that limits it (configuration, permissions, guardrails, tool list, memory, or the component that hosts or constrains it).",
     "harms outside STRIDE": "Step 3c. Every element tagged ai-model: an outcome for each of intellectual property and licence, quality of output, privacy, safety and harmful content, and fairness.",
