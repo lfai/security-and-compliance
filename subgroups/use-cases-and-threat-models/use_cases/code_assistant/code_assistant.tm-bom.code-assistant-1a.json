@@ -707,6 +707,18 @@
         "description": "The token is stored on the workstation where other code can read it."
       },
       {
+        "refId": "weakness:cwe-538",
+        "kind": "flaw",
+        "name": "Insertion of Sensitive Information into Externally-Accessible File or Directory",
+        "identifiers": [
+          {
+            "scheme": "cwe",
+            "value": "CWE-538"
+          }
+        ],
+        "description": "The clone holds sensitive files in a location other code running as the developer can read."
+      },
+      {
         "refId": "weakness:cwe-636",
         "kind": "flaw",
         "name": "Not Failing Securely",
@@ -729,6 +741,18 @@
           }
         ],
         "description": "The policy object is selected by an identifier the caller controls."
+      },
+      {
+        "refId": "weakness:cwe-693",
+        "kind": "flaw",
+        "name": "Protection Mechanism Failure",
+        "identifiers": [
+          {
+            "scheme": "cwe",
+            "value": "CWE-693"
+          }
+        ],
+        "description": "The store has no backup or rebuild procedure that would limit the loss."
       },
       {
         "refId": "weakness:cwe-732",
@@ -2053,10 +2077,16 @@
         "description": "An adversary uses deceptive methods to cause a user or an automated process to download and install dangerous code believed to be a valid update that originates from an adversary controlled source."
       },
       {
-        "refId": "attack-pattern:capec-441",
-        "capecId": 441,
-        "name": "Malicious Logic Insertion",
-        "description": "An adversary installs or adds malicious logic (also known as malware) into a seemingly benign component of a fielded system."
+        "refId": "attack-pattern:capec-443",
+        "capecId": 443,
+        "name": "Malicious Logic Inserted Into Product by Authorized Developer",
+        "description": "An adversary uses their privileged position within an authorized development organization to inject malicious logic into a codebase or product."
+      },
+      {
+        "refId": "attack-pattern:capec-444",
+        "capecId": 444,
+        "name": "Development Alteration",
+        "description": "An adversary modifies a technology, product, or component during its development to acheive a negative impact once the system is deployed."
       },
       {
         "refId": "attack-pattern:capec-538",
@@ -4427,7 +4457,7 @@
       {
         "refId": "threat:local-resource-exhaustion",
         "name": "Agent loops exhaust the workstation",
-        "description": "Developer's local agent enters a long multi-step loop, or the plugin sends a completion request on every keystroke, and the local model uses all of the workstation's CPU, GPU and memory. This results in the IDE and the assistant becoming unusable.",
+        "description": "Developer's local agent enters a long multi-step loop, or the plugin sends a completion request on every keystroke, and the local model uses all of the workstation's CPU, GPU and memory. This results in the IDE and the assistant becoming unusable. Other parts of LLM10: model extraction through the inference API does not apply, because the local model is a stock open model served only to this developer (its weights on disk are covered by threat:local-model-weights-theft); deliberate exhaustion needs code already running on the workstation and is covered by threat:unexpected-code-execution.",
         "source": "catalogue sweep",
         "origin": "structural",
         "categories": [
@@ -4932,7 +4962,7 @@
           }
         ],
         "attackPatterns": [
-          "attack-pattern:capec-441"
+          "attack-pattern:capec-443"
         ],
         "killChainPhase": "installation",
         "affects": [
@@ -4975,7 +5005,7 @@
           },
           {
             "name": "lfai:capec-rationale",
-            "value": "CAPEC-441: the insider inserts malicious logic into the product through a normal change."
+            "value": "CAPEC-443: an authorised developer uses their position to insert malicious logic into the product."
           },
           {
             "name": "lfai:cwe-rationale",
@@ -5021,7 +5051,7 @@
           }
         ],
         "attackPatterns": [
-          "attack-pattern:capec-441"
+          "attack-pattern:capec-443"
         ],
         "killChainPhase": "installation",
         "affects": [
@@ -5071,7 +5101,7 @@
           },
           {
             "name": "lfai:capec-rationale",
-            "value": "CAPEC-441: the insider inserts malicious logic into a tool server the agents trust."
+            "value": "CAPEC-443: an authorised developer uses their position to insert malicious logic into a tool server the agents trust."
           },
           {
             "name": "lfai:cwe-rationale",
@@ -5218,7 +5248,7 @@
       {
         "refId": "threat:agent-modifies-own-controls",
         "name": "Agent changes its own configuration, plugin or guardrails",
-        "description": "Developer's local agent, following injected instructions or a mistaken plan, uses its file access to edit its own configuration, the IDE plugin or the framework's guardrail files, for example to add tools or switch off approval. This results in the agent removing the limits that were meant to contain it. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
+        "description": "Developer's local agent, following injected instructions or a mistaken plan, uses its file access to edit its own configuration, the IDE plugin or the framework's guardrail files, for example to add tools or switch off approval. This results in the agent removing the limits that were meant to contain it. The same path, controls and impact apply whether the change comes from an attacker's injected instructions or from the agent's own mistaken plan, so one threat covers both; the scenario models the adversarial case. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
         "source": "use case and assumption review",
         "origin": "adversarial",
         "categories": [
@@ -5308,7 +5338,7 @@
       {
         "refId": "threat:codebase-direct-tampering",
         "name": "Attacker plants a backdoor in, or encrypts, the local codebase",
-        "description": "Developer's Local Codebase Clone is changed directly by malware or an attacker with access to the workstation, which plants a backdoor in the code or encrypts it for ransom. This results in malicious code being pushed under the developer's name, or work being lost. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
+        "description": "Developer commits and pushes from a Local Codebase Clone that malware on the workstation has changed directly, by planting a backdoor in the code, or opens a clone that the malware has encrypted for ransom. This results in malicious code reaching the shared repository under the developer's name, or the developer's unpushed work being lost. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
         "source": "structural pass (STRIDE)",
         "origin": "adversarial",
         "categories": [
@@ -5331,7 +5361,7 @@
           }
         ],
         "attackPatterns": [
-          "attack-pattern:capec-441"
+          "attack-pattern:capec-444"
         ],
         "killChainPhase": "actions-on-objectives",
         "affects": [
@@ -5376,7 +5406,7 @@
           },
           {
             "name": "lfai:capec-rationale",
-            "value": "CAPEC-441: the attacker inserts malicious logic directly into the working copy."
+            "value": "CAPEC-444: the attacker alters the product during its development, in the developer's working copy, so the change ships with it."
           },
           {
             "name": "lfai:cwe-rationale",
@@ -5453,9 +5483,9 @@
       {
         "refId": "threat:context-flooding-degrades-output",
         "name": "Oversized content pushes the task out of the model's context",
-        "description": "Developer's request is assembled with a very large file, tool result or retrieved item, possibly placed there on purpose, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
+        "description": "Developer asks for help with a task whose context includes a very large file, tool result or retrieved item, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. An attacker could place oversized content on purpose, but the path, controls and impact are the same as for the common accidental case, so one threat covers both. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
         "source": "use case and assumption review",
-        "origin": "adversarial",
+        "origin": "accidental",
         "categories": [
           {
             "taxonomy": "MAESTRO",
@@ -5480,11 +5510,11 @@
         "properties": [
           {
             "name": "lfai:nist-800-30:threat-source",
-            "value": "TS-ADV-01 Adversarial - Individual - Outsider"
+            "value": "TS-ACC-01 Accidental - User"
           },
           {
             "name": "lfai:nist-800-30:threat-event",
-            "value": "TE-66 Achieve results - Cause degradation or denial of attacker-selected services or capabilities"
+            "value": "TE-86 Non-Adversarial - Mishandling of critical and/or sensitive information by authorized users"
           },
           {
             "name": "lfai:nist-800-30:adverse-impact",
@@ -5492,11 +5522,7 @@
           },
           {
             "name": "lfai:catalogue-item",
-            "value": "owasp-llm-top10:LLM10:2025"
-          },
-          {
-            "name": "lfai:technique",
-            "value": "AML.T0029"
+            "value": "owasp-llm-top10:LLM09:2025"
           },
           {
             "name": "lfai:cwe-rationale",
@@ -5569,6 +5595,130 @@
           {
             "name": "lfai:cwe-rationale",
             "value": "CWE-359: personal data is exposed to the assistant and the stores it writes to."
+          }
+        ]
+      },
+      {
+        "refId": "threat:codebase-copied-from-workstation",
+        "name": "Malware on the workstation copies the local codebase",
+        "description": "Developer's workstation runs malware, for example from a phishing attachment, which reads the Local Codebase Clone directly from disk and sends it out, without using the assistant. This results in proprietary code and any secrets in it reaching the attacker. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
+        "source": "structural pass (STRIDE)",
+        "origin": "adversarial",
+        "categories": [
+          {
+            "taxonomy": "STRIDE",
+            "category": "information-disclosure"
+          },
+          {
+            "taxonomy": "MITRE-ATTACK",
+            "category": "collection"
+          },
+          {
+            "taxonomy": "MITRE-ATTACK",
+            "category": "exfiltration"
+          }
+        ],
+        "weaknesses": [
+          {
+            "ref": "weakness:cwe-538"
+          }
+        ],
+        "killChainPhase": "actions-on-objectives",
+        "affects": [
+          "component:data-local-codebase",
+          "asset:codebase-secrets",
+          "component:local-ide"
+        ],
+        "mitigations": [
+          "control:workstation-anti-malware",
+          "control:secret-scanning-and-redaction"
+        ],
+        "properties": [
+          {
+            "name": "lfai:nist-800-30:threat-source",
+            "value": "TS-ADV-01 Adversarial - Individual - Outsider"
+          },
+          {
+            "name": "lfai:nist-800-30:threat-event",
+            "value": "TE-65 Achieve results - Obtain sensitive information via exfiltration"
+          },
+          {
+            "name": "lfai:nist-800-30:adverse-impact",
+            "value": "AI-AST-06 HARM TO ASSETS - Loss of intellectual property"
+          },
+          {
+            "name": "lfai:technique",
+            "value": "T1005"
+          },
+          {
+            "name": "lfai:technique",
+            "value": "T1041"
+          },
+          {
+            "name": "lfai:cwe-rationale",
+            "value": "CWE-538: the clone holds sensitive files in a location other code running as the developer can read."
+          }
+        ]
+      },
+      {
+        "refId": "threat:context-store-destroyed",
+        "name": "A context store is deleted, corrupted or locked",
+        "description": "Developer's assistant depends on its context store, which malware or a failure on the workstation (1a), or a fault or attack at the provider (1b), deletes, corrupts or locks. This results in the assistant losing the project context it retrieves, so its answers become worse until the store is rebuilt. The same threat is modelled in the Sub Use Case 1b TM-BOM.",
+        "source": "structural pass (STRIDE)",
+        "origin": "adversarial",
+        "categories": [
+          {
+            "taxonomy": "STRIDE",
+            "category": "denial-of-service"
+          },
+          {
+            "taxonomy": "STRIDE",
+            "category": "tampering"
+          },
+          {
+            "taxonomy": "MAESTRO",
+            "category": "data-operations"
+          },
+          {
+            "taxonomy": "MITRE-ATTACK",
+            "category": "impact"
+          }
+        ],
+        "weaknesses": [
+          {
+            "ref": "weakness:cwe-693"
+          }
+        ],
+        "killChainPhase": "actions-on-objectives",
+        "affects": [
+          "component:context-store-local",
+          "component:rag-local",
+          "flow:1a:rag-local-to-context-store-local"
+        ],
+        "mitigations": [
+          "control:context-ingestion-validation",
+          "control:context-store-protection"
+        ],
+        "properties": [
+          {
+            "name": "lfai:nist-800-30:threat-source",
+            "value": "TS-ADV-01 Adversarial - Individual - Outsider"
+          },
+          {
+            "name": "lfai:nist-800-30:threat-event",
+            "value": "TE-67 Achieve results - Cause deterioration/destruction of critical system components and functions"
+          },
+          {
+            "name": "lfai:nist-800-30:adverse-impact",
+            "value": "AI-OPS-01 HARM TO OPERATIONS - Inability to perform current missions/business functions"
+          },
+          {
+            "name": "lfai:technique",
+            "value": "T1486"
+          },
+          {
+            "name": "lfai:cwe-rationale",
+            "value": "CWE-693: the store has no backup or rebuild procedure that would limit the loss."
           }
         ]
       }
@@ -6685,7 +6835,7 @@
       {
         "refId": "threat-scenario:local-resource-exhaustion",
         "name": "Agent loops exhaust the workstation",
-        "description": "Developer's local agent enters a long multi-step loop, or the plugin sends a completion request on every keystroke, and the local model uses all of the workstation's CPU, GPU and memory. This results in the IDE and the assistant becoming unusable.",
+        "description": "Developer's local agent enters a long multi-step loop, or the plugin sends a completion request on every keystroke, and the local model uses all of the workstation's CPU, GPU and memory. This results in the IDE and the assistant becoming unusable. Other parts of LLM10: model extraction through the inference API does not apply, because the local model is a stock open model served only to this developer (its weights on disk are covered by threat:local-model-weights-theft); deliberate exhaustion needs code already running on the workstation and is covered by threat:unexpected-code-execution.",
         "event": "Repeated inference over flow:1a:local-agent-to-model-local saturates the workstation.",
         "threats": [
           "threat:local-resource-exhaustion"
@@ -6901,7 +7051,7 @@
         ],
         "likelihood": {
           "level": "medium",
-          "rationale": "Code models can reproduce training code verbatim, and no licence check is stated; the original threat sheet raises this (T27, T28)."
+          "rationale": "Code models can reproduce training code verbatim, and no licence check is stated; the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T27 and T28)."
         },
         "riskAttributes": [
           "compliance"
@@ -7065,7 +7215,7 @@
         "accessLevel": "internal",
         "likelihood": {
           "level": "medium",
-          "rationale": "AI-assisted changes are routine, and no provenance record is stated; the original threat sheet raises this (T18, T19)."
+          "rationale": "AI-assisted changes are routine, and no provenance record is stated; the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T18 and T19)."
         },
         "riskAttributes": [
           "accountability",
@@ -7085,7 +7235,7 @@
       {
         "refId": "threat-scenario:agent-modifies-own-controls",
         "name": "Agent changes its own configuration, plugin or guardrails",
-        "description": "Developer's local agent, following injected instructions or a mistaken plan, uses its file access to edit its own configuration, the IDE plugin or the framework's guardrail files, for example to add tools or switch off approval. This results in the agent removing the limits that were meant to contain it.",
+        "description": "Developer's local agent, following injected instructions or a mistaken plan, uses its file access to edit its own configuration, the IDE plugin or the framework's guardrail files, for example to add tools or switch off approval. This results in the agent removing the limits that were meant to contain it. The same path, controls and impact apply whether the change comes from an attacker's injected instructions or from the agent's own mistaken plan, so one threat covers both; the scenario models the adversarial case.",
         "event": "The agent writes to its configuration through the framework on the workstation.",
         "threats": [
           "threat:agent-modifies-own-controls"
@@ -7106,7 +7256,7 @@
         },
         "likelihood": {
           "level": "medium",
-          "rationale": "Coding agents can usually write anywhere the developer can, including their own settings; no file restriction is stated (original threat sheet T50)."
+          "rationale": "Coding agents can usually write anywhere the developer can, including their own settings; no file restriction is stated (the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, T50)."
         },
         "riskAttributes": [
           "integrity",
@@ -7127,7 +7277,7 @@
       {
         "refId": "threat-scenario:codebase-direct-tampering",
         "name": "Attacker plants a backdoor in, or encrypts, the local codebase",
-        "description": "Developer's Local Codebase Clone is changed directly by malware or an attacker with access to the workstation, which plants a backdoor in the code or encrypts it for ransom. This results in malicious code being pushed under the developer's name, or work being lost.",
+        "description": "Developer commits and pushes from a Local Codebase Clone that malware on the workstation has changed directly, by planting a backdoor in the code, or opens a clone that the malware has encrypted for ransom. This results in malicious code reaching the shared repository under the developer's name, or the developer's unpushed work being lost.",
         "event": "Files of the Local Codebase Clone are changed on disk.",
         "threats": [
           "threat:codebase-direct-tampering"
@@ -7148,7 +7298,7 @@
         },
         "likelihood": {
           "level": "low",
-          "rationale": "It needs code already running on the workstation; the original threat sheet raises both forms (ML-T02, ML-T04)."
+          "rationale": "It needs code already running on the workstation; the earlier threat table (dfd_controls_assets_threats/controls_assets_threats_tables.md, ML-T02 and ML-T04) raises both forms."
         },
         "riskAttributes": [
           "integrity",
@@ -7206,27 +7356,17 @@
       {
         "refId": "threat-scenario:context-flooding-degrades-output",
         "name": "Oversized content pushes the task out of the model's context",
-        "description": "Developer's request is assembled with a very large file, tool result or retrieved item, possibly placed there on purpose, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so.",
+        "description": "Developer asks for help with a task whose context includes a very large file, tool result or retrieved item, which fills the model's context window. This results in the instructions and the relevant code being cut off, and the model returning wrong or unsafe code without saying so. An attacker could place oversized content on purpose, but the path, controls and impact are the same as for the common accidental case, so one threat covers both.",
         "event": "An oversized item fills the prompt sent over flow:1a:local-agent-to-model-local or flow:1b:remote-agent-to-model-remote.",
         "threats": [
           "threat:context-flooding-degrades-output"
         ],
-        "actor": "party:external-attacker",
-        "motivation": [
-          "disruption"
-        ],
-        "intent": "opportunistic",
-        "accessLevel": "external",
-        "attackVector": {
-          "type": "network",
-          "complexity": "low",
-          "privileges": "none",
-          "userInteraction": "required",
-          "scope": "changed"
-        },
+        "actor": "party:developer",
+        "intent": "accidental",
+        "accessLevel": "internal",
         "likelihood": {
           "level": "medium",
-          "rationale": "Large files and tool results are common in repositories, and no context limit is stated (original threat sheet, unnumbered row after T33)."
+          "rationale": "Large files and tool results are common in repositories, and no context limit is stated (the working group's threat sheet (use_cases/code_assistant/threats/Threat modeling - Use case_ Code Assistant.xlsx, the unnumbered row after T33)."
         },
         "riskAttributes": [
           "integrity",
@@ -7271,6 +7411,83 @@
         ],
         "damageScenarios": [
           "damage-scenario:personal-data-exposed"
+        ]
+      },
+      {
+        "refId": "threat-scenario:codebase-copied-from-workstation",
+        "name": "Malware on the workstation copies the local codebase",
+        "description": "Developer's workstation runs malware, for example from a phishing attachment, which reads the Local Codebase Clone directly from disk and sends it out, without using the assistant. This results in proprietary code and any secrets in it reaching the attacker.",
+        "event": "Malware reads the clone from disk; no modelled flow is used.",
+        "threats": [
+          "threat:codebase-copied-from-workstation"
+        ],
+        "actor": "party:external-attacker",
+        "motivation": [
+          "espionage",
+          "financial"
+        ],
+        "intent": "opportunistic",
+        "accessLevel": "external",
+        "attackVector": {
+          "type": "local",
+          "complexity": "low",
+          "privileges": "low",
+          "userInteraction": "required",
+          "scope": "unchanged"
+        },
+        "likelihood": {
+          "level": "low",
+          "rationale": "It needs malware already on the workstation; the assistant does not change how likely that is, but the clone is the most valuable data there."
+        },
+        "riskAttributes": [
+          "confidentiality"
+        ],
+        "affects": [
+          "component:data-local-codebase",
+          "asset:codebase-secrets",
+          "component:local-ide"
+        ],
+        "damageScenarios": [
+          "damage-scenario:proprietary-code-exposed"
+        ]
+      },
+      {
+        "refId": "threat-scenario:context-store-destroyed",
+        "name": "A context store is deleted, corrupted or locked",
+        "description": "Developer's assistant depends on its context store, which malware or a failure on the workstation (1a), or a fault or attack at the provider (1b), deletes, corrupts or locks. This results in the assistant losing the project context it retrieves, so its answers become worse until the store is rebuilt.",
+        "event": "The context store read over flow:1a:rag-local-to-context-store-local or flow:1b:rag-remote-to-context-store-remote is unavailable.",
+        "threats": [
+          "threat:context-store-destroyed"
+        ],
+        "actor": "party:external-attacker",
+        "motivation": [
+          "disruption",
+          "financial"
+        ],
+        "intent": "opportunistic",
+        "accessLevel": "external",
+        "attackVector": {
+          "type": "local",
+          "complexity": "low",
+          "privileges": "low",
+          "userInteraction": "none",
+          "scope": "unchanged"
+        },
+        "likelihood": {
+          "level": "low",
+          "rationale": "The store can be rebuilt from its sources, which limits the impact; no backup is stated."
+        },
+        "riskAttributes": [
+          "availability",
+          "integrity"
+        ],
+        "affects": [
+          "component:context-store-local",
+          "component:rag-local",
+          "flow:1a:rag-local-to-context-store-local"
+        ],
+        "damageScenarios": [
+          "damage-scenario:assistant-unavailable"
         ]
       }
     ],
@@ -8310,6 +8527,10 @@
         {
           "name": "lfai:mitigates",
           "value": "CWE-345"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-693"
         }
       ]
     },
@@ -8356,6 +8577,10 @@
         {
           "name": "lfai:mitigates",
           "value": "CWE-212"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-538"
         },
         {
           "name": "lfai:mitigates",
@@ -8407,6 +8632,10 @@
         {
           "name": "lfai:mitigates",
           "value": "CWE-359"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-693"
         },
         {
           "name": "lfai:mitigates",
@@ -8494,7 +8723,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-443"
         },
         {
           "name": "lfai:mitigates",
@@ -8731,7 +8960,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-443"
         },
         {
           "name": "lfai:mitigates",
@@ -8818,7 +9047,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-443"
         },
         {
           "name": "lfai:mitigates",
@@ -8869,7 +9098,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-443"
         },
         {
           "name": "lfai:mitigates",
@@ -8975,7 +9204,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-444"
         },
         {
           "name": "lfai:mitigates",
@@ -9008,6 +9237,10 @@
         {
           "name": "lfai:mitigates",
           "value": "CWE-522"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CWE-538"
         },
         {
           "name": "lfai:mitigates",
@@ -9081,7 +9314,11 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-443"
+        },
+        {
+          "name": "lfai:mitigates",
+          "value": "CAPEC-444"
         },
         {
           "name": "lfai:mitigates",
@@ -9147,8 +9384,8 @@
     },
     {
       "refId": "control:signed-commits-and-backup",
-      "name": "Sign commits and keep the remote repository as a backed-up source of truth",
-      "description": "Commits are signed and verified on push, and the remote repository is backed up, so a planted or encrypted local clone can be detected and restored.",
+      "name": "Keep the remote repository as a backed-up source of truth, and sign commits",
+      "description": "The remote repository is backed up and is the source of truth, so an encrypted or deleted local clone can be restored from it. Commits are signed so that each pushed change is attributable to a developer key; this does not detect a change made by malware on the same workstation, which can sign with that key, so detection relies on independent change review.",
       "category": "corrective",
       "status": "recommended",
       "appliesTo": [
@@ -9171,7 +9408,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-444"
         },
         {
           "name": "lfai:mitigates",
@@ -9340,7 +9577,7 @@
         },
         {
           "name": "lfai:mitigates",
-          "value": "CAPEC-441"
+          "value": "CAPEC-443"
         },
         {
           "name": "lfai:mitigates",
@@ -9582,7 +9819,7 @@
           "component:cloud-service",
           "component:code-assistant-model-local",
           "component:code-asst-plugin",
-          "component:internal-agentic-framework"
+          "component:context-store-local"
         ],
         "impacts": [
           {
@@ -9865,13 +10102,15 @@
           "threat:unexpected-saas-fallback",
           "threat:insider-exfiltration-via-assistant",
           "threat:local-model-weights-theft",
+          "threat:codebase-copied-from-workstation",
           "threat-scenario:secrets-leak-through-assistant",
           "threat-scenario:local-index-exposure",
           "threat-scenario:system-prompt-and-config-leakage",
           "threat-scenario:mcp-traffic-interception",
           "threat-scenario:unexpected-saas-fallback",
           "threat-scenario:insider-exfiltration-via-assistant",
-          "threat-scenario:local-model-weights-theft"
+          "threat-scenario:local-model-weights-theft",
+          "threat-scenario:codebase-copied-from-workstation"
         ],
         "relatedDamageScenarios": [
           "damage-scenario:credentials-compromised",
@@ -10031,13 +10270,16 @@
           "component:internal-agentic-framework",
           "component:local-code-asst-agent",
           "component:code-asst-plugin",
-          "component:local-ide"
+          "component:local-ide",
+          "component:context-store-local"
         ],
         "relatedThreats": [
           "threat:auth-service-denial",
           "threat:local-resource-exhaustion",
+          "threat:context-store-destroyed",
           "threat-scenario:auth-service-denial",
-          "threat-scenario:local-resource-exhaustion"
+          "threat-scenario:local-resource-exhaustion",
+          "threat-scenario:context-store-destroyed"
         ],
         "relatedDamageScenarios": [
           "damage-scenario:assistant-unavailable"
@@ -10059,7 +10301,9 @@
             "strategy": "reduce",
             "controls": [
               "control:auth-rate-limiting",
-              "control:agent-budgets-and-rate-limits"
+              "control:agent-budgets-and-rate-limits",
+              "control:context-ingestion-validation",
+              "control:context-store-protection"
             ],
             "status": "recommended"
           }
@@ -10613,19 +10857,6 @@
     },
     {
       "subjects": [
-        "component:internal-agentic-framework"
-      ],
-      "annotator": {
-        "component": {
-          "type": "application",
-          "name": "cyclonedx skill"
-        }
-      },
-      "timestamp": "2026-11-17T00:00:00Z",
-      "text": "not-applicable owasp-llm-top10:LLM09:2025: misinformation originates in the model's generation; the framework passes output through unchanged, so it is decided on the model and on the plugin that presents it"
-    },
-    {
-      "subjects": [
         "component:local-code-asst-agent"
       ],
       "annotator": {
@@ -10961,6 +11192,71 @@
       },
       "timestamp": "2026-11-17T00:00:00Z",
       "text": "reviewed usecase:code-assistant-1a: the system BOM declares no exceptions for this use case, so its preconditions, alternative flow and postconditions were reviewed: the marketplace installation led to threat:malicious-look-alike-plugin, authentication to threat:developer-credential-phishing, the local-hardware precondition to threat:local-resource-exhaustion, the delegation alternative flow to threat:unexpected-saas-fallback, and the logging postcondition to threat:agent-actions-not-audited; the exceptions in definition.md (prompt injection, MCP server unreachable, context store poisoning) led to threat:codebase-prompt-injection, threat:cascading-tool-failure and threat:local-context-poisoning"
+    },
+    {
+      "subjects": [
+        "component:data-local-codebase"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed component:data-local-codebase: data store: modification led to threat:codebase-direct-tampering; loss of availability led to threat:codebase-direct-tampering (encryption for ransom); copying outside the system's flows led to threat:codebase-copied-from-workstation"
+    },
+    {
+      "subjects": [
+        "component:context-store-local"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed component:context-store-local: data store: modification led to threat:local-context-poisoning; loss of availability led to threat:context-store-destroyed; copying outside the system's flows led to threat:local-index-exposure"
+    },
+    {
+      "subjects": [
+        "component:code-assistant-model-local"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed component:code-assistant-model-local: data store: modification led to threat:local-model-supply-chain; loss of availability led to threat:local-resource-exhaustion; copying outside the system's flows led to threat:local-model-weights-theft"
+    },
+    {
+      "subjects": [
+        "component:code-assistant-model-local"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed component:code-assistant-model-local: harms outside STRIDE: licence led to threat:generated-code-licence-violation; quality led to threat:insecure-generated-code and threat:context-flooding-degrades-output; privacy led to threat:personal-data-in-context; safety and harmful content: no separate threat, because the model returns only code and explanations to a developer who reviews them, so unsafe code is threat:insecure-generated-code and deliberately harmful code is threat:insider-authentication-backdoor; fairness: does not arise, because the assistant makes no decision about people"
+    },
+    {
+      "subjects": [
+        "component:local-code-asst-agent"
+      ],
+      "annotator": {
+        "component": {
+          "type": "application",
+          "name": "cyclonedx skill"
+        }
+      },
+      "timestamp": "2026-11-17T00:00:00Z",
+      "text": "reviewed component:local-code-asst-agent: own controls: led to threat:agent-modifies-own-controls"
     }
   ]
 }
