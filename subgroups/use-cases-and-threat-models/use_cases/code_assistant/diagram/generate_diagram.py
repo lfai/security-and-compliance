@@ -37,9 +37,11 @@ BOUNDARIES = {
 
 # ─── Nodes ─────────────────────────────────────────────────────────────────
 # Each entry: bom_ref → (display_label, cdx_type, boundary_key)
+# cdx_type is the CycloneDX component type, or "actor" for a blueprint actor
+# (a person or agent), which is not a component.
 NODES = [
     # Internal
-    ("actor-developer",           "Developer",                           "device",                "internal"),
+    ("actor-developer",           "Developer",                           "actor",                 "internal"),
     ("local-ide",                 "IDE",                                 "application",           "internal"),
     ("code-asst-plugin",          "Code Assistant\nPlugin",              "application",           "internal"),
     ("data-local-codebase",       "Local Codebase\nClone",               "data",                  "internal"),
@@ -69,7 +71,8 @@ NODES = [
 
 # ─── Node visual style by CycloneDX type ──────────────────────────────────
 TYPE_STYLE = {
-    "device":                {"shape": "oval",      "fillcolor": "#c8e6c9", "style": "filled"},
+    "actor":                 {"shape": "oval",      "fillcolor": "#c8e6c9", "style": "filled"},
+    "device":                {"shape": "box3d",     "fillcolor": "#dcedc8", "style": "filled"},
     "application":           {"shape": "box",       "fillcolor": "#ffffff", "style": "filled,rounded"},
     "data":                  {"shape": "cylinder",  "fillcolor": "#ffe0b2", "style": "filled"},
     "framework":             {"shape": "component", "fillcolor": "#e1bee7", "style": "filled"},
