@@ -6,4 +6,15 @@
 .vscode/*.log
 
 # Misc
-.bob
+# IBM Bob local state is ignored; shared skills under .bob/skills/ are tracked.
+.bob/*
+!.bob/skills/
+# Claude Code: only the shared skills under .claude/skills/ are tracked; everything else
+# under .claude/ (local settings, personal agents and commands) stays local.
+.claude/*
+!.claude/skills/
+
+# Python caches from running the skill scripts
+__pycache__/
+.pytest_cache/
+.venv/

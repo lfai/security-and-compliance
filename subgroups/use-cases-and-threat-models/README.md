@@ -80,6 +80,15 @@ AI:
 2. Map enriched statements to CAPEC & CWE
 3. Map CAPEC & CWE to Controls (NIST 800-53 and CSA AICM)
 
+### AI skill: CycloneDX 2.0 system BOMs and threat models
+
+The repository includes a CycloneDX 2.0 skill for **IBM Bob** ([`.bob/skills/cyclonedx/`](../../.bob/skills/cyclonedx/SKILL.md)) and **Claude Code** ([`.claude/skills/claude-cyclonedx/`](../../.claude/skills/claude-cyclonedx/SKILL.md)). Both assistants share the same workflows, scripts and schema, and they automate the process above in two steps:
+
+1. **Diagram to system BOM.** Give the assistant the dataflow diagram (image or Mermaid) and a supporting `.md`, and ask it to *"turn this system diagram into a system BOM"*. It writes a CycloneDX 2.0 BOM with the components, actors, trust zones, boundaries, flows and use cases ([workflow](../../.bob/skills/cyclonedx/workflows/diagram-to-system-bom.md)).
+2. **System BOM to threat model.** Ask it to *"generate a TM from this system BOM"*. It writes one threat-model BOM per use case, with threats written to the guidance above, NIST 800-30 enrichment, CAPEC and CWE, and NIST 800-53 and CSA AICM controls. Each TM-BOM links back to the system BOM ([workflow](../../.bob/skills/cyclonedx/workflows/system-bom-to-threat-model.md)).
+
+Every BOM is checked with `python .bob/skills/cyclonedx/scripts/validate_bom.py` (schema, references and links between the BOMs). A worked example for the Code Assistant is in [`.bob/skills/cyclonedx/examples/`](../../.bob/skills/cyclonedx/examples/). To run it yourself, follow [GETTING-STARTED.md](../../.bob/skills/cyclonedx/GETTING-STARTED.md).
+
 ### Current Work
 
 We have threat modelled the use case "AI Assistant Code Generator" (based on using a code-generating AI assistant as a plugin in IDE).
