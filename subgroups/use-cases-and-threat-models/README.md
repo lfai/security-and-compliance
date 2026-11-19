@@ -80,14 +80,50 @@ AI:
 2. Map enriched statements to CAPEC & CWE
 3. Map CAPEC & CWE to Controls (NIST 800-53 and CSA AICM)
 
-### AI skill: CycloneDX 2.0 system BOMs and threat models
+### AI skills: CycloneDX 2.0 system BOMs and threat models
 
-The repository includes a CycloneDX 2.0 skill for **IBM Bob** ([`.bob/skills/cyclonedx/`](../../.bob/skills/cyclonedx/SKILL.md)) and **Claude Code** ([`.claude/skills/claude-cyclonedx/`](../../.claude/skills/claude-cyclonedx/SKILL.md)). Both assistants share the same workflows, scripts and schema, and they automate the process above in two steps:
+The repository includes AI assistant skills that automate the process above. They produce machine-readable [OWASP CycloneDX 2.0](https://cyclonedx.org/) documents, so that threat models can be consumed directly by security, compliance and governance tooling.
 
-1. **Diagram to system BOM.** Give the assistant the dataflow diagram (image or Mermaid) and a supporting `.md`, and ask it to *"turn this system diagram into a system BOM"*. It writes a CycloneDX 2.0 BOM with the components, actors, trust zones, boundaries, flows and use cases ([workflow](../../.bob/skills/cyclonedx/workflows/diagram-to-system-bom.md)).
-2. **System BOM to threat model.** Ask it to *"generate a TM from this system BOM"*. It writes one threat-model BOM per use case, with threats written to the guidance above, NIST 800-30 enrichment, CAPEC and CWE, and NIST 800-53 and CSA AICM controls. Each TM-BOM links back to the system BOM ([workflow](../../.bob/skills/cyclonedx/workflows/system-bom-to-threat-model.md)).
+| Skill | Assistant | What it does |
+|---|---|---|
+| [`cyclonedx`](../../.bob/skills/cyclonedx/SKILL.md) | IBM Bob (`/cyclonedx`) | Turns a system diagram and notes into a **system BOM**, generates one **threat-model BOM (TM-BOM) per use case** from it, validates BOMs and the links between them, and maps where elements are declared and referenced. |
+| [`claude-cyclonedx`](../../.claude/skills/claude-cyclonedx/SKILL.md) | Claude Code (`/claude-cyclonedx`, or ask in plain language) | The same skill for Claude Code. It is a thin entry point that uses the shared workflows, scripts, schema and examples in `.bob/skills/cyclonedx/`, so both assistants follow the same procedure and produce the same output. |
+| [`purl`](../../.bob/skills/purl/SKILL.md) | IBM Bob | Package URL (ECMA-427) authoring, used for component identity in BOMs. |
 
-Every BOM is checked with `python .bob/skills/cyclonedx/scripts/validate_bom.py` (schema, references and links between the BOMs). A worked example for the Code Assistant is in [`.bob/skills/cyclonedx/examples/`](../../.bob/skills/cyclonedx/examples/). To run it yourself, follow [GETTING-STARTED.md](../../.bob/skills/cyclonedx/GETTING-STARTED.md).
+The skills do the modelling; you supply the inputs, review what the assistant assumed, and run the validator to check its work.
+
+- **System BOM:** a CycloneDX 2.0 description of the system: its components, actors, trust zones, boundaries, data flows and use cases.
+- **TM-BOM:** the threat model for one use case. It carries a *slice* of the system BOM (the elements that use case touches), the threats, the NIST SP 800-30 enrichment, CAPEC and CWE mappings, NIST SP 800-53 and CSA AICM controls, and risks. It links back to the system BOM with BOM-Links.
+
+#### Process flow
+
+```mermaid
+flowchart TD
+    A["You: dataflow diagram<br/>(image or Mermaid .mmd)<br/>+ supporting notes (.md)"] --> B
+    B["Step 1 (AI): 'Turn this system diagram into a system BOM'"] --> C["system-bom.json<br/>+ classification tags + open questions"]
+    C --> D{"You: review open questions and tags,<br/>run validate_bom.py"}
+    D -- "answers / corrections" --> B
+    D -- "0 errors" --> E
+    E["Step 2 (AI): 'Generate a threat model from this system BOM'<br/>confirm use cases and methodologies"] --> F["One TM-BOM per use case<br/>(name.tm-bom.use-case.json)"]
+    F --> G{"You: validate_bom.py --system ... --strict,<br/>read the threats and 'not applicable' reasons"}
+    G -- "gaps or errors" --> E
+    G -- "accepted" --> H["Optional: visualise_bom.py<br/>interactive map of the BOMs"]
+    H --> I["Commit to a folder under use_cases/<br/>and open a PR"]
+    F -. "BOM-Links" .-> C
+```
+
+| # | You provide | You run or ask | You get |
+|---|---|---|---|
+| 0 | A Python 3.9+ virtual environment (once) | `pip install -r .bob/skills/cyclonedx/scripts/requirements.txt` | The validator and scripts, ready to run |
+| 1 | The dataflow diagram (a Mermaid `.mmd` or other text diagram gives better results than an image) and supporting notes: what each element is, its data, the use cases, and who hosts what | *"Turn this system diagram into a system BOM. Diagram: `<path>/diagram.mmd`. Notes: `<path>/notes.md`. Write it to `<path>/system-bom.json`."* ([workflow](../../.bob/skills/cyclonedx/workflows/diagram-to-system-bom.md)) | `system-bom.json`, a count of what was found, each component's classification tags (which decide what the threat sweep covers), and a list of open questions |
+| 2 | Answers to the open questions | `python .bob/skills/cyclonedx/scripts/validate_bom.py <path>/system-bom.json` | Confirmation that the system BOM is valid. Fix mistakes here: they carry into every threat model |
+| 3 | The validated system BOM | *"Generate a threat model from this system BOM: `<path>/system-bom.json`. Write one TM-BOM per use case into `<path>/`."* ([workflow](../../.bob/skills/cyclonedx/workflows/system-bom-to-threat-model.md)) | One TM-BOM per use case. For each, the assistant cuts the slice (`slice_use_case.py`), finds threats with STRIDE (and MAESTRO by default) on every element and flow, sweeps the applicable catalogues (OWASP Top 10s, MITRE ATLAS, MITRE ATT&CK, CWE) recording each item as a threat or "not applicable" with a reason, reviews the use case for system-specific threats, then adds NIST SP 800-30, CAPEC, CWE, NIST SP 800-53 and CSA AICM |
+| 4 | Each TM-BOM | `python .bob/skills/cyclonedx/scripts/validate_bom.py <path>/<name>.tm-bom.<use-case>.json --system <path>/system-bom.json --strict --report-json <path>/<use-case>.coverage.json` | A coverage line (threats, elements covered, controls mapped, sweep decisions) and a JSON report of any gaps. 0 errors is required; with `--strict`, 0 warnings means full coverage |
+| 5 | The system BOM and its TM-BOMs | `python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <path>/system-bom.json <path>/*.tm-bom.*.json -o bom-map.html` | An offline, interactive HTML map of where each element is declared and referenced across the BOMs (keep it out of the repository) |
+
+The validator proves that every decision was recorded, not that it is right. Read the threats and the "not applicable" reasons before sharing a threat model. In testing, a full threat model for a system with three use cases took the assistant about 1.5 to 2 hours.
+
+To get started, follow [GETTING-STARTED.md](../../.bob/skills/cyclonedx/GETTING-STARTED.md) (setup for macOS, Linux and Windows, both steps, checking results, and troubleshooting). A worked example for the Code Assistant, a system BOM and a linked TM-BOM for Sub Use Case 1b, is in [`.bob/skills/cyclonedx/examples/`](../../.bob/skills/cyclonedx/examples/). Maintainer notes are in the [skills README](../../.bob/skills/README.md).
 
 ### Current Work
 
@@ -97,7 +133,7 @@ The DFD lives [here on Mural](https://app.mural.co/t/securityusecasesandthreatmo
 
 ![Data Flow Diagram of Code Assistant](./images/code_assistant_dfd.png)
 
-The Threat Model lives [here on google Docs](https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing) (please request access if needed)
+The Threat Model lives [here on google Docs](https://docs.google.com/spreadsheets/d/1SaB_a9iaSDTNvnyFJznMuBHIXmkDP1fcHX2ltcyJeUs/edit?usp=sharing) (please request access if needed). A copy is in the repository, as a Markdown table ([code_assistant_threats.md](./use_cases/code_assistant/threats/code_assistant_threats.md), columns A to K) and as the full spreadsheet, in [`use_cases/code_assistant/threats/`](./use_cases/code_assistant/threats/).
 
 We are currently creating an automated, AI driven process to utilise AI to:
 
