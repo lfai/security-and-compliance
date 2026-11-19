@@ -38,6 +38,8 @@ Classify each element using this table:
 
 Do not invent elements that are not in the diagram or the Markdown.
 
+**Describe what each element is, not what can go wrong with it.** A `description` says what the component, actor or zone is and does in this system. Leave out threats, risks and attack scenarios ("an attack surface…", "risks include…", "susceptible to…"): they belong in the threat model, where they are tracked, mapped to controls and validated. If the notes describe a component by its threats, keep the threats for the threat model and describe the legitimate component. For example, write "The AI-powered IDE plugin that hosts the Code Assistant Agent and connects the IDE to it", not "A compromised or malicious IDE plugin…". The validator warns when a description uses threat words.
+
 **Ambiguity.** Diagrams are often ambiguous. Do not stop at each ambiguity. Make the most plausible reading, record it as a blueprint `assumptions[]` entry with `validity: "unverified"` (and `relatedAssets` naming the elements involved), and list it in the report as an open question. Common cases:
 - **Same label, different shapes.** Two shapes with the same label are separate elements, unless the notes say they are one. Give each a refId that says what it does (for example `component:input-guard-llm` and `component:input-guard-embedding`).
 - **A grouping with the same name as a box inside it.** Treat the grouping as that component's boundary (a `contains` relationship), not as a zone.

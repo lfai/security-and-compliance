@@ -38,7 +38,7 @@
         "type": "application",
         "refId": "component:local-ide",
         "name": "Integrated Development Environment (IDE)",
-        "description": "The software environment where code is written and tested—an attack surface due to risks like malicious extensions, insecure settings, or credential exposure.",
+        "description": "The software environment where code is written and tested, and the host of the Code Assistant Plugin.",
         "externalReferences": [
           {
             "type": "bom",
@@ -51,7 +51,7 @@
         "type": "application",
         "refId": "component:code-asst-plugin",
         "name": "Code Assistant Plugin",
-        "description": "A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions—introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.",
+        "description": "The AI-powered IDE plugin that hosts the Code Assistant Agent and connects the IDE to it.",
         "externalReferences": [
           {
             "type": "bom",
@@ -64,7 +64,7 @@
         "type": "application",
         "refId": "component:authn-service",
         "name": "Authentication Service",
-        "description": "The service for verifying the identity of a user or system—risks include credential theft, weak authentication mechanisms, and session hijacking.",
+        "description": "The service for verifying the identity of a user or system.",
         "externalReferences": [
           {
             "type": "bom",
@@ -77,7 +77,7 @@
         "type": "application",
         "refId": "component:authz-service",
         "name": "Authorization Service",
-        "description": "The service for determining what an authenticated user or system is allowed to access or perform—risks include excessive permissions, privilege escalation, and misconfigured access controls.",
+        "description": "The service for determining what an authenticated user or system is allowed to access or perform.",
         "externalReferences": [
           {
             "type": "bom",
@@ -90,7 +90,7 @@
         "type": "application",
         "refId": "component:mcp-server-third-party",
         "name": "Third Party MCP Server",
-        "description": "An organization-operated MCP server that integrates the assistant with internal third-party services. Poses risks if misconfigured or inadequately secured, including unauthorized data access, insecure API exposure, and privilege escalation through service integrations.",
+        "description": "An organization-operated MCP server that integrates the assistant with internal third-party services.",
         "externalReferences": [
           {
             "type": "bom",
@@ -103,7 +103,7 @@
         "type": "application",
         "refId": "component:code-asst-agent",
         "name": "Code Assistant Agent",
-        "description": "The agent embedded within the Code Assistant Plugin and running inside the IDE on the developer's workstation. Modeled as a static component prior to plugin activation; once activated it becomes an actor with agency. Handles low-latency tasks such as inline completions and prompt assembly, and invokes local MCP servers for context retrieval. Subject to prompt injection, supply chain compromise via the plugin delivery path, and abuse of IDE-accessible APIs.",
+        "description": "The agent embedded within the Code Assistant Plugin and running inside the IDE on the developer's workstation. Modeled as a static component prior to plugin activation; once activated it becomes an actor with agency. Handles low-latency tasks such as inline completions and prompt assembly, and invokes local MCP servers for context retrieval.",
         "externalReferences": [
           {
             "type": "bom",
@@ -116,7 +116,7 @@
         "type": "application",
         "refId": "component:remote-code-asst-agent",
         "name": "Remote Code Assistant Agent (remote, dynamic)",
-        "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations.",
+        "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case.",
         "externalReferences": [
           {
             "type": "bom",
@@ -129,7 +129,7 @@
         "type": "machine-learning-model",
         "refId": "component:code-assistant-model-remote",
         "name": "Remote Code Assistant Model",
-        "description": "The core AI model that generates responses or code suggestions, run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent.",
+        "description": "The core AI model that generates responses or code suggestions, run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). This is a component within the Agent.",
         "externalReferences": [
           {
             "type": "bom",
@@ -142,7 +142,7 @@
         "type": "application",
         "refId": "component:rag-remote",
         "name": "Remote RAG",
-        "description": "A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs.",
+        "description": "A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality.",
         "externalReferences": [
           {
             "type": "bom",
@@ -155,7 +155,7 @@
         "type": "data",
         "refId": "component:context-store-remote",
         "name": "Remote Context Store",
-        "description": "A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs.",
+        "description": "A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses.",
         "externalReferences": [
           {
             "type": "bom",
@@ -168,7 +168,7 @@
         "type": "application",
         "refId": "component:mcp-gateway",
         "name": "MCP Gateway",
-        "description": "The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. Acts as a perimeter trust boundary—misconfiguration or compromise can expose backend infrastructure to unauthorized access or traffic manipulation.",
+        "description": "The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. It is the single entry point to the Agentic SaaS platform.",
         "externalReferences": [
           {
             "type": "bom",
@@ -181,7 +181,7 @@
         "type": "application",
         "refId": "component:mcp-agentic-saas",
         "name": "MCP Server — Agentic SaaS",
-        "description": "The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components. A high-value target due to its central role—risks include unauthorized access, data interception, and abuse of its broad orchestration capabilities.",
+        "description": "The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components.",
         "externalReferences": [
           {
             "type": "bom",
@@ -194,7 +194,7 @@
         "type": "platform",
         "refId": "component:external-plugin-marketplace",
         "name": "External Plugin Marketplace",
-        "description": "An externally operated third-party platform where developers discover and install IDE plugins or extensions—introduces supply chain risks such as malicious or vulnerable plugins, insufficient vetting, and potential for unauthorized data access or exfiltration.",
+        "description": "An externally operated third-party platform where developers discover and install IDE plugins or extensions.",
         "externalReferences": [
           {
             "type": "bom",
@@ -207,7 +207,7 @@
         "type": "platform",
         "refId": "component:agentic-saas",
         "name": "Agentic SaaS",
-        "description": "An externally operated platform that delivers agentic assistant capabilities as a managed service. Introduces risks related to third-party data handling, limited visibility into model behavior and data flows, dependency on external availability, and reduced control over security posture.",
+        "description": "An externally operated platform that delivers agentic assistant capabilities as a managed service.",
         "externalReferences": [
           {
             "type": "bom",
@@ -220,7 +220,7 @@
         "type": "application",
         "refId": "component:mcp-cloud",
         "name": "MCP Server — Cloud Service",
-        "description": "An externally operated MCP server through which the assistant reaches an external service over the MCP protocol (e.g., GitHub, Slack, a database). The specific service is not scoped; it is characterized only by its MCP interface and by being external. Introduces supply chain risks including vulnerable or malicious dependencies, excessive permissions, and potential exfiltration of data passed through the integration.",
+        "description": "An externally operated MCP server through which the assistant reaches an external service over the MCP protocol (e.g., GitHub, Slack, a database). The specific service is not scoped; it is characterized only by its MCP interface and by being external.",
         "externalReferences": [
           {
             "type": "bom",
@@ -233,7 +233,7 @@
         "type": "application",
         "refId": "component:cloud-service",
         "name": "Cloud Service (e.g., GitHub, Slack, database)",
-        "description": "The external service that sits behind the MCP Server and is called remotely on behalf of the assistant (e.g., GitHub, Slack, a database). The specific service is intentionally not scoped; it is characterized only by being external and reachable through an MCP interface. Introduces additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.",
+        "description": "The external service that sits behind the MCP Server and is called remotely on behalf of the assistant (e.g., GitHub, Slack, a database). The specific service is intentionally not scoped; it is characterized only by being external and reachable through an MCP interface.",
         "externalReferences": [
           {
             "type": "bom",
@@ -481,7 +481,7 @@
             "persona": {
               "archetype": "developer",
               "scope": "internal",
-              "description": "Human actor who writes, modifies, and maintains code—considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations)."
+              "description": "Human actor who writes, modifies, and maintains code."
             }
           },
           "description": "The human developer who interacts with the code assistant within the IDE."
@@ -505,7 +505,7 @@
               ]
             }
           },
-          "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations."
+          "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case."
         }
       ],
       "flows": [
