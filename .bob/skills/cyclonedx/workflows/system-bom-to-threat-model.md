@@ -2,7 +2,7 @@
 
 Generate a **threat model** from a CycloneDX 2.0 system BOM: **one threat-model BOM (TM-BOM) per use case**, each linked to the system BOM by BOM-Link. This follows the LF AI & Data Use Cases and Threat Modeling subgroup's method ([README](../../../../subgroups/use-cases-and-threat-models/README.md)): perspective-correct threat statements, NIST SP 800-30 enrichment, CAPEC and CWE mapping, and controls mapped to NIST SP 800-53 and CSA AICM.
 
-The reference output is [examples/tm-bom.code-assistant-1b.json](../examples/tm-bom.code-assistant-1b.json), one fully worked threat for the Code Assistant Sub Use Case 1b, linked to [examples/system-bom.code-assistant.json](../examples/system-bom.code-assistant.json). It shows the **shape** of one threat end to end (scenario, attack path, controls, risk, catalogue citation, rationales), not the scale: a real TM-BOM covers every element and sweep item, so the validator's coverage and sweep warnings on this one-threat example are expected.
+The reference output is [examples/tm-bom.code-assistant-1b.json](../examples/tm-bom.code-assistant-1b.json) (with its threat table, [examples/tm-bom.code-assistant-1b.threats.md](../examples/tm-bom.code-assistant-1b.threats.md)), one fully worked threat for the Code Assistant Sub Use Case 1b, linked to [examples/system-bom.code-assistant.json](../examples/system-bom.code-assistant.json). It shows the **shape** of one threat end to end (scenario, attack path, controls, risk, catalogue citation, rationales), not the scale: a real TM-BOM covers every element and sweep item, so the validator's coverage and sweep warnings on this one-threat example are expected.
 
 ## How the two documents link
 
@@ -168,6 +168,8 @@ At design stage, ratings are judgements, not measurements. Give an `inherentRisk
 
 ## Step 7: Validate, link back, report
 
+Validate first, then write the threat table (Step 8): the table is only as correct as the TM-BOM it is written from.
+
 ```
 python .bob/skills/cyclonedx/scripts/validate_bom.py <tm-bom>.json --system <system>.json --report-json <tm-bom>.coverage.json
 ```
@@ -200,6 +202,22 @@ Report, for each TM-BOM, using the validator's output and `--report-json` file r
 - risks left unrated, and any defaults you chose because you could not ask the user;
 - the validator result, with any warnings you could not resolve.
 
+## Step 8: Write the threat table
+
+Once a TM-BOM validates with no errors, write its threat table, a Markdown page for people to read and review:
+
+```
+python .bob/skills/cyclonedx/scripts/tm_to_markdown.py <tm-bom>.json
+```
+
+This writes `<tm-bom>.threats.md` next to the TM-BOM (the `.json` suffix replaced by `.threats.md`; use `-o` to choose another path). The page has three tables:
+
+- **Threats:** one row per threat, in the shape of the working group's [Code Assistant threat table](../../../../subgroups/use-cases-and-threat-models/use_cases/code_assistant/threats/code_assistant_threats.md): the threat statement, STRIDE and MAESTRO categories, where it is located (affected elements by zone), the actor, the NIST SP 800-30 impact, source and event, catalogue items, MITRE ATT&CK and ATLAS techniques, whether it is AI specific, CAPEC and CWE with their rationales, the mitigating controls, and the risk rating.
+- **Controls:** one row per control, with its category, tier, status, the elements it applies to, the NIST SP 800-53 and CSA AICM requirements it satisfies, and the threats it mitigates.
+- **Catalogue items decided not applicable:** every not-applicable annotation, with its elements and reason, so reviewers can check the reasons the validator cannot judge.
+
+The page is generated from the TM-BOM and says so in its first line. Never edit it by hand: change the TM-BOM and run the script again. The script replaces an existing file only if it wrote it. Give the user the path of each page in the report.
+
 ## Regenerating after the system BOM changes
 
 When the system BOM changes, bump its `version`, then re-slice each existing TM-BOM in place:
@@ -208,4 +226,4 @@ When the system BOM changes, bump its `version`, then re-slice each existing TM-
 python .bob/skills/cyclonedx/scripts/slice_use_case.py <system>.json --use-case usecase:<id> -o <tm-bom>.json --update
 ```
 
-`--update` keeps the TM-BOM's `serialNumber`, bumps its `version`, and carries over its threats, controls, risks, weaknesses, standards and attacker parties. It reports flows that were added or removed, so you can review threats on removed flows; it refuses to write if a threat now references an element that is no longer in the slice. If the system BOM links back to the TM-BOM, rerun `--link` to refresh the version, then validate. A BOM-Link to an older version is reported as a warning, so you can find stale TM-BOMs.
+`--update` keeps the TM-BOM's `serialNumber`, bumps its `version`, and carries over its threats, controls, risks, weaknesses, standards and attacker parties. It reports flows that were added or removed, so you can review threats on removed flows; it refuses to write if a threat now references an element that is no longer in the slice. If the system BOM links back to the TM-BOM, rerun `--link` to refresh the version, then validate. A BOM-Link to an older version is reported as a warning, so you can find stale TM-BOMs. Then rerun `tm_to_markdown.py` (Step 8) so the threat table matches.

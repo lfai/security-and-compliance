@@ -27,6 +27,7 @@ People setting this up for the first time should read `.bob/skills/cyclonedx/GET
 | Validate a CycloneDX 2.0 BOM, or check its links | run `python .bob/skills/cyclonedx/scripts/validate_bom.py <bom>.json [--system <system>.json]` and explain the result |
 | Ask what a 2.0 field or object means | run `python .bob/skills/cyclonedx/scripts/schema_tool.py outline <module>[:<object>]` |
 | See where elements are declared and referenced, within a BOM and across a system BOM and its TM-BOMs | run `python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <system>.json [<tm>.json …] -o <scratch>/bom-map.html` (or `schema -o <scratch>/schema-map.html` for the schema alone) and give the user the file path to open |
+| Write a TM-BOM as a readable threat table | run `python .bob/skills/cyclonedx/scripts/tm_to_markdown.py <tm>.json` (writes `<tm>.threats.md`) and give the user the file path |
 | Work with CycloneDX 1.7 | [reference/v1.7-quick-reference.md](reference/v1.7-quick-reference.md) |
 
 Read the workflow file with `read_file` before starting. Each workflow is the procedure to follow, step by step.
@@ -62,12 +63,13 @@ Read the workflow file with `read_file` before starting. Each workflow is the pr
 | `scripts/slice_use_case.py` | Lists use cases, cuts the system slice for one use case into a TM-BOM skeleton (or updates an existing TM-BOM), adds serial numbers and back-links. |
 | `scripts/schema_tool.py` | Module-by-module navigation and extraction of the bundled schema; regenerates the schema references. |
 | `scripts/visualise_bom.py`, `scripts/visualise_bom.html` | Writes an interactive, offline HTML map of one or more BOMs: the documents and BOM-Links between them, every element with where it is declared and what references it (including through slice copies in TM-BOMs), and the schema's reference fields. The `.html` file is its page template. |
+| `scripts/tm_to_markdown.py` | Writes a TM-BOM as a Markdown threat table (threats, controls, and not-applicable decisions with their reasons) for people to read and review. |
 | `scripts/fetch_catalogues.py` | Refreshes the threat catalogues in `reference/catalogues/` from their publishers. |
 | `scripts/tests/` | The test suite for the scripts. |
 | `reference/threat-model-policy.json` | Which catalogues are swept for which kind of element, the allowed `lfai:` properties, and the recorded catalogue decisions. |
 | `reference/catalogues/` | ID, title and link for each threat catalogue, with its edition and licence notice. |
 | `reference/` (other files) | Generated system and TM schema references, and the 1.7 quick reference. |
-| `examples/` | The Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b. Both validate. |
+| `examples/` | The Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b. Both validate. `tm-bom.code-assistant-1b.threats.md` is the TM-BOM's generated threat table. |
 | `schema/2.0/` | The bundled CycloneDX 2.0 schema. |
 
 The scripts need Python 3.9 or later. `validate_bom.py` also needs the packages in `scripts/requirements.txt` (`jsonschema`, `rfc3339-validator`); `fetch_catalogues.py` also needs `pyyaml` and `pypdf` (`scripts/requirements-dev.txt`). The other scripts use the standard library only.
