@@ -27,6 +27,7 @@ People setting this up for the first time should read `.bob/skills/cyclonedx/GET
 | Validate a CycloneDX 2.0 BOM, or check its links | run `python .bob/skills/cyclonedx/scripts/validate_bom.py <bom>.json [--system <system>.json]` and explain the result |
 | Ask what a 2.0 field or object means | run `python .bob/skills/cyclonedx/scripts/schema_tool.py outline <module>[:<object>]` |
 | See where elements are declared and referenced, within a BOM and across a system BOM and its TM-BOMs | run `python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <system>.json [<tm>.json …] -o <scratch>/bom-map.html` (or `schema -o <scratch>/schema-map.html` for the schema alone) and give the user the file path to open |
+| Write a TM-BOM as a readable threat table | run `python .bob/skills/cyclonedx/scripts/tm_to_markdown.py <tm>.json` (writes `<tm>.threats.md`) and give the user the file path |
 | Work with CycloneDX 1.7 | `.bob/skills/cyclonedx/reference/v1.7-quick-reference.md` |
 
 Read the workflow file in full before starting, and follow its steps in order. Paths in the workflows are relative to the repository root, and so are the paths in this file.
@@ -60,5 +61,5 @@ Read the workflow file in full before starting, and follow its steps in order. P
 - **Questions:** ask the user with AskUserQuestion when a step says to ask, for example before `--assign-serial` or `--link`, which edit a system BOM in place, or to confirm which use cases and methodologies to model. If you cannot ask (for example when running as a subagent), never edit a file in place: work on a copy, take the default the step gives, and list every default you chose in the report.
 - **Ignore the Bob entry point.** `.bob/skills/cyclonedx/SKILL.md` is the IBM Bob version of this file and names Bob's tools (`read_file`, `execute_command`, `ask_followup_question`). Do not follow its tool instructions; this file replaces it. The workflows, scripts and reference files under `.bob/skills/cyclonedx/` are shared and apply as written.
 - **Large outputs:** a TM-BOM can be long. Build it with the slice script, then add the threats, controls and risks with Edit, or with a short Python script for many entries. Do not retype the system slice by hand.
-- **Examples:** `.bob/skills/cyclonedx/examples/` holds the Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b with a single threat. Match its shape, not its scale: a real TM-BOM covers every element and sweep item.
+- **Examples:** `.bob/skills/cyclonedx/examples/` holds the Code Assistant system BOM and a worked, linked TM-BOM for Sub Use Case 1b with a single threat, and its generated threat table (`tm-bom.code-assistant-1b.threats.md`). Match its shape, not its scale: a real TM-BOM covers every element and sweep item.
 - Never present a BOM that has not been through `validate_bom.py`, and report its result.

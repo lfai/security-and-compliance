@@ -98,7 +98,8 @@ For each use case it:
 1. cuts a **slice** of the system BOM into a new TM-BOM (with `scripts/slice_use_case.py`);
 2. finds threats in three passes: STRIDE on every element and flow; a **sweep** of the catalogues that apply to each element, recording every catalogue item as a threat or as "not applicable" with a reason; and a review of the use case and its assumptions for anything system-specific;
 3. adds NIST SP 800-30 sources, events and impacts, CAPEC and CWE, and controls mapped to NIST SP 800-53 and CSA AICM;
-4. validates the result and reports coverage.
+4. validates the result and reports coverage;
+5. writes a **threat table**, `<name>.tm-bom.<use-case>.threats.md`, next to the TM-BOM (with `scripts/tm_to_markdown.py`).
 
 A full threat model takes time: in testing, about 1.5 to 2 hours for a system with three use cases.
 
@@ -121,6 +122,16 @@ threat model: 29 threats; 30/30 elements covered; 28/28 controls mapped; catalog
 - The `--report-json` file has the details: uncovered elements, unmapped controls, per-element sweep counts, and the items scoped out for a lifecycle stage.
 
 **The validator cannot judge quality.** It proves a decision was recorded, not that it is right. Read the threats and, above all, the "not applicable" reasons: each should give a reason specific to that element.
+
+### Read the threat table
+
+The TM-BOM is JSON for tools. To read and review the threat model, open the threat table the assistant wrote next to it, or write one yourself:
+
+```
+python .bob/skills/cyclonedx/scripts/tm_to_markdown.py <path>/<name>.tm-bom.<use-case>.json
+```
+
+It writes `<path>/<name>.tm-bom.<use-case>.threats.md`, with three tables: the threats (in the shape of the working group's [Code Assistant threat table](../../../subgroups/use-cases-and-threat-models/use_cases/code_assistant/threats/code_assistant_threats.md), plus controls and risk), the controls with their NIST SP 800-53 and CSA AICM requirements, and every "not applicable" decision with its reason. The page is generated: to change it, change the TM-BOM and run the script again.
 
 ### See how the BOMs link together
 
@@ -162,4 +173,4 @@ Compare it with the worked example for Sub Use Case 1b, [examples/tm-bom.code-as
 
 ## 8. Keep your results
 
-Threat models are design artefacts the working group reviews. If you want to share them, put the diagram, notes, system BOM and TM-BOMs together in a folder under `subgroups/use-cases-and-threat-models/use_cases/`, and open a pull request (`git commit -s`, as [CONTRIBUTING.md](../../../CONTRIBUTING.md) requires).
+Threat models are design artefacts the working group reviews. If you want to share them, put the diagram, notes, system BOM, TM-BOMs and their threat tables together in a folder under `subgroups/use-cases-and-threat-models/use_cases/`, and open a pull request (`git commit -s`, as [CONTRIBUTING.md](../../../CONTRIBUTING.md) requires).

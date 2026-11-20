@@ -94,6 +94,7 @@ The skills do the modelling; you supply the inputs, review what the assistant as
 
 - **System BOM:** a CycloneDX 2.0 description of the system: its components, actors, trust zones, boundaries, data flows and use cases.
 - **TM-BOM:** the threat model for one use case. It carries a *slice* of the system BOM (the elements that use case touches), the threats, the NIST SP 800-30 enrichment, CAPEC and CWE mappings, NIST SP 800-53 and CSA AICM controls, and risks. It links back to the system BOM with BOM-Links.
+- **Threat table:** a Markdown page generated from each TM-BOM for people to read and review. The TM-BOM stays the source of truth.
 
 #### Process flow
 
@@ -104,8 +105,8 @@ flowchart TD
     C --> D{"You: review open questions and tags,<br/>run validate_bom.py"}
     D -- "answers / corrections" --> B
     D -- "0 errors" --> E
-    E["Step 2 (AI): 'Generate a threat model from this system BOM'<br/>confirm use cases and methodologies"] --> F["One TM-BOM per use case<br/>(name.tm-bom.use-case.json)"]
-    F --> G{"You: validate_bom.py --system ... --strict,<br/>read the threats and 'not applicable' reasons"}
+    E["Step 2 (AI): 'Generate a threat model from this system BOM'<br/>confirm use cases and methodologies"] --> F["One TM-BOM per use case<br/>(name.tm-bom.use-case.json)<br/>+ its threat table (name.tm-bom.use-case.threats.md)"]
+    F --> G{"You: validate_bom.py --system ... --strict,<br/>read the threat table and 'not applicable' reasons"}
     G -- "gaps or errors" --> E
     G -- "accepted" --> H["Optional: visualise_bom.py<br/>interactive map of the BOMs"]
     H --> I["Commit to a folder under use_cases/<br/>and open a PR"]
@@ -117,7 +118,7 @@ flowchart TD
 | 0 | A Python 3.9+ virtual environment (once) | `pip install -r .bob/skills/cyclonedx/scripts/requirements.txt` | The validator and scripts, ready to run |
 | 1 | The dataflow diagram (a Mermaid `.mmd` or other text diagram gives better results than an image) and supporting notes: what each element is, its data, the use cases, and who hosts what | *"Turn this system diagram into a system BOM. Diagram: `<path>/diagram.mmd`. Notes: `<path>/notes.md`. Write it to `<path>/system-bom.json`."* ([workflow](../../.bob/skills/cyclonedx/workflows/diagram-to-system-bom.md)) | `system-bom.json`, a count of what was found, each component's classification tags (which decide what the threat sweep covers), and a list of open questions |
 | 2 | Answers to the open questions | `python .bob/skills/cyclonedx/scripts/validate_bom.py <path>/system-bom.json` | Confirmation that the system BOM is valid. Fix mistakes here: they carry into every threat model |
-| 3 | The validated system BOM | *"Generate a threat model from this system BOM: `<path>/system-bom.json`. Write one TM-BOM per use case into `<path>/`."* ([workflow](../../.bob/skills/cyclonedx/workflows/system-bom-to-threat-model.md)) | One TM-BOM per use case. For each, the assistant cuts the slice (`slice_use_case.py`), finds threats with STRIDE (and MAESTRO by default) on every element and flow, sweeps the applicable catalogues (OWASP Top 10s, MITRE ATLAS, MITRE ATT&CK, CWE) recording each item as a threat or "not applicable" with a reason, reviews the use case for system-specific threats, then adds NIST SP 800-30, CAPEC, CWE, NIST SP 800-53 and CSA AICM |
+| 3 | The validated system BOM | *"Generate a threat model from this system BOM: `<path>/system-bom.json`. Write one TM-BOM per use case into `<path>/`."* ([workflow](../../.bob/skills/cyclonedx/workflows/system-bom-to-threat-model.md)) | One TM-BOM per use case. For each, the assistant cuts the slice (`slice_use_case.py`), finds threats with STRIDE (and MAESTRO by default) on every element and flow, sweeps the applicable catalogues (OWASP Top 10s, MITRE ATLAS, MITRE ATT&CK, CWE) recording each item as a threat or "not applicable" with a reason, reviews the use case for system-specific threats, then adds NIST SP 800-30, CAPEC, CWE, NIST SP 800-53 and CSA AICM. Each TM-BOM also gets a Markdown threat table next to it (`tm_to_markdown.py`), in the shape of the [Code Assistant threat table](./use_cases/code_assistant/threats/code_assistant_threats.md) plus controls, risks and the "not applicable" decisions |
 | 4 | Each TM-BOM | `python .bob/skills/cyclonedx/scripts/validate_bom.py <path>/<name>.tm-bom.<use-case>.json --system <path>/system-bom.json --strict --report-json <path>/<use-case>.coverage.json` | A coverage line (threats, elements covered, controls mapped, sweep decisions) and a JSON report of any gaps. 0 errors is required; with `--strict`, 0 warnings means full coverage |
 | 5 | The system BOM and its TM-BOMs | `python .bob/skills/cyclonedx/scripts/visualise_bom.py bom <path>/system-bom.json <path>/*.tm-bom.*.json -o bom-map.html` | An offline, interactive HTML map of where each element is declared and referenced across the BOMs (keep it out of the repository) |
 
