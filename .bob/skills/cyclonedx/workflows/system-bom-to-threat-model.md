@@ -48,6 +48,7 @@ Identify threats in three passes: a **structural** pass, a **catalogue sweep**, 
 **3a. Structural pass (STRIDE).** Apply all six STRIDE categories to:
 - every flow in `blueprints[0].flows`, giving most attention to flows whose source and destination are in different zones (they cross a `boundary`);
 - every component, actor and blueprint asset in the slice;
+- every data store (a `data` component, a `machine-learning-model` component, or a blueprint `dataStore` or data `asset`) **as a target in its own right**, not only as something a component reads or writes on the way to doing its job: direct modification of what it stores, loss of availability (deletion or locking), and copying of its contents by someone with no route through the system's own flows;
 - every boundary: what changes in trust across it, and what someone on the less trusted side can reach.
 
 Boundaries in the system BOM may be trust boundaries (`type: "trust"`) or only functional, process or deployment boundaries. Annotate a `trustBoundary` (Step 4) only for boundaries the system BOM types `trust`, or ones you have evidence are trust boundaries; give the evidence in its `description`. If the system BOM draws no trust boundary, do not invent trust levels: apply STRIDE to the crossings anyway, record the missing trust boundaries as an open question in the report, and leave `trustBoundaries` empty. A flow between zones crosses a boundary only at the outermost zones that differ, as the system-BOM workflow defines it.
@@ -66,7 +67,9 @@ Boundaries in the system BOM may be trust boundaries (`type: "trust"`) or only f
 
 **Lifecycle scope.** A use case may carry a property `lfai:lifecycle` of `training` or `inference` (set in the system BOM). The policy's `lifecycleScope` lists catalogue items that cannot apply in a stage, with the reason; they are not swept there and need no annotation. The coverage report lists them, so the scoping stays visible.
 
-**Overlapping items.** Some items of two swept catalogues cover the same ground. Write one threat and cite both items on it; do not write two threats for the same thing.
+**Overlapping items.** Some items of two swept catalogues cover the same ground. Write one threat and cite both items on it; do not write two threats for the same thing. This does not merge threats that differ in their actor, their path or their controls: a deliberate and an accidental version of a threat, or two different parts of one catalogue item, are separate threats, and each cites the item.
+
+**Cover the whole item.** Many catalogue items name several distinct threats, often both deliberate and accidental ones. Before you cite an item, or mark it not applicable, read its whole scope in the catalogue's own text, and decide each part for each element it applies to. When a threat covers only part of an item for an element, write threats for the other parts that apply, and give the reason for each part that does not apply in the `description` of the threat that cites the item. Do not mark the item not applicable for that element as well: the validator rejects an item that is both cited and marked not applicable for the same element. A citation means the whole item was decided for that element, not that one example of it was found. If you cannot read the item's text (for example, with no web access, since the catalogue CSVs copy only IDs, titles and links), work from what you know of the item, and say in the report which items' scope you could not read.
 
 The policy file is the source of truth if this table and it ever differ. The item lists, with pinned editions, are in [reference/catalogues/](../reference/catalogues/); read the CSV for each catalogue you sweep.
 
@@ -90,9 +93,21 @@ If a tag ever has no sweep catalogue, rely on 3a and 3c for those elements, and 
 **3c. Beyond the catalogues.** Catalogues miss what is specific to this system. Trace each use case end to end and ask what an attacker, an insider, a failing component or a careless user could do at each step that neither pass found. Include:
 - what happens when a security component (guard, filter, authorization service) fails or times out;
 - data that keeps its sensitivity, or loses its access controls, as it moves between components;
+- **the malicious insider.** For every threat whose actor is someone with internal access (an employee, an operator, an administrator, a supplier's staff), also ask what that person could do *on purpose* with the same access: misuse the system to get what it should refuse, plant content that others will consume, add or change a component nobody approved, or deny afterwards what they did. A careless-user threat does not cover the deliberate one. Write the deliberate one as its own threat with a `party` whose `persona.archetype` is `insider-threat`, unless it has the same path, controls and impact, in which case say so in the careless threat's `description`;
+- **an agent working against its own controls.** For every element tagged `agent`, ask whether it can change anything that limits it: its configuration, permissions, guardrails, tool list or memory, or the component that hosts or constrains it. An agent that can rewrite what it is allowed to do has no effective limit;
+- **harms outside STRIDE.** STRIDE and the security catalogues do not prompt for every harm an AI system can cause. For every `ai-model` element, decide each of: intellectual property and licence, the quality of the output (degraded, manipulated or invented content), privacy, safety and harmful content, and fairness. Such a threat may have no STRIDE category (see "Threats outside STRIDE" in Step 4);
 - the use case's `exceptions`, `preconditions` and blueprint `assumptions`: every one that describes something going wrong, or that might not hold, should lead to a threat or to a recorded reason why not. If the use case has none, say so in the report.
 
 Record the review of every blueprint assumption and every use case in the slice as an annotation whose `subjects` include it and whose `text` is `reviewed <refId>: <outcome>`, where the outcome names the threats it led to or says why it led to none (for example `reviewed assumption:patient-data: led to threat:phi-channel-interception`). The validator warns about any assumption or use case without one.
+
+Record the outcome of the element checks in this step and in 3a the same way, so that a check that found nothing is visible in the TM-BOM and not only in the report. Write one annotation per element and check, whose `subjects` is the element and whose `text` is `reviewed <refId>: <check>: <outcome>`:
+- `data store` for each data store in 3a;
+- `own controls` for each `agent` element;
+- `harms outside STRIDE` for each `ai-model` element, with an outcome for each of the five harms.
+
+For example, for a model that drafts clinical notes from patient records: `reviewed component:note-model: harms outside STRIDE: privacy led to threat:phi-retained-by-model-hosting; quality led to threat:...; safety led to threat:...; fairness led to threat:...; licence: the model reproduces no third-party text, because it summarises the patient's own record`. Decide each harm from this system's own elements and flows; do not copy the outcome from another system's TM-BOM.
+
+The validator checks that these annotations have the `reviewed <refId>: <outcome>` form, but not that every element has one, or that the check name is valid. Check that yourself before you report.
 
 Threats from 3c cite no catalogue item, which is expected.
 
@@ -113,7 +128,7 @@ For each threat, add these to the TM-BOM:
 |---|---|---|---|
 | `threat` | `threats.threats[]` | `refId`, `name` | `description` (the statement), `origin` (NIST 800-30 source type: `adversarial`, `accidental`, `structural`, `environmental`), `categories[]` (`{taxonomy, category}`: STRIDE, MAESTRO, LINDDUN or MITRE-ATTACK, with category values from the schema), `affects[]` (sliced refIds), `attackPatterns[]`, `weaknesses[]`, `killChainPhase`, `mitigations[]` (control refIds) |
 | `threatScenario` | `threats.threatScenarios[]` | `refId`, `name`, `threats[]` | `actor` (a party refId), `motivation[]`, `intent`, `accessLevel`, `attackVector`, `likelihood.level` + `rationale`, `riskAttributes[]`, `affects[]`, `damageScenarios[]` |
-| attacker `party` | `definitions.parties[]` | `roles` + one of `persona`/`organization`/`person` | `roles: [{ "role": "attacker" }]`, `persona.archetype` (`attacker`, `insider-threat`, `nation-state`, `organized-crime`, …). This belongs in the TM-BOM, not in the system BOM. |
+| attacker `party` | `definitions.parties[]` | `roles` + one of `persona`/`organization`/`person` | `roles: [{ "role": "attacker" }]` (or `insider-threat` for an insider, or `provider` for a supplier that causes harm through its normal access), `persona.archetype` (`attacker`, `insider-threat`, `supplier`, `nation-state`, `organized-crime`, …). This belongs in the TM-BOM, not in the system BOM. |
 | `attackPattern` | `threats.attackPatterns[]` | `refId`, `name` | `capecId` (integer), `description` |
 | `weakness` | `definitions.weaknesses[]` | `name` or `identifiers` | `refId`, `kind: "flaw"`, `identifiers: [{ "scheme": "cwe", "value": "CWE-494" }]`. Threats reference them as `{ "ref": "weakness:..." }`. |
 | `attackPath` (for multi-step threats) | `threats.attackPaths[]` | `refId`, `name`, `steps[]` | each step has a `description`, `source`/`destination` (sliced refIds), `boundaryCrossed`, `technique` (`{id, name, tactic}`, where `tactic` is a tactic **ID**: `TA0001` for ATT&CK or `AML.TA0005` for ATLAS; from ATT&CK or ATLAS), `attackPattern`, `exploits`, `mitigations` |
@@ -195,6 +210,8 @@ If the user wants links in both directions, run `python .bob/skills/cyclonedx/sc
 Report, for each TM-BOM, using the validator's output and `--report-json` file rather than counting by hand:
 - the file, its serialNumber, and the use case it covers;
 - the number of threats per STRIDE and MAESTRO category, and the threats with no STRIDE category;
+- the harms outside STRIDE (Step 3c) that you decided cannot arise, each with the reason, as recorded in the `reviewed` annotations;
+- the catalogue items whose full scope you could not read (Step 3b);
 - coverage: the elements and flows with no threat, and the controls with no threat;
 - the catalogue sweep: items decided per element and catalogue, how many items were marked not applicable, elements with no chosen catalogue, and elements classified by component type;
 - risks left unrated, and any defaults you chose because you could not ask the user;

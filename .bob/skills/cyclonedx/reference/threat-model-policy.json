@@ -92,7 +92,8 @@
     "`sweep` catalogues are swept item by item: every item gets a threat that cites it (lfai:catalogue-item) or a not-applicable annotation.",
     "A component and the actor it realizes (an agent) are one element: sweep and annotate the component; decisions on either count for both.",
     "Items in lifecycleScope for the use case's lifecycle are not swept.",
-    "Where items of two swept catalogues overlap, cite both on the same threat rather than writing two threats.",
+    "Where items of two swept catalogues overlap, cite both on the same threat rather than writing two threats. Threats that differ in actor, path or controls (a deliberate and an accidental version, or two parts of one item) stay separate, and each cites the item.",
+    "A citation decides the whole item for that element: read the item's full scope and decide each part it names, deliberate and accidental. Give the reason for a part that does not apply in the citing threat's description, not in a not-applicable annotation for the same element.",
     "`consult` catalogues are too large to sweep item by item. Use them to classify threats (techniques, weaknesses) and cite the items that apply.",
     "Every element and flow also gets STRIDE.",
     "Attack behaviour is classified with CAPEC (reference_files/mitre_capec.csv) where CAPEC has a pattern; it has none for most AI-specific threats (prompt injection, poisoning, hallucination), so use ATLAS techniques for those and leave attackPatterns empty. Human actors and threat sources use NIST SP 800-30 (reference_files/nist_800_30_*.csv)."
@@ -154,9 +155,17 @@
     }
   },
   "review": {
-    "$comment": "Step 3c: record that every blueprint assumption and every use case in the slice was reviewed, as an annotation whose subjects include the reviewed element. The outcome names the threats it led to, or says why it led to none.",
+    "$comment": "Step 3c: record that every blueprint assumption and every use case in the slice was reviewed, as an annotation whose subjects include the reviewed element. The outcome names the threats it led to, or says why it led to none. The element checks (elementChecks) are recorded the same way, with the check named after the refId.",
     "annotationPrefix": "reviewed",
     "format": "reviewed <refId>: <outcome>",
+    "elementFormat": "reviewed <refId>: <check>: <outcome>",
     "example": "reviewed assumption:patient-data: led to threat:phi-channel-interception and threat:phi-retained-by-model-hosting"
+  },
+  "elementChecks": {
+    "$comment": "Checks the threat-model workflow (steps 3a and 3c) makes on single elements, in addition to the catalogue sweep. Each is recorded as a review annotation in review.elementFormat, so that a check that found nothing is visible in the TM-BOM. No script reads this key: the validator checks only that review annotations have the review.format form, not that every element has one or that the check name is one of these. Keep catalogue item IDs out of these texts, as in sweepNotes.",
+    "data store": "Step 3a. Every data component, machine-learning-model component, blueprint dataStore and data asset, as a target in its own right: direct modification, loss of availability, and copying by someone with no route through the system's own flows.",
+    "own controls": "Step 3c. Every element tagged agent: whether it can change anything that limits it (configuration, permissions, guardrails, tool list, memory, or the component that hosts or constrains it).",
+    "harms outside STRIDE": "Step 3c. Every element tagged ai-model: an outcome for each of intellectual property and licence, quality of output, privacy, safety and harmful content, and fairness.",
+    "malicious insider": "Step 3c. Not recorded per element: for every threat with an internal actor, the deliberate version by an insider is a threat of its own, or the careless threat's description says why it has the same path, controls and impact."
   }
 }
