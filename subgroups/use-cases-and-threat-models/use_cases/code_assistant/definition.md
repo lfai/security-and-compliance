@@ -980,17 +980,17 @@ The sections below define every actor and component that appears in the architec
 Humans or systems that initiate or receive actions.
 
 - **Developer**
-  The human actor who writes, modifies, and maintains code — considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations).
+  The human actor who writes, modifies, and maintains code.
 
   Example: A backend engineer, a DevOps engineer, a security engineer, a contractor with repo access.
 
 - **Code Assistant Agent** (local, dynamic)
-  The agent delivered as part of the Code Assistant Plugin. Before installation the plugin is a static software component; once activated inside the IDE the embedded agent becomes an actor with agency over the developer environment. *Local* affirms that the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. It handles tasks ranging from low-latency inline completions through to complex multi-step operations such as autonomous code generation and test scaffolding. A context store is available for structured state across workflow steps. A RAG pipeline component exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration. In threat modeling this actor is treated as an active participant with an expanded blast radius — its autonomous, multi-tool operation makes it susceptible to prompt injection, workflow hijacking, and cascading misuse of integrated services accessible via MCP.
+  The agent delivered as part of the Code Assistant Plugin. Before installation the plugin is a static software component; once activated inside the IDE the embedded agent becomes an actor with agency over the developer environment. *Local* affirms that the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. It handles tasks ranging from low-latency inline completions through to complex multi-step operations such as autonomous code generation and test scaffolding. A context store is available for structured state across workflow steps. A RAG pipeline component exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration.
 
   Example: GitHub Copilot (in-IDE agent), Amazon Q Developer (in-IDE agent), Continue with Ollama, Aider with a locally hosted model, OpenHands with a local LLM
 
 - **Remote Code Assistant Agent** (remote, dynamic)
-  An agent hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. *Remote* affirms that the agent and its agentic framework operate outside the developer's workstation, within a third-party platform. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. It may have access to additional tools, skills, and service connectors not individually enumerated in this use case. In threat modeling this actor is treated as an active participant with a broad blast radius — its external hosting introduces risks around data exfiltration, third-party data handling, prompt injection via remote context, and limited developer visibility into its internal operations.
+  An agent hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. *Remote* affirms that the agent and its agentic framework operate outside the developer's workstation, within a third-party platform. *Dynamic* affirms that the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows — rather than merely responding to single-turn prompts. It may have access to additional tools, skills, and service connectors not individually enumerated in this use case.
 
   Example: Claude Code (Anthropic), Cursor Agent, Devin (Cognition AI)
 
@@ -1010,7 +1010,7 @@ Humans or systems that initiate or receive actions.
         "persona": {
           "archetype": "developer",
           "scope": "internal",
-          "description": "Human actor who writes, modifies, and maintains code—considered a potential target (e.g., phishing, credential theft) or source of risk (e.g., introducing vulnerabilities or misconfigurations)."
+          "description": "Human actor who writes, modifies, and maintains code."
         }
       },
       "description": "The human developer who interacts with the code assistant within the IDE."
@@ -1035,7 +1035,7 @@ Humans or systems that initiate or receive actions.
           ]
         }
       },
-      "description": "The agent (local, dynamic) delivered as part of the Code Assistant Plugin. Operates as a static component prior to installation; once activated in the IDE it becomes an actor with agency over the developer environment. Local: the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. A context store is available for structured state across steps. A RAG pipeline exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration. Susceptible to prompt injection, workflow hijacking, and cascading misuse of MCP-accessible services."
+      "description": "The agent (local, dynamic) delivered as part of the Code Assistant Plugin. Operates as a static component prior to installation; once activated in the IDE it becomes an actor with agency over the developer environment. Local: the agent and its agentic framework run entirely on the developer's workstation within the internal trust boundary. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. A context store is available for structured state across steps. A RAG pipeline exists in the architecture but is not exercised in the current use case variants and is deferred for later consideration."
     },
     {
       "refId": "actor:remote-code-asst-agent",
@@ -1054,7 +1054,7 @@ Humans or systems that initiate or receive actions.
           ]
         }
       },
-      "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case. Susceptible to prompt injection via remote context, third-party data handling risks, and limited developer visibility into its internal operations."
+      "description": "The agent (remote, dynamic) hosted entirely within the External SaaS trust boundary, opaque to the developer beyond its API surface. Remote: the agent and its agentic framework operate outside the developer's workstation within a third-party platform. Dynamic: the agent can take autonomous actions — tool calling, invoking MCP servers, and orchestrating multi-step workflows. May access additional tools, skills, and connectors not enumerated in this use case."
     }
   ]
 }
@@ -1067,17 +1067,17 @@ Humans or systems that initiate or receive actions.
 Used to describe the control zones of an organization relative to the use cases.
 
 - **Internal**
-  The **local network boundary**. Contains systems, APIs, or infrastructure that are locally reachable within the organization's own network — the developer's workstation, on-premises services, and locally installed MCP servers. Components here are governed by the organization's own security controls and are generally more trusted, but still pose risks such as misconfigurations, lateral movement, and insider threats.
+  The **local network boundary**. Contains systems, APIs, or infrastructure that are locally reachable within the organization's own network — the developer's workstation, on-premises services, and locally installed MCP servers. Components here are governed by the organization's own security controls and are generally more trusted.
 
   Example: Developer workstation, self-hosted GitLab, locally installed Jira MCP Server, on-prem Jenkins CI
 
 - **External SaaS**
-  The **remote network boundary** for managed SaaS services. Contains third-party software platforms that are accessed over the public internet or a remote network and provide application or agentic capabilities — including the Agentic SaaS platform that hosts the Remote Code Assistant Agent. Components here operate under a third-party trust model and introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
+  The **remote network boundary** for managed SaaS services. Contains third-party software platforms that are accessed over the public internet or a remote network and provide application or agentic capabilities — including the Agentic SaaS platform that hosts the Remote Code Assistant Agent. Components here operate under a third-party trust model, with limited organizational visibility.
 
   Example: Claude Code (Anthropic), Cursor, GitHub Copilot Workspace, Slack
 
 - **External Cloud**
-  The **remote network boundary** for external services reached through an MCP Server interface. These services are characterized only by the MCP protocol and by being external; the specific services (for example GitHub, Slack, or a database) are intentionally not scoped. Introduce additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
+  The **remote network boundary** for external services reached through an MCP Server interface. These services are characterized only by the MCP protocol and by being external; the specific services (for example GitHub, Slack, or a database) are intentionally not scoped. They are governed by the external service provider's own security and shared-responsibility model.
 
   Example: GitHub, Slack, a database, or a cloud platform exposed through an MCP Server
 
@@ -1086,49 +1086,49 @@ Used to describe the control zones of an organization relative to the use cases.
 Data at rest or data in motion.
 
 - **Local Codebase Clone** (`component:data-local-codebase`)
-  A developer's local copy of a repository — treated as a sensitive asset since it may contain proprietary code, secrets, or configurations that could be exposed if the endpoint is compromised.
+  A developer's local copy of a repository, which may contain proprietary code, secrets and configuration.
 
   Example: local monorepo checkout
 
 - **Local Context Store** (`component:context-store-local`)
-  A locally hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs.
+  A locally hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses.
 
   Example: Local Chroma DB, local FAISS index
 
 - **Remote Context Store** (`component:context-store-remote`)
-  A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses. Risks include unauthorized access to sensitive stored content, poisoning of the data corpus, and data leakage via model outputs.
+  A remotely hosted data store that supplies structured or unstructured content to the model or retrieval pipeline to enrich responses.
 
   Example: Pinecone, Weaviate
 
 #### Application
 
 - **Code Assistant Plugin** (`component:code-asst-plugin`)
-  A compromised or intentionally malicious AI-powered IDE plugin that appears to assist with coding but performs unauthorized actions — introducing risks such as data exfiltration, credential harvesting, backdoor insertion, or manipulation of code and outputs.
+  The AI-powered IDE plugin that hosts the Code Assistant Agent and connects the IDE to it.
 
-  Example: Malicious fake ESLint extension, trojanized Prettier plugin
+  Example: GitHub Copilot, Amazon Q Developer, Continue
 
 - **Integrated Development Environment (IDE)** (`component:local-ide`)
-  The software environment where code is written and tested — an attack surface due to risks like malicious extensions, insecure settings, or credential exposure.
+  The software environment where code is written and tested, and the host of the Code Assistant Plugin.
 
   Example: VS Code, JetBrains IntelliJ IDEA, Google Antigravity IDE
 
 - **Authentication Service** (`component:authn-service`)
-  The service for verifying the identity of a user or system — risks include credential theft, weak authentication mechanisms, and session hijacking.
+  The service for verifying the identity of a user or system.
 
   Example: Okta, Microsoft Entra ID, AWS Cognito
 
 - **Authorization Service** (`component:authz-service`)
-  The service for determining what an authenticated user or system is allowed to access or perform — risks include excessive permissions, privilege escalation, and misconfigured access controls.
+  The service for determining what an authenticated user or system is allowed to access or perform.
 
   Example: Open Policy Agent (OPA), AWS IAM, HashiCorp Boundary
 
 - **Third Party MCP Server** (`component:mcp-server-third-party`)
-  An organization-operated MCP server that integrates the assistant with internal third-party services. Poses risks if misconfigured or inadequately secured, including unauthorized data access, insecure API exposure, and privilege escalation through service integrations.
+  An organization-operated MCP server that integrates the assistant with internal third-party services.
 
   Example: Internal MCP server bridging Jira, Confluence
 
 - **Code Assistant Agent** *(static, embedded in the plugin)* (`component:code-asst-agent`)
-  The agent code shipped inside the Code Assistant Plugin. Before the plugin is installed and activated it is a static application component. As a component it is subject to supply chain risks: a compromised plugin binary may carry a malicious agent payload.
+  The agent code shipped inside the Code Assistant Plugin. Before the plugin is installed and activated it is a static application component.
 
 - **Code Assistant Agent (local, dynamic) — artifact** (`component:local-code-asst-agent`)
   The static, inventoried artifact (code, configuration, packaged runtime) of the local dynamic agent. Once activated inside the IDE, the artifact acts as `actor:local-code-asst-agent`. The component and the actor are joined through the party (see [Component ↔ Party ↔ Actor links](#cyclonedx-20--component--party--actor-links)).
@@ -1137,51 +1137,51 @@ Data at rest or data in motion.
   The static, inventoried artifact of the agent hosted on the Agentic SaaS platform. When running, the artifact acts as `actor:remote-code-asst-agent`, joined through the party in the same way.
 
 - **Local RAG** (`component:rag-local`)
-  A component, hosted locally, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs.
+  A component, hosted locally, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality.
 
   Example: Local LangChain + Chroma, LlamaIndex + FAISS
 
 - **Remote RAG** (`component:rag-remote`)
-  A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality. Introduces risks around ingestion of untrusted or manipulated content, exposure of sensitive data through retrieval, and injection of malicious inputs that propagate into model outputs.
+  A component, hosted remotely, that dynamically fetches relevant content from available data sources to augment the model's context and improve response quality.
 
   Example: Hosted LangChain + Pinecone, Haystack + Weaviate
 
 - **MCP Server — Cloud Service** (`component:mcp-cloud`)
-  An externally operated MCP server through which the assistant reaches an external service over the MCP protocol (e.g., GitHub, Slack, a database). The specific service is not scoped; it is characterized only by its MCP interface and by being external. Introduces supply chain risks including vulnerable or malicious dependencies, excessive permissions, and potential exfiltration of data passed through the integration.
+  An externally operated MCP server through which the assistant reaches an external service over the MCP protocol (e.g., GitHub, Slack, a database). The specific service is not scoped; it is characterized only by its MCP interface and by being external.
 
   Example: GitHub MCP server, Slack MCP server, database MCP server
 
 - **Cloud Service** (`component:cloud-service`)
-  The single external service in the External Cloud zone, reached only through the MCP Server — Cloud Service interface. It is characterized only by being external and by speaking MCP; the specific service (for example GitHub, Slack, or a database) is intentionally not scoped, and the work group may explore concrete services later. Introduces additional risks including supply chain vulnerabilities, data exposure, and limited visibility or control over security practices.
+  The single external service in the External Cloud zone, reached only through the MCP Server — Cloud Service interface. It is characterized only by being external and by speaking MCP; the specific service (for example GitHub, Slack, or a database) is intentionally not scoped, and the work group may explore concrete services later.
 
   Example: GitHub, Slack, a database
 
 - **MCP Server — Agentic SaaS** (`component:mcp-agentic-saas`)
-  The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components. A high-value target due to its central role — risks include unauthorized access, data interception, and abuse of its broad orchestration capabilities.
+  The MCP server component hosted within the Agentic SaaS platform, responsible for exposing assistant capabilities and orchestrating downstream agent, model, and retrieval components.
 
   Example: Cursor cloud MCP layer, GitHub Copilot Workspace MCP backend
 
 - **MCP Gateway** (`component:mcp-gateway`)
-  The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. Acts as a perimeter trust boundary — misconfiguration or compromise can expose backend infrastructure to unauthorized access or traffic manipulation.
+  The ingress service (e.g., proxy, API gateway, or firewall) that receives and routes inbound connections to the assistant backend. It is the single entry point to the Agentic SaaS platform.
 
   Example: AWS API Gateway, Nginx reverse proxy, Cloudflare Tunnel
 
 #### Platform
 
 - **External Plugin Marketplace** (`component:external-plugin-marketplace`)
-  An externally operated third-party platform where developers discover and install IDE plugins or extensions — introduces supply chain risks such as malicious or vulnerable plugins, insufficient vetting, and potential for unauthorized data access or exfiltration.
+  An externally operated third-party platform where developers discover and install IDE plugins or extensions.
 
   Example: VS Code Marketplace, JetBrains Marketplace, Chrome Web Store
 
 - **Agentic SaaS** (`component:agentic-saas`)
-  An externally operated platform that delivers agentic assistant capabilities as a managed service. Introduces risks related to third-party data handling, limited visibility into model behavior and data flows, dependency on external availability, and reduced control over security posture.
+  An externally operated platform that delivers agentic assistant capabilities as a managed service.
 
   Example: Cursor, GitHub Copilot Workspace
 
 #### Framework
 
 - **Agentic Framework (Internal)** (`component:internal-agentic-framework`)
-  The orchestration layer, running locally on the developer's workstation, that coordinates multi-step, tool-using workflows on behalf of the assistant. Manages execution flow between the model, retrieval systems, and external services — a high-impact trust boundary where prompt injection, tool misuse, or unintended action chains can have significant consequences.
+  The orchestration layer, running locally on the developer's workstation, that coordinates multi-step, tool-using workflows on behalf of the assistant. Manages execution flow between the model, retrieval systems, and external services.
 
   Example: LangChain, CrewAI, Anthropic Agents SDK
 
@@ -1193,12 +1193,12 @@ Data at rest or data in motion.
 #### Machine-Learning-Model
 
 - **Code Assistant Model (Local)** (`component:code-assistant-model-local`)
-  The core AI model that generates responses or code suggestions. Run locally (e.g., a self-hosted model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent.
+  The core AI model that generates responses or code suggestions. Run locally (e.g., a self-hosted model). This is a component within the Agent.
 
   Example: Ollama + CodeLlama 13B, self-hosted Mistral 7B
 
 - **Code Assistant Model (Remote)** (`component:code-assistant-model-remote`)
-  The core AI model that generates responses or code suggestions. Run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). Relevant in threat modeling due to risks like prompt injection, data leakage, model manipulation, and insecure output generation. This is a component within the Agent.
+  The core AI model that generates responses or code suggestions. Run remotely (e.g., a cloud-hosted model such as a 30B-parameter model). This is a component within the Agent.
 
   Example: Claude Sonnet (Anthropic API), GPT-4o (Azure OpenAI), Llama 3 70B (Amazon Bedrock)
 
