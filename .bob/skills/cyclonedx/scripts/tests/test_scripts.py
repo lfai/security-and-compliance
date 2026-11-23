@@ -8,6 +8,7 @@ Needs pytest and jsonschema (see ../requirements.txt).
 import copy
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -708,3 +709,93 @@ def test_visualiser_refuses_to_overwrite_other_files(tmp_path):
     code, out = run("visualise_bom.py", "bom", SYSTEM, "-o", other)
     assert code != 0 and "not written by this tool" in out
     assert other.read_text(encoding="utf-8") == "<p>mine</p>"
+
+
+# ---------------------------------------------------------------- threat table
+
+def threat_table(tmp_path, doc=None):
+    src = save(tmp_path / "tm.json", doc) if doc is not None else TM
+    out = tmp_path / "tm.threats.md"
+    code, text = run("tm_to_markdown.py", src, "-o", out)
+    assert code == 0, text
+    return out.read_text(encoding="utf-8")
+
+
+def table_rows(page, heading):
+    section = page.split(f"## {heading}", 1)[1].split("\n## ", 1)[0]
+    return [line for line in section.splitlines() if line.startswith("| `")]
+
+
+def test_threat_table_renders_the_example(tmp_path):
+    page = threat_table(tmp_path)
+    rows = table_rows(page, "Threats")
+    assert len(rows) == 1
+    row = rows[0]
+    # Statement, categories, location, actor, NIST 800-30, catalogue item, techniques, CAPEC/CWE, controls, risk.
+    assert "Developer uses an unofficial marketplace" in row
+    assert "| Spoofing, Information disclosure | Agent ecosystem |" in row
+    assert "Internal: Code Assistant Plugin, Integrated Development Environment (IDE)" in row
+    assert "External attacker (adversarial)" in row
+    assert "TS-ADV-01" in row and "TE-20" in row and "AI-AST-06" in row
+    assert "[A03:2025 Software Supply Chain Failures](https://owasp.org/Top10/2025/" in row
+    assert "T1195.002 Compromise Software Supply Chain" in row and "T1041" in row
+    assert "| No |" in row
+    assert "[CAPEC-185 Malicious Software Download](https://capec.mitre.org/data/definitions/185.html): the developer" in row
+    assert "[CWE-494 Download of Code Without Integrity Check]" in row
+    assert "(`control:plugin-sandboxing`)" in row
+    assert "likelihood medium; impact major; response reduce" in row
+    assert len(table_rows(page, "Controls")) == 3
+    assert "CSA AI Controls Matrix: STA-08 Supply Chain Inventory" in page
+    # Every table row has the same number of cells as its header (no unescaped '|').
+    for heading, cols in (("Threats", 14), ("Controls", 8)):
+        for r in table_rows(page, heading):
+            assert len(re.split(r"(?<!\\)\|", r)) - 2 == cols, r
+
+
+def test_threat_table_is_deterministic(tmp_path):
+    assert threat_table(tmp_path) == threat_table(tmp_path)
+
+
+def test_threat_table_ai_flag_not_applicable_and_escaping(tmp_path):
+    tm = load(TM)
+    th = tm["threats"]["threats"][0]
+    th["description"] = "Line one | with a pipe\nline <two>"
+    th["properties"].append({"name": "lfai:technique", "value": "AML.T0051"})
+    tm["annotations"].append(na_annotation(
+        ["component:local-ide"],
+        "not-applicable owasp-top10-web:A07:2025, owasp-top10-web:A01:2025: the IDE has no login of its own"))
+    page = threat_table(tmp_path, tm)
+    row = table_rows(page, "Threats")[0]
+    assert "Line one \\| with a pipe<br>line &lt;two&gt;" in row
+    assert "ATLAS: [AML.T0051 LLM Prompt Injection]" in row and "| Yes |" in row
+    na = [line for line in page.split("## Catalogue items decided not applicable", 1)[1].splitlines()
+          if line.startswith("| Integrated")]
+    assert len(na) == 1 and "A07:2025" in na[0] and "A01:2025" in na[0] and "no login of its own" in na[0]
+
+
+def test_threat_table_default_output_and_overwrite_guard(tmp_path):
+    src = save(tmp_path / "x.tm-bom.uc.json", load(TM))
+    code, out = run("tm_to_markdown.py", src)
+    assert code == 0, out
+    page = tmp_path / "x.tm-bom.uc.threats.md"
+    assert "](x.tm-bom.uc.json)" in page.read_text(encoding="utf-8")
+    code, out = run("tm_to_markdown.py", src)  # regenerating its own output is allowed
+    assert code == 0, out
+    other = tmp_path / "notes.md"
+    other.write_text("# mine\n", encoding="utf-8")
+    code, out = run("tm_to_markdown.py", src, "-o", other)
+    assert code != 0 and "not written by this tool" in out
+    assert other.read_text(encoding="utf-8") == "# mine\n"
+
+
+def test_threat_table_refuses_a_system_bom(tmp_path):
+    code, out = run("tm_to_markdown.py", SYSTEM, "-o", tmp_path / "x.md")
+    assert code != 0 and "not a threat-model BOM" in out
+
+
+def test_example_threat_table_is_current():
+    page = os.path.join(EXAMPLES, "tm-bom.code-assistant-1b.threats.md")
+    code, out = run("tm_to_markdown.py", TM, "-o", "-")
+    assert code == 0, out
+    with open(page, encoding="utf-8") as f:
+        assert f.read() == out, "regenerate it: python .bob/skills/cyclonedx/scripts/tm_to_markdown.py " + TM
